@@ -83,7 +83,7 @@ sub get_prefix {
 	my $prefix = undef;
 	open MAKEFILE, "Makefile" or die "Cannot open file [Makefile] for reading\n";
 	while(<MAKEFILE>) {
-		if (m!^INSTALLSITEBIN=(.*)$!) {
+		if (m!^SITEPREFIX\s*=\s*(.*)$!) {
 			$prefix = $1;
 			last;
 		}
