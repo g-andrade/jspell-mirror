@@ -5,6 +5,9 @@ use ExtUtils::MakeMaker;
 use Config::AutoConf;
 use ExtUtils::CBuilder;
 
+my $VERSION = "1.9_001";
+# We need to make this VERSION coherent with the one under Jspell.pm someway
+
 # What do we need?
 
 # 1. a C compiler
@@ -22,10 +25,10 @@ my $cc = ExtUtils::CBuilder->new();
 my %c_config = (PREFIX => '/usr/local');
 
 ### AGREP
-my @agrep_source = qw~asearch.c asearch1.c bitap.c checkfile.c
-                      compat.c  follow.c   main.c  maskgen.c
-                      mgrep.c   parse.c    preprocess.c
-                      sgrep.c   utilities.c~;
+my @agrep_source = qw~asearch.c    asearch1.c     bitap.c     checkfile.c
+                      compat.c     follow.c       main.c       maskgen.c
+                      mgrep.c      parse.c        preprocess.c
+                      sgrep.c      utilities.c~;
 my @agrep_objects = map {$cc->compile(source => "agrep/$_")} @agrep_source;
 $cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
 
@@ -49,7 +52,7 @@ my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
                        dump.c       jbuild.c    jspell.c    sc-corr.c   xgets.c
                        gclass.c     jjflags.c   lookup.c    term.c      y.tab.c~;
 my @jspell_objects = map {$cc->compile(
-		extra_compiler_flags => '-DVERSION=\\"2.0\\"',
+		extra_compiler_flags => '-DVERSION=\\"'.$VERSION.'\\"',
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 

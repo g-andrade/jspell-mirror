@@ -5,8 +5,6 @@
 #include <string.h>
 #include "re.h"
 
-/* extern unsigned char *strcpy(), *strncpy(), *strcat(); */
-/* extern int strlen(); */
 #define CHAR	unsigned char
 #define MAXPAT 128
 #define MAXPATT 256
