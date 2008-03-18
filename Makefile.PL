@@ -33,12 +33,12 @@ $cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
 # first let use luck and just "use" it
 `cd src; yacc parse.y`;
 
-my @jspell_source = qw~correct.c	good.c		jmain.c		makedent.c	tgood.c
-					   defmt.c		hash.c		jslib.c		parse.c		tree.c
-                       dump.c		jbuild.c	jspell.c	sc-corr.c	xgets.c
-                       gclass.c		jjflags.c	lookup.c	term.c		y.tab.c~;
+my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
+                       defmt.c      hash.c      jslib.c     parse.c     tree.c
+                       dump.c       jbuild.c    jspell.c    sc-corr.c   xgets.c
+                       gclass.c     jjflags.c   lookup.c    term.c      y.tab.c~;
 my @jspell_objects = map {$cc->compile(
-		extra_compiler_flags => '',
+		extra_compiler_flags => '-DVERSION=\\"2.0\\"',
 		source => "src/$_")} @jspell_source;
 
 WriteMakefile(
