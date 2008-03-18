@@ -15,6 +15,12 @@ if (not Config::AutoConf->check_cc()) {
 	die "I need a C compiler. Please install one!\n" 
 }
 
+# 1.1 a Yacc
+my $yacc;
+if (!($yacc = Config::AutoConf->check_prog_yacc())) {
+	die "I need one of bison, byacc or yacc. Please install one!\n" 	
+}
+
 # 2. ncurses
 if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 	die "I need ncurses library. Please install it!\n" 	
@@ -25,6 +31,7 @@ my $cc = ExtUtils::CBuilder->new();
 my %c_config = (PREFIX => '/usr/local');
 
 ### AGREP
+print "\nCompiling agrep...\n";
 my @agrep_source = qw~asearch.c    asearch1.c     bitap.c     checkfile.c
                       compat.c     follow.c       main.c       maskgen.c
                       mgrep.c      parse.c        preprocess.c
@@ -33,9 +40,12 @@ my @agrep_objects = map {$cc->compile(source => "agrep/$_")} @agrep_source;
 $cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
 
 ### JSpell
+print "\nCompiling jspell...\n";
 # first we need to get a YACC/Bison
 # first let use luck and just "use" it
-`cd src; yacc parse.y`;
+my $cmd = "cd src; $yacc parse.y";
+print "$cmd\n";
+print `$cmd`;
 
 ## Take jsconfig.in and create jsconfig.h
 open IN, "src/jsconfig.in" or die "Cannot open file [src/jsconfig.in] for reading.\n";
