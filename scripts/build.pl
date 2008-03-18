@@ -3,6 +3,7 @@
 use warnings;
 use strict;
 
+use File::Copy;
 use Config::AutoConf;
 use ExtUtils::CBuilder;
 
@@ -66,6 +67,16 @@ while(<IN>) {
 close H;
 close IN;
 
+open IN, "scripts/jspell-dict.in" or die "Cannot open file [...] for reading.\n";
+open PL,  ">scripts/jspell-dict" or die "Cannot create file [...] for writing.\n";
+while(<IN>) {
+	s/\[%\s*(\S+)\s*%\]/$c_config{$1}/ge;
+	print PL;
+}
+close PL;
+close IN;
+
+
 my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
                        defmt.c      hash.c      jslib.c     tree.c
                        dump.c       jbuild.c    jspell.c    sc-corr.c   xgets.c
@@ -85,7 +96,19 @@ $cc->link_executable(extra_linker_flags => '-lncurses',
 
 print "\nBuilt International Jspell $VERSION.\n";
 
-
+open TS, '>_jdummy_' or die ("Cant create timestamp [_jdummy_].\n");
+print TS localtime;
+close TS;
+## Copy(from,to)
+# This might change in the future
+## %% my @executables = qw~src/jspell src/jbuild agrep/agrep~;
+## %% 
+## %% for my $exe (@executables) {
+## %% 	chmod 0755, $exe;
+## %% 	copy($exe, "blib/bin");
+## %% }
+## %% 
+## 
 
 sub get_prefix {
 	my $prefix = undef;

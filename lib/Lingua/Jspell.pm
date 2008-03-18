@@ -35,9 +35,16 @@ our %STOP =();
 BEGIN {
   # Search for jspell binary.
   $JSPELL = which("jspell");
+  my $JSPELLDICT = which("jspell-dict");
+  if (!$JSPELL) {
+	# check if we are running under make test
+	$JSPELL = "blib/script/jspell";
+	$JSPELLDICT = "blib/script/jspell-dict";
+	$JSPELL = undef unless -e $JSPELL;
+  }
   die "jspell binary cannot be found!\n" unless -e $JSPELL;
 
-  chomp($JSPELLLIB = `jspell-dict --dic-dir`);
+  chomp($JSPELLLIB = `$JSPELLDICT --dic-dir`);
 }
 
 =head1 SYNOPSIS
