@@ -15,7 +15,7 @@
 
 
 static char *input(int l, int c, char *st_out, char *st, int max);
-static char *getline(int l, int c, register char *s, int max);
+static char *jgetline(int l, int c, register char *s, int max);
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -567,7 +567,7 @@ void inter_list()
    move(li - 1, 0);
    printf(CORR_C_LOOKUP_PROMPT);
    buf[0] = '\0';
-   if (getline(li-1, strlen(CORR_C_LOOKUP_PROMPT), buf, 99) == NULL) {
+   if (jgetline(li-1, strlen(CORR_C_LOOKUP_PROMPT), buf, 99) == NULL) {
       putchar(7);
       erase();
    }
@@ -590,7 +590,7 @@ void out_shell()
    move(li - 1, 0);
    putchar('!');
    buf[0] = '\0';
-   if (getline(li-1, 1, buf, 199) == NULL) {
+   if (jgetline(li-1, 1, buf, 199) == NULL) {
       putchar(7);
       erase();
       fflush(stdout);
@@ -762,7 +762,7 @@ char *input(int l, int c, char *st_out, char *st, int max)
 #ifndef NOCURSES
    move(l, c);
    printf(st_out);
-   return getline(l, c+strlen(st_out), st, max);
+   return jgetline(l, c+strlen(st_out), st, max);
 #endif
 }
 
@@ -786,7 +786,7 @@ void screen_erase(char *p, char *s, char *p_end, int l, int c) {
 #endif
 }
 
-static char *getline(int l, int c, register char *s, int max)
+static char *jgetline(int l, int c, register char *s, int max)
 {
 #ifndef NOCURSES
    register char *p, *p_end, *p1;
