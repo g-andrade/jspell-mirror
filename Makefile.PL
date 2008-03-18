@@ -40,6 +40,12 @@ my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
 my @jspell_objects = map {$cc->compile(
 		extra_compiler_flags => '-DVERSION=\\"2.0\\"',
 		source => "src/$_")} @jspell_source;
+my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
+
+$cc->link_executable(objects => [@jspell_shared,'src/jbuild.c'], exe_file => "src/jbuild");
+$cc->link_executable(objects => [@jspell_shared,'src/jmain.c'],  exe_file => "src/jspell");
+
+
 
 WriteMakefile(
     NAME                => 'Lingua::Jspell',
