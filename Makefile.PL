@@ -42,8 +42,12 @@ my @jspell_objects = map {$cc->compile(
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
-$cc->link_executable(objects => [@jspell_shared,'src/jbuild.c'], exe_file => "src/jbuild");
-$cc->link_executable(objects => [@jspell_shared,'src/jmain.c'],  exe_file => "src/jspell");
+$cc->link_executable(extra_linker_flags => '-lncurses',
+	             objects => [@jspell_shared,'src/jbuild.c'], 
+		     exe_file => "src/jbuild");
+$cc->link_executable(extra_linker_flags => '-lncurses',
+                     objects => [@jspell_shared,'src/jmain.c'],  
+	             exe_file => "src/jspell");
 
 
 
