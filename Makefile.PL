@@ -23,9 +23,9 @@ my @agrep_source = qw~asearch.c asearch1.c bitap.c checkfile.c
                       compat.c  follow.c   main.c  maskgen.c
                       mgrep.c   parse.c    preprocess.c
                       sgrep.c   utilities.c~;
-my @agrep_objects = map {$cc->compile(source => $_)} @agrep_source;
+my @agrep_objects = map {$cc->compile(source => "agrep/$_")} @agrep_source;
 
-$cc->link_executable(objects => [@agrep_objects], exe_file => "agrep");
+$cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
 
 
 WriteMakefile(
