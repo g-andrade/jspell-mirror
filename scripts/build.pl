@@ -97,7 +97,7 @@ sub get_version {
 	my $version = undef;
 	open PM, "lib/Lingua/Jspell.pm" or die "Cannot open file [lib/Lingua/Jspell.pm] for reading\n";
 	while(<PM>) {
-		if (m!^our\s+\$VERSION\s*=\s*'([^]+)'!) {
+		if (m!^our\s+\$VERSION\s*=\s*'([^']+)'!) {
 			$version = $1;
 			last;
 		}
