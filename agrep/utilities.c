@@ -1,6 +1,7 @@
 /* this file contains various utility functions for accessing
    and manipulating regular expression syntax trees.	*/
 
+#include <stdlib.h>
 #include <stdio.h>
 #include "re.h"
 

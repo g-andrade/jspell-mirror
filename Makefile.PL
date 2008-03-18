@@ -19,7 +19,7 @@ if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 
 ## Get a C compiler
 my $cc = ExtUtils::CBuilder->new();
-my $c_config = (PREFIX => '/usr/local');
+my %c_config = (PREFIX => '/usr/local');
 
 ### AGREP
 my @agrep_source = qw~asearch.c asearch1.c bitap.c checkfile.c

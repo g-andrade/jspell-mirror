@@ -2,6 +2,7 @@
    a regular expression, and return a pointer to a syntax
    tree for that regular expression.				*/
 
+#include <stdlib.h>
 #include <stdio.h>
 #include "re.h"
 
