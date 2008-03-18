@@ -17,16 +17,27 @@ if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 	die "I need ncurses library. Please install it!\n" 	
 }
 
-### AGREP
+## Get a C compiler
 my $cc = ExtUtils::CBuilder->new();
+
+### AGREP
 my @agrep_source = qw~asearch.c asearch1.c bitap.c checkfile.c
                       compat.c  follow.c   main.c  maskgen.c
                       mgrep.c   parse.c    preprocess.c
                       sgrep.c   utilities.c~;
 my @agrep_objects = map {$cc->compile(source => "agrep/$_")} @agrep_source;
-
 $cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
 
+### JSpell
+# first we need to get a YACC/Bison
+# first let use luck and just "use" it
+`cd src; yacc parse.y`;
+
+my @jspell_source = qw~correct.c	good.c		jmain.c		makedent.c	tgood.c
+					   defmt.c		hash.c		jslib.c		parse.c		tree.c
+                       dump.c		jbuild.c	jspell.c	sc-corr.c	xgets.c
+                       gclass.c		jjflags.c	lookup.c	term.c		y.tab.c~;
+my @jspell_objects = map {$cc->compile(source => "src/$_")} @jspell_source;
 
 WriteMakefile(
     NAME                => 'Lingua::Jspell',
