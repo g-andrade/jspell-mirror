@@ -37,7 +37,9 @@ my @jspell_source = qw~correct.c	good.c		jmain.c		makedent.c	tgood.c
 					   defmt.c		hash.c		jslib.c		parse.c		tree.c
                        dump.c		jbuild.c	jspell.c	sc-corr.c	xgets.c
                        gclass.c		jjflags.c	lookup.c	term.c		y.tab.c~;
-my @jspell_objects = map {$cc->compile(source => "src/$_")} @jspell_source;
+my @jspell_objects = map {$cc->compile(
+		extra_compiler_flags => '',
+		source => "src/$_")} @jspell_source;
 
 WriteMakefile(
     NAME                => 'Lingua::Jspell',
