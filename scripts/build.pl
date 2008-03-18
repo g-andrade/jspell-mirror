@@ -6,37 +6,41 @@ use strict;
 use Config::AutoConf;
 use ExtUtils::CBuilder;
 
+# Gather some variables
 my $VERSION = get_version();
 my $prefix = get_prefix();
 
+# Prepare a hash with variables for substitution on jsconfig.in
 my %c_config = (PREFIX => $prefix);
 
-print "\nBuilding International Jspell $VERSION\n";
-print "\nCompiling software for [$prefix]\n";
+# Show some information to the user about what are we doing.
+print "Building International Jspell $VERSION.\n";
+print "\nCompiling software for [$prefix].\n";
 
-
-# Check a C Compiler
+print "\nChecking for a working C compiler.\n";
 if (not Config::AutoConf->check_cc()) {
 	die "I need a C compiler. Please install one!\n" 
 }
 
-# 1.1 a Yacc
+print "\nChecking for a working YACC processor.\n";
 my $yacc;
 if (!($yacc = Config::AutoConf->check_prog_yacc())) {
 	die "I need one of bison, byacc or yacc. Please install one!\n" 	
 }
 
-# 2. ncurses
+print "\nChecking for a working ncurses library.\n";
 if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 	die "I need ncurses library. Please install it!\n" 	
 }
 
-## Get a C compiler
+
+
+# prepare a C compiler
 my $cc = ExtUtils::CBuilder->new();
 
 
 ### AGREP
-print "\nCompiling agrep...\n";
+print "\nCompiling agrep.\n";
 my @agrep_source = qw~asearch.c    asearch1.c     bitap.c     checkfile.c
                       compat.c     follow.c       main.c       maskgen.c
                       mgrep.c      parse.c        preprocess.c
@@ -45,7 +49,7 @@ my @agrep_objects = map {$cc->compile(source => "agrep/$_")} @agrep_source;
 $cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
 
 ### JSpell
-print "\nCompiling jspell...\n";
+print "\nCompiling Jspell.\n";
 # first we need to get a YACC/Bison
 # first let use luck and just "use" it
 my $cmd = "cd src; $yacc parse.y";
@@ -74,9 +78,13 @@ my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;
 $cc->link_executable(extra_linker_flags => '-lncurses',
                      objects => [@jspell_shared,'src/jbuild.c'], 
                      exe_file => "src/jbuild");
+
 $cc->link_executable(extra_linker_flags => '-lncurses',
                      objects => [@jspell_shared,'src/jmain.c'],  
                      exe_file => "src/jspell");
+
+print "\nBuilt International Jspell $VERSION.\n";
+
 
 
 sub get_prefix {
