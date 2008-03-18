@@ -19,6 +19,7 @@ if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 
 ## Get a C compiler
 my $cc = ExtUtils::CBuilder->new();
+my $c_config = (PREFIX => '/usr/local');
 
 ### AGREP
 my @agrep_source = qw~asearch.c asearch1.c bitap.c checkfile.c
@@ -33,6 +34,16 @@ $cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
 # first let use luck and just "use" it
 `cd src; yacc parse.y`;
 
+## Take jsconfig.in and create jsconfig.h
+open IN, "src/jsconfig.in" or die "Cannot open file [src/jsconfig.in] for reading.\n";
+open H,  ">src/jsconfig.h" or die "Cannot create file [src/jsconfig.h] for writing.\n";
+while(<IN>) {
+	s/\[%\s*(\S+)\s*%\]/$c_config{$1}/ge;
+	print H;
+}
+close H;
+close IN;
+
 my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
                        defmt.c      hash.c      jslib.c     tree.c
                        dump.c       jbuild.c    jspell.c    sc-corr.c   xgets.c
@@ -43,11 +54,11 @@ my @jspell_objects = map {$cc->compile(
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
 $cc->link_executable(extra_linker_flags => '-lncurses',
-	             objects => [@jspell_shared,'src/jbuild.c'], 
-		     exe_file => "src/jbuild");
+                     objects => [@jspell_shared,'src/jbuild.c'], 
+                     exe_file => "src/jbuild");
 $cc->link_executable(extra_linker_flags => '-lncurses',
                      objects => [@jspell_shared,'src/jmain.c'],  
-	             exe_file => "src/jspell");
+                     exe_file => "src/jspell");
 
 
 

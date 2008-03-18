@@ -8,19 +8,19 @@
 ****** instalation directories ******
 */
 #ifndef BINDIR
-#define BINDIR        "/opt/local//bin"
+#define BINDIR        "[% PREFIX %]/bin"
 #endif
 #ifndef INDDIR
-#define INDDIR        "/opt/local//include"
+#define INDDIR        "[% PREFIX %]/include"
 #endif
 #ifndef LIBDIR
-#define LIBDIR        "/opt/local//lib/jspell"
+#define LIBDIR        "[% PREFIX %]/lib/jspell"
 #endif
 #ifndef MAN1DIR
-#define MAN1DIR        "/opt/local//man/man1"
+#define MAN1DIR        "[% PREFIX %]/man/man1"
 #endif
 #ifndef MAN4DIR
-#define MAN4DIR        "/opt/local//man/man4"
+#define MAN4DIR        "[% PREFIX %]/man/man4"
 #endif
 
 /*
