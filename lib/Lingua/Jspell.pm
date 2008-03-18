@@ -7,13 +7,9 @@ use strict;
 
 Lingua::Jspell - The great new Lingua::Jspell!
 
-=head1 VERSION
-
-Version 0.01
-
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '1.90_001';
 
 =head1 SYNOPSIS
 

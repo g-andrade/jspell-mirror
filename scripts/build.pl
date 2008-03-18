@@ -6,8 +6,13 @@ use strict;
 use Config::AutoConf;
 use ExtUtils::CBuilder;
 
-my $VERSION = "1.9_001";
-# We need to make this VERSION coherent with the one under Jspell.pm someway
+my $VERSION = get_version();
+my $prefix = get_prefix();
+
+my %c_config = (PREFIX => $prefix);
+
+print "\nBuilding International Jspell $VERSION\n";
+print "\nCompiling software for [$prefix]\n";
 
 
 # Check a C Compiler
@@ -28,7 +33,7 @@ if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 
 ## Get a C compiler
 my $cc = ExtUtils::CBuilder->new();
-my %c_config = (PREFIX => '/usr/local');
+
 
 ### AGREP
 print "\nCompiling agrep...\n";
@@ -74,5 +79,29 @@ $cc->link_executable(extra_linker_flags => '-lncurses',
                      exe_file => "src/jspell");
 
 
+sub get_prefix {
+	my $prefix = undef;
+	open MAKEFILE, "Makefile" or die "Cannot open file [Makefile] for reading\n";
+	while(<MAKEFILE>) {
+		if (m!^INSTALLSITEBIN=(.*)$!) {
+			$prefix = $1;
+			last;
+		}
+	}
+	close MAKEFILE;
+	die "Could not find INSTALLSITEBIN variable on your Makefile.\n" unless $prefix;
+	return $prefix;
+}
 
-
+sub get_version {
+	my $version = undef;
+	open PM, "lib/Lingua/Jspell.pm" or die "Cannot open file [lib/Lingua/Jspell.pm] for reading\n";
+	while(<PM>) {
+		if (m!^our\s+\$VERSION\s*=\s*'([^]+)'!) {
+			$version = $1;
+			last;
+		}
+	}
+	close PM;
+	die "Could not find VERSION on your .pm file. Weirdo!\n" unless $version;
+}
