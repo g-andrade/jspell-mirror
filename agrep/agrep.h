@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <ctype.h>
+#include <string.h>
 #include "re.h"
 
 extern unsigned char *strcpy(), *strncpy(), *strcat();
