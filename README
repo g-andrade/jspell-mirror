@@ -1,15 +1,17 @@
 Lingua-Jspell
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it get an idea of the modules uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+Lingua-Jspell is a morphological analyser. Its first version were distributed
+based on a C package with autoconf/automake/libtool configuration. Given that
+main usage of Jspell is done through its Perl interface, Jspell is now made
+available as a Perl module, that includes the original C code unmodified.
+
+For the installation you need a C compiler and YACC or Bison. The building
+tools will try to detect them but it is not guaranteed that they will be
+detected correctly.
+
+Please refer to the documentation or http://natura.di.uminho.pt/ for
+further details on Jspell usage and Jspell dictionaries.
 
 INSTALLATION
 
@@ -20,12 +22,10 @@ To install this module, run the following commands:
     make test
     make install
 
+Please submit build problems as RT tickets using 
+bug-lingua-jspell@rt.cpan.org
 
 COPYRIGHT AND LICENCE
 
-Put the correct copyright and licence information here.
+Copyright (C) 2008 Projecto Natura
 
-Copyright (C) 2004 Alberto Simões
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.

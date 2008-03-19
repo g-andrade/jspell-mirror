@@ -19,13 +19,9 @@ use IPC::Open3;
 
 Lingua::Jspell - Perl interface to the jspell morphological analyser.
 
-=head1 VERSION
-
-Version 0.01
-
 =cut
 
-our $VERSION = '1.90_01';
+our $VERSION = '1.50_01';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };

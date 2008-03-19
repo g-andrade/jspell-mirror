@@ -15,14 +15,15 @@ my $prefix = get_prefix();
 my %c_config = (PREFIX => $prefix);
 
 # Show some information to the user about what are we doing.
-print "Building International Jspell $VERSION.\n";
+print "\n - Building International Jspell $VERSION - \n";
+
 print "\nCompiling software for [$prefix].\n";
 
 print "Checking for a working C compiler...";
 if (not Config::AutoConf->check_cc()) {
 	die "I need a C compiler. Please install one!\n" 
 } else {
-	print " found\n"
+	print " [found]\n"
 }
 
 print "Checking for a working YACC processor...";
@@ -30,14 +31,14 @@ my $yacc;
 if (!($yacc = Config::AutoConf->check_prog_yacc())) {
 	die "I need one of bison, byacc or yacc. Please install one!\n" 	
 } else {
-	print " found\n"
+	print " [found]\n"
 }
 
 print "Checking for a working ncurses library...";
 if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 	die "I need ncurses library. Please install it!\n" 	
 } else {
-	print " found\n"
+	print " [found]\n"
 }
 
 
@@ -55,8 +56,13 @@ my @agrep_source = qw~asearch.c    asearch1.c     bitap.c     checkfile.c
 my @agrep_objects = map {
 		print " - agrep/$_\n";
 		$cc->compile(   source => "agrep/$_")} @agrep_source;
+		
+print " - building [agrep] binary\n";
 $cc->link_executable(objects  => [@agrep_objects],
 					 exe_file => "agrep/agrep");
+
+
+
 
 ### JSpell
 print "\nCompiling Jspell.\n";
@@ -67,9 +73,6 @@ print `$cmd`;
 
 interpolate('src/jsconfig.in','src/jsconfig.h',%c_config);
 interpolate('scripts/jspell-dict.in','scripts/jspell-dict',%c_config);
-
-
-
 
 my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
                        defmt.c      hash.c      jslib.c     tree.c
@@ -82,10 +85,12 @@ my @jspell_objects = map {
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
+print " - building [jbuild] binary\n";
 $cc->link_executable(extra_linker_flags => '-lncurses',
                      objects => [@jspell_shared,'src/jbuild.c'], 
                      exe_file => "src/jbuild");
 
+print " - building [jspell] binary\n";
 $cc->link_executable(extra_linker_flags => '-lncurses',
                      objects => [@jspell_shared,'src/jmain.c'],  
                      exe_file => "src/jspell");

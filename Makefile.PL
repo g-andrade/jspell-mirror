@@ -31,7 +31,7 @@ BEGIN {
 	open M, "MANIFEST" or die "Weirdo. I can't read MANIFEST!";
 	while (<M>) {
 		chomp;
-		push @agrep, $_ if /^agrep.*[chy]$/;
+		push @agrep, $_ if /^agrep.*[ch]$/;
 		push @jspell, $_ if /^src/;
 	}
 	close M;
@@ -48,7 +48,7 @@ sub postamble {
 jspell: _jdummy_
 	\$(NOECHO) \$(NOOP)
 	
-_jdummy_: @agrep @jspell
+_jdummy_: @agrep @jspell scripts/build.pl
 	\$(PERL) scripts/build.pl
 
 MAKE_FRAG
