@@ -216,7 +216,7 @@ int Text, M, D;
                    /* match begin of line */
         }
       } /* while i < end ... */
-      strncpy(buffer, buffer+num_read, Maxline);
+      strncpy((char*)buffer, (char*)buffer+num_read, Maxline);
     } /* end while read()... */
   return;
   } /*  end if (D == 0) */
@@ -388,7 +388,7 @@ Nextchar: i=i+1;
         }
 Nextchar1: i=i+1;
     } /* while */
-    strncpy(buffer, buffer+num_read, Maxline);
+    strncpy((char*)buffer, (char*)buffer+num_read, Maxline);
   } /* while */
   return;
 } /* re1 */
@@ -482,7 +482,7 @@ int Text, M, D;
       ResidueSize = Maxline + num_read - lasti;
       if(ResidueSize > Maxline) {
            ResidueSize = Maxline;  }
-      strncpy(buffer+Maxline-ResidueSize, buffer+lasti, ResidueSize);
+      strncpy((char*)buffer+Maxline-ResidueSize, (char*)buffer+lasti, ResidueSize);
       lasti = Maxline - ResidueSize;
     } /* while */
   return;
@@ -589,7 +589,7 @@ Nextchar:
         }
 Nextchar1: i++;
     } /* while i < end */
-    strncpy(buffer, buffer+num_read, Maxline);
+    strncpy((char*)buffer, (char*)buffer+num_read, Maxline);
   } /* while  read() */
   return;
 } /* re */
@@ -621,7 +621,7 @@ int argc; char *argv[];
   unsigned char Pattern[MAXPAT], OldPattern[MAXPAT], temp[MAXPAT];
   
   initial_value();
-  strcpy(Progname, argv[0]);
+  strcpy((char*)Progname, argv[0]);
   if (argc < 2) usage();
   Pattern[0] = '\0';
   while(--argc > 0 && (*++argv)[0] == '-') {
@@ -649,7 +649,7 @@ int argc; char *argv[];
                       exit(2);
                     }
                     D_pattern[0] = '<';
-                    strcpy(D_pattern+1, argv[0]);
+                    strcpy((char*)D_pattern+1, argv[0]);
                     argc--;
                   } else {
                     if ((D_length = strlen(argv[0]+2)) > MaxDelimit) {
@@ -657,9 +657,9 @@ int argc; char *argv[];
                       exit(2);
                     }
                     D_pattern[0] = '<';
-                    strcpy(D_pattern+1, argv[0]+2);
+                    strcpy((char*)D_pattern+1, argv[0]+2);
                   } /* else */
-                  strcat(D_pattern, ">; ");
+                  strcat((char*)D_pattern, ">; ");
                   D_length++;   /* to count ';' as one */
                   break;
        case 'e' : argc--;
@@ -669,9 +669,9 @@ int argc; char *argv[];
 		  }
 		  if((++argv)[0][0] == '-') {
                        Pattern[0] = '\\';
-                       strcat(Pattern, (argv)[0]);
+                       strcat((char*)Pattern, (argv)[0]);
                   }
-                  else strcat(Pattern, argv[0]);
+                  else strcat((char*)Pattern, argv[0]);
                   break;
        case 'f' : PAT_FILE = ON;
 		  argv++;
@@ -692,7 +692,7 @@ int argc; char *argv[];
 		  }
 		  CONSTANT = ON;
 		  argv++;
-		  strcat(Pattern, argv[0]);
+		  strcat((char*)Pattern, argv[0]);
 		  if(argc > 1 && argv[1][0] == '-') {
 			fprintf(stderr, "%s: -k should be the last option in the command\n", Progname);
 			exit(2);
@@ -751,7 +751,7 @@ int argc; char *argv[];
   }
   if (!(PAT_FILE) && Pattern[0] == '\0') { /* Pattern not set with -e option */
     if (argc == 0) usage();
-    strcpy(Pattern, *argv); 
+    strcpy((char*)Pattern, *argv); 
     argc--;
     argv++;
   }
@@ -780,18 +780,18 @@ int argc; char *argv[];
           fprintf(stderr, "%s: malloc failure (you probably don't have enough memory)\n", Progname);
           exit(2);
         }
-        strcpy(Textfiles[Numfiles++], *argv++);
+        strcpy((char*)Textfiles[Numfiles++], *argv++);
 	   } /* else */
      } /* while (argc--) */
   } /* else */
   checksg(Pattern, D);       /* check if the pattern is simple */
-  strcpy(OldPattern, Pattern);
+  strcpy((char*)OldPattern, (char*)Pattern);
   if (SGREP == 0) {
       preprocess(D_pattern, Pattern);
-      strcpy(old_D_pat, D_pattern);
+      strcpy((char*)old_D_pat, (char*)D_pattern);
       M = maskgen(Pattern, D);
   }
-  else M = strlen(OldPattern);
+  else M = strlen((char*)OldPattern);
   if (PAT_FILE)  prepf(fp);
   if (Numfiles > 1) FNAME = ON;
   if (NOFILENAME) FNAME = 0;
@@ -804,7 +804,7 @@ int argc; char *argv[];
     }
     if(PAT_FILE) mgrep(fd);
     else {
-    	if(SGREP) sgrep(OldPattern, strlen(OldPattern), fd, D);
+    	if(SGREP) sgrep(OldPattern, strlen((char*)OldPattern), fd, D);
    	else      bitap(old_D_pat, Pattern, fd, M, D);
     }
     if (COUNT) {
@@ -814,14 +814,14 @@ int argc; char *argv[];
   } 
   else {
     for (i = 0; i < Numfiles; i++, close(fd), num_of_matched = 0) {
-      	strcpy(CurrentFileName, Textfiles[i]);
+      	strcpy((char*)CurrentFileName, (char*)Textfiles[i]);
       	if ((fd = open(Textfiles[i], 0)) <= 0) {
             fprintf(stderr, "%s: can't open file %s\n",Progname, Textfiles[i]);
       	} 
 	else { 
 	     	if(PAT_FILE) mgrep(fd);
 	     	else {
-             		if(SGREP) sgrep(OldPattern, strlen(OldPattern), fd, D);
+             		if(SGREP) sgrep(OldPattern, strlen((char*)OldPattern), fd, D);
              		else      bitap(old_D_pat, Pattern, fd, M, D);
 	        }
         	if (num_of_matched) NOMATCH = OFF;
@@ -844,17 +844,17 @@ int argc; char *argv[];
 	if(WORDBOUND || WHOLELINE || LINENUM || INVERSE) { 
 		SGREP = 0;	
       		preprocess(D_pattern, Pattern);
-      		strcpy(old_D_pat, D_pattern);
+      		strcpy((char*)old_D_pat, (char*)D_pattern);
       		M = maskgen(Pattern, D);
 	}
 	COUNT=ON; D=1;
 	while(D<M && D<=MaxError && num_of_matched == 0) {
     		for (i = 0; i < Numfiles; i++, close(fd)) {
-      			strcpy(CurrentFileName, Textfiles[i]);
+      			strcpy((char*)CurrentFileName, (char*)Textfiles[i]);
       			if ((fd = open(Textfiles[i], 0)) > 0) {
 	     			if(PAT_FILE) mgrep(fd);
 	     			else {
-             		    		if(SGREP) sgrep(OldPattern,strlen(OldPattern),fd,D);
+             		    		if(SGREP) sgrep(OldPattern,strlen((char*)OldPattern),fd,D);
              		    		else bitap(old_D_pat,Pattern,fd,M,D);
       				}
 			} 
@@ -873,11 +873,11 @@ int argc; char *argv[];
 		if(c != 'y') goto CONT;
 GO_AHEAD:
     		for (i = 0; i < Numfiles; i++, close(fd)) {
-      			strcpy(CurrentFileName, Textfiles[i]);
+      			strcpy((char*)CurrentFileName, (char*)Textfiles[i]);
       			if ((fd = open(Textfiles[i], 0)) > 0) {
 	     			if(PAT_FILE) mgrep(fd);
 	     			else {
-             		    		if(SGREP) sgrep(OldPattern,strlen(OldPattern),fd,D);
+             		    		if(SGREP) sgrep(OldPattern,strlen((char*)OldPattern),fd,D);
              		    		else bitap(old_D_pat,Pattern,fd,M,D);
 				}
       			} 
@@ -947,7 +947,7 @@ CHAR *Pattern; int D;
 {                          
   char c;
   int i, m;
-  m = strlen(Pattern);
+  m = strlen((char*)Pattern);
   if(!(PAT_FILE) && m <= D) {
       fprintf(stderr, "%s: size of pattern must be greater than number of errors\n", Progname);
       exit(2);

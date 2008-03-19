@@ -64,7 +64,7 @@ char buffer[Max_record+Max_record+BlockSize];
   D_Mask = ~D_Mask;
   FIRSTROUND = ON;
 
-  while ((num_read = fill_buf(fd, buffer + Max_record, Max_record)) > 0)
+  while ((num_read = fill_buf(fd,  (unsigned char*)buffer + Max_record, Max_record)) > 0)
   {
     i=Max_record; end = Max_record + num_read; 
     if(FIRSTROUND) {  i = Max_record - 1 ;

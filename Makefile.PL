@@ -21,8 +21,22 @@ WriteMakefile(
     clean               => { FILES => 'Lingua-Jspell-*' },
 );
 
-
 package MY; # so that "SUPER" works right
+
+our @agrep;
+our @jspell;
+
+BEGIN {
+	## Construct dependencies lists automagically
+	open M, "MANIFEST" or die "Weirdo. I can't read MANIFEST!";
+	while (<M>) {
+		chomp;
+		push @agrep, $_ if /^agrep.*[chy]$/;
+		push @jspell, $_ if /^src/;
+	}
+	close M;
+}
+
 sub top_targets {
     my $inherited = shift->SUPER::top_targets(@_);
     $inherited =~ s!^(config\s*::.*)$!$1 jspell!m;
@@ -30,12 +44,12 @@ sub top_targets {
 }
 
 sub postamble {
-    return <<'MAKE_FRAG';
+    return <<"MAKE_FRAG";
 jspell: _jdummy_
-	$(NOECHO) $(NOOP)
+	\$(NOECHO) \$(NOOP)
 	
-_jdummy_:
-	$(PERL) scripts/build.pl
+_jdummy_: @agrep @jspell
+	\$(PERL) scripts/build.pl
 
 MAKE_FRAG
 }

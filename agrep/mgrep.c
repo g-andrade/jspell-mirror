@@ -82,7 +82,7 @@ int fp;
     num_pat = p-1;
     p_size = MAXPAT;
     for(i=1 ; i <= num_pat; i++) {
-	p = strlen(patt[i]);
+	p = strlen((char*)patt[i]);
 	pat_len[i] = p;
 	if(p!=0 && p < p_size) p_size = p;
     }
@@ -127,7 +127,7 @@ int fd;
        if(start < 0) {
             start = 1; 
        }
-       strncpy(text+start, text+end, residue);
+       strncpy((char*)text+start, (char*)text+end, residue);
     } /* end of while(num_read = ... */
     text[MAXLINE] = '\n';
     text[start-1] = '\n';

@@ -20,7 +20,7 @@ for(i=0; i<WORD; i++) position[i].class[0] = '\0';
 for(i=0; i<WORD; i++) position[i].flag = 0;
 wildmask = NO_ERR_MASK = endposition = 0;
 No_error = 0;
-M = strlen(Pattern);
+M = strlen((char*)Pattern);
 if(NOUPPER) {
               for(i=0; i<M; i++) if(isalpha(Pattern[i])) 
                      if (isupper(Pattern[i])) Pattern[i] = tolower(Pattern[i]);

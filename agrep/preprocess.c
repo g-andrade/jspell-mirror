@@ -30,20 +30,20 @@ CHAR *D_pattern, *Pattern;
   int d_end ;  
   int IN_RANGE=0, EVEN=0, OR_AND=0;
   old_pat = Pattern; /* to remember the starting position */
-  m = strlen(Pattern);
+  m = strlen((char*)Pattern);
   for(i=0; i< m; i++) {
       if(Pattern[i] == '\\') i++;
       else if(Pattern[i] == '|' || Pattern[i] == '*' ) REGEX = ON;   
   }
-  r_pat = (CHAR *) malloc(strlen(Pattern)+2*strlen(D_pattern));
-  strcpy(temp, D_pattern);
-  d_end = t = strlen(temp);  /* size of D_pattern, including '; ' */
+  r_pat = (CHAR *) malloc(strlen((char*)Pattern)+2*strlen((char*)D_pattern));
+  strcpy((char*)temp, (char*)D_pattern);
+  d_end = t = strlen((char*)temp);  /* size of D_pattern, including '; ' */
   if (WHOLELINE) { temp[t++] = LANGLE; 
                    temp[t++] = NNLINE; 
                    temp[t++] = RANGLE;
                    temp[t] = '\0';
-                   strcat(temp, Pattern);
-                   m = strlen(temp);
+                   strcat((char*)temp, (char*)Pattern);
+                   m = strlen((char*)temp);
                    temp[m++] = LANGLE; 
                    temp[m++] = '\n'; 
                    temp[m++] = RANGLE; 
@@ -53,8 +53,8 @@ CHAR *D_pattern, *Pattern;
                       temp[t++] = WORDB; 
                       temp[t++] = RANGLE;
                       temp[t] = '\0'; }
-     strcat(temp, Pattern);
-     m = strlen(temp);
+     strcat((char*)temp, (char*)Pattern);
+     m = strlen((char*)temp);
      if (WORDBOUND) { temp[m++] = LANGLE; 
                       temp[m++] = WORDB; 
                       temp[m++] = RANGLE; }
@@ -91,7 +91,7 @@ CHAR *D_pattern, *Pattern;
   }
   Pattern[j++] = ANDPAT;
   old_D_pat[D_length] = '\0';
-  strcpy(D_pattern, old_D_pat);
+  strcpy((char*)D_pattern, (char*)old_D_pat);
   D_length++;
 /*
   Pattern[j++] = ' ';
@@ -206,7 +206,7 @@ CHAR *D_pattern, *Pattern;
         fprintf(stderr, "%s: regular expression too long\n", Progname);
         exit(2);
      }
-  strcpy(old_pat, Pattern); /* do real change to the Pattern to be returned */
+  strcpy((char*)old_pat, (char*)Pattern); /* do real change to the Pattern to be returned */
   return;
   } /* if regex */
 

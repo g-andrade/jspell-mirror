@@ -18,26 +18,32 @@ my %c_config = (PREFIX => $prefix);
 print "Building International Jspell $VERSION.\n";
 print "\nCompiling software for [$prefix].\n";
 
-print "\nChecking for a working C compiler.\n";
+print "Checking for a working C compiler...";
 if (not Config::AutoConf->check_cc()) {
 	die "I need a C compiler. Please install one!\n" 
+} else {
+	print " found\n"
 }
 
-print "\nChecking for a working YACC processor.\n";
+print "Checking for a working YACC processor...";
 my $yacc;
 if (!($yacc = Config::AutoConf->check_prog_yacc())) {
 	die "I need one of bison, byacc or yacc. Please install one!\n" 	
+} else {
+	print " found\n"
 }
 
-print "\nChecking for a working ncurses library.\n";
+print "Checking for a working ncurses library...";
 if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 	die "I need ncurses library. Please install it!\n" 	
+} else {
+	print " found\n"
 }
 
 
 
 # prepare a C compiler
-my $cc = ExtUtils::CBuilder->new();
+my $cc = ExtUtils::CBuilder->new(quiet => 1);
 
 
 ### AGREP
@@ -46,15 +52,17 @@ my @agrep_source = qw~asearch.c    asearch1.c     bitap.c     checkfile.c
                       compat.c     follow.c       main.c       maskgen.c
                       mgrep.c      parse.c        preprocess.c
                       sgrep.c      utilities.c~;
-my @agrep_objects = map {$cc->compile(source => "agrep/$_")} @agrep_source;
+my @agrep_objects = map {
+		print " - agrep/$_\n";
+		$cc->compile(   source => "agrep/$_")} @agrep_source;
 $cc->link_executable(objects  => [@agrep_objects],
 					 exe_file => "agrep/agrep");
 
 ### JSpell
 print "\nCompiling Jspell.\n";
 
+print " - parse.y -> y.tab.c\n";
 my $cmd = "cd src; $yacc parse.y";
-print "$cmd\n";
 print `$cmd`;
 
 interpolate('src/jsconfig.in','src/jsconfig.h',%c_config);
@@ -67,7 +75,9 @@ my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
                        defmt.c      hash.c      jslib.c     tree.c
                        dump.c       jbuild.c    jspell.c    sc-corr.c   xgets.c
                        gclass.c     jjflags.c   lookup.c    term.c      y.tab.c~;
-my @jspell_objects = map {$cc->compile(
+my @jspell_objects = map {
+	print " - src/$_\n";
+	$cc->compile(
 		extra_compiler_flags => '-DVERSION=\\"'.$VERSION.'\\"',
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		

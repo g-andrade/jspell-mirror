@@ -2,15 +2,13 @@
    expression and produce a DFA using the McNaughton-Yamada
    construction.						*/
 
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "re.h"
 
-extern char *strncpy(), *strcat(), *strcpy();
-extern int  strlen();
-
 #define TRUE	1
 
-extern char *malloc();
 extern Pset pset_union(); 
 extern int pos_cnt;
 extern Re_node parse();

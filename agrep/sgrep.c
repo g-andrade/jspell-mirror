@@ -87,7 +87,7 @@ CHARTYPE *pat;  int fd, m, D;
 	if(m > LONG_EXAC) m_preprocess(pat);
 	else prep_bm(pat, m);
     }
-    else if (DNA) prep4(pat, m);
+    else if (DNA) prep4((char*)pat, m);
 	 else 	if(m >= LONG_APPX) am_preprocess(pat);
 		else {
 			prep(pat, m, D);
@@ -119,7 +119,7 @@ CHARTYPE *pat;  int fd, m, D;
        if(start < MAXLINE) {
             start = MAXLINE; 
        }
-       strncpy(text+start, text+end, residue);
+       strncpy((char*)text+start, (char*)text+end, residue);
        start++;
     } /* end of while(num_read = ... */
     return;
@@ -329,7 +329,7 @@ int M, D ; register CHARTYPE *text, *textend, *pat;
                                     currentpos = i;
                                     if(i <= lastend) i = lastend;
                                     else {
-                                       s_output(text, &currentpos); 
+                                       s_output(text, (int*)&currentpos); 
                                        i = currentpos; 
                                     }
                                     lastend = i;
@@ -348,7 +348,7 @@ int M, D ; register CHARTYPE *text, *textend, *pat;
                                     if(FILENAMEONLY) { return; }
                                     if(i <= lastend) i = lastend;
                                     else {
-                                       s_output(text, &currentpos); 
+                                       s_output(text, (int*)&currentpos); 
                                        i = currentpos; 
                                     }
                                     lastend = i;
@@ -501,7 +501,7 @@ CHARTYPE *Pattern;
 {
 int i, j, m;
 unsigned hash;
-	m = strlen(Pattern);
+	m = strlen((char*)Pattern);
 	for (i = 1, Hashmask = 1 ; i<16 ; i++) Hashmask = (Hashmask << 1) + 1 ;
 	for (i = 0; i < MAXMEMBER_1; i++) MEMBER_1[i] = 0;
 	for (i = m-1; i>=0; i--) {
@@ -573,7 +573,7 @@ CHARTYPE *Pattern;
 {
 int i, j, m;
 unsigned hash;
-	m = strlen(Pattern);
+	m = strlen((char*)Pattern);
 	for (i = 0; i < MAX_SHIFT_2; i++) SHIFT_2[i] = m;
 	for (i = m-1; i>=1; i--) {
 		hash = Pattern[i];

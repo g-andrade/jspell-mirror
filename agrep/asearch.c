@@ -23,7 +23,7 @@ CHAR old_D_pat[]; int text; register unsigned D;
   if(D > 4) {
          asearch0(old_D_pat, text, D); 
          return;  }
-  D_length = strlen(old_D_pat);
+  D_length = strlen((char*)old_D_pat);
   buffer[Max_record-1] = '\n';
   D_Mask = D_endpos;
   for ( i=1; i<D_length; i++) D_Mask = (D_Mask<<1) | D_Mask;
@@ -49,7 +49,7 @@ CHAR old_D_pat[]; int text; register unsigned D;
 	}
         FIRSTROUND = OFF; }
     if (l < BlockSize) {
-        strncpy(buffer+end, old_D_pat, D_length);
+        strncpy((char*)buffer+end, (char*)old_D_pat, D_length);
         buffer[end+D_length] = '\0';
         end = end + D_length; }
     while (i < end )
@@ -170,7 +170,7 @@ Nextchar1: i=i+1;
        if(ResidueSize > Max_record) {
           ResidueSize = Max_record;
           TRUNCATE = ON;         }
-       strncpy(buffer+Max_record-ResidueSize, buffer+lasti, ResidueSize);
+       strncpy((char*)buffer+Max_record-ResidueSize, (char*)buffer+lasti, ResidueSize);
        lasti = Max_record - ResidueSize;
        if(lasti == 0)     lasti = 1; 
     }
@@ -188,7 +188,7 @@ CHAR old_D_pat[]; int text; register unsigned D;
   int printout_end;
   CHAR buffer[BlockSize+Max_record+1];
   
-  D_length = strlen(old_D_pat);
+  D_length = strlen((char*)old_D_pat);
   buffer[Max_record-1] = '\n';
   D_Mask = D_endpos;
   for ( i=1; i<D_length; i++) D_Mask = (D_Mask<<1) | D_Mask;
@@ -207,7 +207,7 @@ CHAR old_D_pat[]; int text; register unsigned D;
         i = Max_record - 1;
         FIRSTROUND = OFF; }
     if (l < BlockSize) {
-        strncpy(buffer+end, old_D_pat, D_length);
+        strncpy((char*)buffer+end, (char*)old_D_pat, D_length);
         buffer[end+D_length] = '\0';
         end = end + D_length; }
     while (i < end )
@@ -289,7 +289,7 @@ CHAR old_D_pat[]; int text; register unsigned D;
        if(ResidueSize > Max_record) {
           ResidueSize = Max_record;
           TRUNCATE = ON;         }
-       strncpy(buffer+Max_record-ResidueSize, buffer+lasti, ResidueSize);
+       strncpy((char*)buffer+Max_record-ResidueSize, (char*)buffer+lasti, ResidueSize);
        lasti = Max_record - ResidueSize;
        if(lasti == 0)     lasti = 1; 
     }
