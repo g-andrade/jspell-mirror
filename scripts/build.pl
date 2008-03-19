@@ -47,34 +47,20 @@ my @agrep_source = qw~asearch.c    asearch1.c     bitap.c     checkfile.c
                       mgrep.c      parse.c        preprocess.c
                       sgrep.c      utilities.c~;
 my @agrep_objects = map {$cc->compile(source => "agrep/$_")} @agrep_source;
-$cc->link_executable(objects => [@agrep_objects], exe_file => "agrep/agrep");
+$cc->link_executable(objects  => [@agrep_objects],
+					 exe_file => "agrep/agrep");
 
 ### JSpell
 print "\nCompiling Jspell.\n";
-# first we need to get a YACC/Bison
-# first let use luck and just "use" it
+
 my $cmd = "cd src; $yacc parse.y";
 print "$cmd\n";
 print `$cmd`;
 
-## Take jsconfig.in and create jsconfig.h
-open IN, "src/jsconfig.in" or die "Cannot open file [src/jsconfig.in] for reading.\n";
-open H,  ">src/jsconfig.h" or die "Cannot create file [src/jsconfig.h] for writing.\n";
-while(<IN>) {
-	s/\[%\s*(\S+)\s*%\]/$c_config{$1}/ge;
-	print H;
-}
-close H;
-close IN;
+interpolate('src/jsconfig.in','src/jsconfig.h',%c_config);
+interpolate('scripts/jspell-dict.in','scripts/jspell-dict',%c_config);
 
-open IN, "scripts/jspell-dict.in" or die "Cannot open file [...] for reading.\n";
-open PL,  ">scripts/jspell-dict" or die "Cannot create file [...] for writing.\n";
-while(<IN>) {
-	s/\[%\s*(\S+)\s*%\]/$c_config{$1}/ge;
-	print PL;
-}
-close PL;
-close IN;
+
 
 
 my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
@@ -97,18 +83,21 @@ $cc->link_executable(extra_linker_flags => '-lncurses',
 print "\nBuilt International Jspell $VERSION.\n";
 
 open TS, '>_jdummy_' or die ("Cant create timestamp [_jdummy_].\n");
-print TS localtime;
+print TS scalar(localtime);
 close TS;
-## Copy(from,to)
-# This might change in the future
-## %% my @executables = qw~src/jspell src/jbuild agrep/agrep~;
-## %% 
-## %% for my $exe (@executables) {
-## %% 	chmod 0755, $exe;
-## %% 	copy($exe, "blib/bin");
-## %% }
-## %% 
-## 
+
+sub interpolate {
+	my ($from, $to, %config) = @_;
+	
+	open FROM, $from or die "Cannot open file [$from] for reading.\n";
+	open TO, ">", $to or die "Cannot open file [$to] for writing.\n";
+	while (<FROM>) {
+		s/\[%\s*(\S+)\s*%\]/$config{$1}/ge;		
+		print TO;
+	}
+	close TO;
+	close FROM;
+}
 
 sub get_prefix {
 	my $prefix = undef;
