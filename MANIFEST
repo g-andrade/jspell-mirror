@@ -2,11 +2,15 @@ Changes
 MANIFEST
 Makefile.PL
 README
+
 lib/Lingua/Jspell.pm
+
 t/00.load.t
 t/pod-coverage.t
 t/pod.t
+
 scripts/build.pl
+scripts/jspell-dict.in
 
 agrep/agrep.1
 agrep/agrep.algorithms
