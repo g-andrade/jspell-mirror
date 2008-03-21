@@ -69,4 +69,4 @@ src/tgood.c
 src/tree.c
 src/version.h
 src/xgets.c
-src/y.tab.c
+# src/y.tab.c
