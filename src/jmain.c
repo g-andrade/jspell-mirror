@@ -20,9 +20,7 @@
 #include "jspell.h"
 #include "proto.h"
 
-#ifndef NOCURSES
 #include "myterm.h"
-#endif
 
 /**
  * @brief Main jspell code

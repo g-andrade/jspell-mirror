@@ -10,8 +10,8 @@
 #include "good.h"
 /* this #define is necessay to term.h */
 #define MAIN2
-#include "myterm.h"
 
+#include "myterm.h"
 
 
 static char *input(int l, int c, char *st_out, char *st, int max);
