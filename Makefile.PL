@@ -13,7 +13,7 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
 		'Config::AutoConf' => 0.07,
-		'ExtUtils::CBuilder' => 0.21,
+		'ExtUtils::CBuilder' => 0.22,
 		'File::Which' => 0,
         'Test::More' => 0,
     },
