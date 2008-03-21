@@ -26,13 +26,13 @@ if (not Config::AutoConf->check_cc()) {
 	print " [found]\n"
 }
 
-print "Checking for a working YACC processor...";
-my $yacc;
-if (!($yacc = Config::AutoConf->check_prog_yacc())) {
-	die "I need one of bison, byacc or yacc. Please install one!\n" 	
-} else {
-	print " [found]\n"
-}
+## print "Checking for a working YACC processor...";
+## my $yacc;
+## if (!($yacc = Config::AutoConf->check_prog_yacc())) {
+## 	die "I need one of bison, byacc or yacc. Please install one!\n" 	
+## } else {
+## 	print " [found]\n"
+## }
 
 print "Checking for a working ncurses library...";
 if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
@@ -69,9 +69,9 @@ $cc->link_executable(objects  => [@agrep_objects],
 ### JSpell
 print "\nCompiling Jspell.\n";
 
-print " - parse.y -> y.tab.c\n";
-my $cmd = "cd src; $yacc parse.y";
-print `$cmd`;
+#print " - parse.y -> y.tab.c\n";
+#my $cmd = "cd src; $yacc parse.y";
+#print `$cmd`;
 
 
 my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c

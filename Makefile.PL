@@ -40,7 +40,7 @@ BEGIN {
 	while (<M>) {
 		chomp;
 		push @agrep, $_ if /^agrep.*[ch]$/;
-		push @jspell, $_ if /^src/;
+		push @jspell, $_ if /^src.*[ch]$/;
 		push @scripts, $_ if /^scripts.*in$/;
 	}
 	close M;
@@ -65,6 +65,9 @@ installdic:
 
 jspell: _jdummy_
 	\$(NOECHO) \$(NOOP)
+	
+src/y.tab.c: src/parser.y
+	yacc src/parser.y
 	
 _jdummy_: @scripts @agrep @jspell scripts/build.pl
 	\$(PERL) scripts/build.pl
