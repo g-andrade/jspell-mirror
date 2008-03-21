@@ -12,8 +12,8 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/Lingua/Jspell.pm',
     PL_FILES            => {},
     PREREQ_PM => {
-		'Config::AutoConf' => 0.05,
-		'ExtUtils::CBuilder' => 0.22,
+		'Config::AutoConf' => 0.07,
+		'ExtUtils::CBuilder' => 0.21,
 		'File::Which' => 0,
         'Test::More' => 0,
     },
