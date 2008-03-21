@@ -26,18 +26,24 @@ if (not Config::AutoConf->check_cc()) {
 	print " [found]\n"
 }
 
-print "Checking for a working YACC processor...";
-my $yacc;
-if (!($yacc = Config::AutoConf->check_prog_yacc())) {
- 	die "I need one of bison, byacc or yacc. Please install one!\n" 	
-} else {
- 	print " [found]\n"
-}
 
+
+# print "Checking for a working YACC processor...";
+# my $yacc;
+# if (!($yacc = Config::AutoConf->check_prog_yacc())) {
+#  	die "I need one of bison, byacc or yacc. Please install one!\n" 	
+# } else {
+#  	print " [found]\n"
+# }
+
+my $LCURSES="";
+my $CCURSES="";
 print "Checking for a working ncurses library...";
 if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
-	die "I need ncurses library. Please install it!\n" 	
+	print " [not found]\n";
+	$CCURSES="-DNOCURSES ";
 } else {
+	$LCURSES="-lncurses";
 	print " [found]\n"
 }
 
@@ -69,10 +75,10 @@ $cc->link_executable(objects  => [@agrep_objects],
 ### JSpell
 print "\nCompiling Jspell.\n";
 
-print " - parse.y -> y.tab.c\n";
-my $cmd = "cd src; $yacc parse.y";
-print `$cmd`;
-
+## print " - parse.y -> y.tab.c\n";
+## my $cmd = "cd src; $yacc parse.y";
+## print `$cmd`;
+## 
 
 my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
                        defmt.c      hash.c      jslib.c     tree.c
@@ -81,17 +87,17 @@ my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
 my @jspell_objects = map {
 	print " - src/$_\n";
 	$cc->compile(
-		extra_compiler_flags => '-DVERSION=\\"'.$VERSION.'\\"',
+		extra_compiler_flags => $CCURSES.' -DVERSION=\\"'.$VERSION.'\\"',
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
 print " - building [jbuild] binary\n";
-$cc->link_executable(extra_linker_flags => '-lncurses',
+$cc->link_executable(extra_linker_flags => "$LCURSES $CCURSES",
                      objects => [@jspell_shared,'src/jbuild.c'], 
                      exe_file => "src/jbuild");
 
 print " - building [jspell] binary\n";
-$cc->link_executable(extra_linker_flags => '-lncurses',
+$cc->link_executable(extra_linker_flags => "$LCURSES $CCURSES",
                      objects => [@jspell_shared,'src/jmain.c'],  
                      exe_file => "src/jspell");
 
