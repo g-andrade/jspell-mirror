@@ -17,7 +17,7 @@ static int inited = 0;
 static int verify_hash()
 /* verifica se esta tudo bem com o hashheader */
 {
-   if (hashsize < sizeof hashheader) {
+   if (hashsize < sizeof(hashheader)) {
       if (hashsize < 0)
          fprintf(stderr, LOOKUP_C_CANT_READ, hashname);
       else if (hashsize == 0)
@@ -78,7 +78,7 @@ static int creat_empty_table()
 
 static int read_hash_header(int hashfd)
 {
-   hashsize = read(hashfd, (char *) &hashheader, sizeof hashheader);
+   hashsize = read(hashfd, (char *) &hashheader, sizeof(hashheader));
    if (verify_hash() == -1) return -1;
 
    if (nodictflag) {  /* d'ont remove these {} */

@@ -600,36 +600,37 @@ static void det_prefstringchar(char *preftype)
 
 static void process_LibDict(char *LibDict, char *cpd)
 {
-    char *p;
-    static char libdictname[sizeof DEFHASH];
+	char *p;
+	static char libdictname[sizeof DEFHASH];
     
-    if (LibDict == NULL) {
-	strcpy(libdictname, DEFHASH);
-	LibDict = libdictname;
-	p = rindex(libdictname, '.');
-	if (p != NULL  &&  strcmp(p, ".hash") == 0)
-	    *p = '\0'; /* Don't want ext. in LibDict */
+	if (LibDict == NULL) {
+		strcpy(libdictname, DEFHASH);
+		LibDict = libdictname;
+		p = rindex(libdictname, '.');
+		if (p != NULL  &&  strcmp(p, ".hash") == 0)
+	    	*p = '\0'; /* Don't want ext. in LibDict */
     }
     if (!nodictflag)
-	treeinit(cpd, LibDict);
+		treeinit(cpd, LibDict);
 }
 
 static int process_a_e_and_d_flags(void) 
 {
-    int res;
+	int res;
     
-    res = 0;
-    if (aflag) {
-	if (!islib) {
-	    askmode();
-	    treeoutput();
+	res = 0;
+	if (aflag) {
+		if (!islib) {
+			askmode();
+			treeoutput();
+		}
+	} else if (eflag) {
+		expandmode(eflag);
+	} else if (dumpflag) {
+		dumpmode();
+	} else {
+		res = 1;		
 	}
-    } else if (eflag) {
-	expandmode(eflag);
-    } else if (dumpflag) {
-	dumpmode();
-    } else
-	res = 1;
     return res;
 }
 
