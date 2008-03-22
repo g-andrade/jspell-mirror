@@ -41,10 +41,14 @@ my $CCURSES="";
 print "Checking for a working ncurses library...";
 if (not Config::AutoConf->check_lib("ncurses", "tgoto")) {
 	print " [not found]\n";
-	$CCURSES="-DNOCURSES ";
+	$CCURSES="-DNOCURSES";
 } else {
 	$LCURSES="-lncurses";
 	print " [found]\n"
+}
+
+if ($^O eq "MSWin32") {
+	$CCURSES.=" -D__WIN__"
 }
 
 interpolate('src/jsconfig.in','src/jsconfig.h',%c_config);
@@ -81,7 +85,7 @@ print "\nCompiling Jspell.\n";
 ## 
 
 my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
-                       defmt.c      hash.c      jslib.c     tree.c
+                       defmt.c      hash.c      jslib.c     tree.c 
                        dump.c       jbuild.c    jspell.c    sc-corr.c   xgets.c
                        gclass.c     jjflags.c   lookup.c    term.c      y.tab.c~;
 my @jspell_objects = map {
@@ -91,15 +95,15 @@ my @jspell_objects = map {
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
-print " - building [jbuild] binary\n";
-$cc->link_executable(extra_linker_flags => "$LCURSES $CCURSES",
-                     objects => [@jspell_shared,'src/jbuild.c'], 
-                     exe_file => "src/jbuild");
-
 print " - building [jspell] binary\n";
-$cc->link_executable(extra_linker_flags => "$LCURSES $CCURSES",
-                     objects => [@jspell_shared,'src/jmain.c'],  
+$cc->link_executable(extra_linker_flags => "$LCURSES$CCURSES",
+                     objects => [@jspell_shared,'src/jmain.o'],  
                      exe_file => "src/jspell");
+					 
+print " - building [jbuild] binary\n";
+$cc->link_executable(extra_linker_flags => "$LCURSES$CCURSES",
+                     objects => [@jspell_shared,'src/jbuild.o'], 
+                     exe_file => "src/jbuild");
 
 print "\nBuilt International Jspell $VERSION.\n";
 

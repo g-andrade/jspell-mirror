@@ -900,11 +900,11 @@ static void open_outfile(struct stat *statbuf)
     
     fstat(fileno(infile), statbuf);
     strcpy(tempfile, TEMPNAME);
-    file_descriptor = mkstemp(tempfile);
+    file_descriptor = mkstemps(tempfile,0);
     if ((outfile = fdopen(file_descriptor, "w")) == NULL) {
-	fprintf(stderr, CANT_CREATE, tempfile);
-	sleep((unsigned) 2);
-	return;
+		fprintf(stderr, CANT_CREATE, tempfile);
+		sleep((unsigned) 2);
+		return;
     }
     chmod(tempfile, statbuf->st_mode);
 }
@@ -915,23 +915,23 @@ static void update_file(char *filename, struct stat *statbuf)
     int c;
 
     if ((infile = fopen(tempfile, "r")) == NULL) {
-	fprintf(stderr, ISPELL_C_TEMP_DISAPPEARED, tempfile);
-	sleep((unsigned) 2);
-	return;
+		fprintf(stderr, ISPELL_C_TEMP_DISAPPEARED, tempfile);
+		sleep((unsigned) 2);
+		return;
     }
 
     sprintf(bakfile, "%s%s", filename, BAKEXT);
 
     if (strncmp(filename, bakfile, MAXNAMLEN) != 0)
-	unlink(bakfile);        /* unlink so we can write a new one. */
+		unlink(bakfile);        /* unlink so we can write a new one. */
     if (link(filename, bakfile) == 0)
-	unlink(filename);
+		unlink(filename);
     
     /* if we can't write new, preserve .bak regardless of xflag */
     if ((outfile = fopen(filename, "w")) == NULL) {
-	fprintf(stderr, CANT_CREATE, filename);
-	sleep((unsigned) 2);
-	return;
+		fprintf(stderr, CANT_CREATE, filename);
+		sleep((unsigned) 2);
+		return;
     }
 
     chmod(filename, statbuf->st_mode);
