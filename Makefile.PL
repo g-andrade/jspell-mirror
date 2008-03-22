@@ -5,6 +5,10 @@ use ExtUtils::MakeMaker;
 # NOT SURE IF I WANT THIS OR NOT
 # unlink "_jdummy_";
 
+my $EXE = "";
+$EXE=".exe" if $^O eq "MSWin32";
+
+
 WriteMakefile(
     NAME                => 'Lingua::Jspell',
     AUTHOR              => 'Projecto Natura',
@@ -17,7 +21,7 @@ WriteMakefile(
 		'File::Which' => 0,
         'Test::More' => 0,
     },
-	EXE_FILES           => ['src/jspell','src/jbuild','agrep/agrep', 'scripts/jspell-dict'],
+	EXE_FILES           => ["src/jspell$EXE","src/jbuild$EXE","agrep/agrep$EXE", 'scripts/jspell-dict'],
 	MAN1PODS            => {
 		'src/jspell.pod'      => 'blib/man1/jspell.1',
 		'src/jspellaff.pod'   => 'blib/man1/jspellaff.1',
