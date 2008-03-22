@@ -557,7 +557,7 @@ static int pr_pre_expansion(
       printf("%s%s", croot, SEP1);
    strcpy(class_aux, ichartosstr(flent->class, 1));
    if (option != 4) {
-      strcpy(root_info, ichartosstr(gentable[flent->flagbit].class, 0));
+      strcpy(root_info, ichartosstr(gentable[flent->flagbit].jclass, 0));
       print_expansion(croot, tword, extra, root_info, class_aux, "");
    }
    *put_sep = 1;
@@ -653,7 +653,7 @@ static int pr_suf_expansion(
       printf("%s%s", croot, SEP1);
    if (option != 4) {
       strcpy(class_aux, ichartosstr(flent->class, 1));
-      strcpy(root_info, ichartosstr(gentable[flent->flagbit].class, 0));
+      strcpy(root_info, ichartosstr(gentable[flent->flagbit].jclass, 0));
       print_expansion(croot, tword, extra, root_info, pre_class, class_aux);
    }
    *put_sep = 1;

@@ -513,7 +513,7 @@ int do_replace_all(char *ctok, ichar_t *itok, char **curchar, char *begintoken)
 
    mk_upper(itok, nitok);
    if ((d = treelookup(nitok, &repl))) {
-      strcpy(ctok, ichartosstr(strtosichar(d->class, 1), 0));
+      strcpy(ctok, ichartosstr(strtosichar(d->jclass, 1), 0));
       replace_token(contextbufs[0], begintoken, ctok, curchar);
       return 1;
    }

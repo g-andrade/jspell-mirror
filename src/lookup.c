@@ -156,7 +156,7 @@ static void init_words(int hashfd)
             dp->word = &hashstrings[ind[0]];
 /*            printf("DEB- dp->word = %s\n", dp->word); */
 
-            if (n0 == 2 || n0 == 3) dp->class = &hashstrings[ind[1]];
+            if (n0 == 2 || n0 == 3) dp->jclass = &hashstrings[ind[1]];
 /*            else                    dp->class = NULL; */ /* is already null */
             if (n0 == 3)            dp->next = &hashtbl[ind[2]];
             else if (n0 == 4)       dp->next = &hashtbl[ind[1]];
@@ -188,9 +188,9 @@ static int read_generic_flag_info(int hashfd)
    for (i = 0; i < MASKBITS; i++) {
       if (read(hashfd, (char *) &(gentable[i].classl), sizeof(short)) ==
                                                        sizeof(short)) {
-         gentable[i].class = (ichar_t *) malloc(
+         gentable[i].jclass = (ichar_t *) malloc(
                               sizeof(ichar_t) * (gentable[i].classl + 1));
-         if (read(hashfd, (char *) gentable[i].class,
+         if (read(hashfd, (char *) gentable[i].jclass,
                   ((unsigned) (gentable[i].classl)+1) * sizeof(ichar_t))
              != (gentable[i].classl+1) * sizeof(ichar_t))
          {

@@ -152,7 +152,7 @@ void tree_saw_off(register ichar_t *word);
 struct dent {   /* dictionary entry */
    struct dent *next;
    char *   word;
-   char *   class;  /*CHANGE NEW*/
+   char *   jclass;  /*CHANGE NEW*/
    char *   comm;   /* comments*/  /*CHANGE NEW*/
    MASKTYPE mask[MASKSIZE];
 #ifdef FULLMASKSET
@@ -263,7 +263,7 @@ extern hash_info pers,   /* personal dictionary */
  * Language tables used to encode prefix and suffix information.
  */
 struct genflagent { /*CHANGE*/ /* NEW structure */
-   ichar_t * class;                  /* Class of flag */
+   ichar_t * jclass;                  /* Class of flag */
    short     classl;                 /* Length of class */
 };
 

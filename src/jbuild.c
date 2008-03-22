@@ -161,8 +161,8 @@ static void write_gentable(void)
     for (i = 0; i < MASKBITS; i++) {
         /* printf("gentable[i].classl = %d", gentable[i].classl); */
         fwrite((char *) &(gentable[i].classl), 1, sizeof(short), houtfile);
-        if (gentable[i].class)
-            fwrite((char *) gentable[i].class, gentable[i].classl + 1,
+        if (gentable[i].jclass)
+            fwrite((char *) gentable[i].jclass, gentable[i].classl + 1,
                    sizeof(ichar_t), houtfile);
         else
             fwrite((char *) aux, 1, sizeof(ichar_t), houtfile);
@@ -306,12 +306,12 @@ static int put_class_strings(int strptr)
     int i, n;
 
     for (i = 0, dp = hashtbl;  i < hashsize;  i++, dp++) {
-        if (dp->class == NULL)
-            dp->class = (char *) -1;
+        if (dp->jclass == NULL)
+            dp->jclass = (char *) -1;
         else {
-            n = strlen(dp->class) + 1;
-            fwrite(dp->class, n, 1, houtfile);
-            dp->class = (char *) strptr;
+            n = strlen(dp->jclass) + 1;
+            fwrite(dp->jclass, n, 1, houtfile);
+            dp->jclass = (char *) strptr;
             strptr += n;
         }
     }
@@ -365,8 +365,8 @@ static int write_dent(register struct dent *dp)
 
         ind[0] = (int) dp->word;
         i = 1;
-        if (dp->class != (char *) -1) {
-            ind[(int)i] = (int) dp->class;
+        if (dp->jclass != (char *) -1) {
+            ind[(int)i] = (int) dp->jclass;
             i++;
         }
 
@@ -642,7 +642,7 @@ static void collision_treatement(struct dent *d, register struct dent *dp, int h
         dp = dp->next;
     }
 
-    if (dp != NULL && strcmp(d->class, dp->class) == 0) {  /* we should combine only if class is equal */
+    if (dp != NULL && strcmp(d->jclass, dp->jclass) == 0) {  /* we should combine only if class is equal */
         /* A different capitalization is already in the dictionary.
          * Combine capitalizations.  */
         if (combinecaps(dp, d) < 0)

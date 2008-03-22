@@ -52,7 +52,7 @@ interpolate('scripts/jspell-dict.in','scripts/jspell-dict',%c_config);
 interpolate('scripts/installdic.in','scripts/installdic.pl',%c_config);
 
 # prepare a C compiler
-my $cc = ExtUtils::CBuilder->new(quiet => 1);
+my $cc = ExtUtils::CBuilder->new(quiet => 0);
 
 
 ### AGREP
