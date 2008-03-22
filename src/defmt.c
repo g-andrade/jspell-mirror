@@ -611,15 +611,15 @@ void get_info(struct success hit) {
     i = 0;
     pre_class[0] = suf_class[0] = suf2_class[0] = '\0';   /* null string */
     if (hit.prefix) {
-	ichartostr(pre_class, (hit.prefix)->class, (hit.prefix)->classl+1, 1);
+	ichartostr(pre_class, (hit.prefix)->jclass, (hit.prefix)->classl+1, 1);
 	used_flags[i++] = BITTOCHAR(hit.prefix->flagbit);
     }
     if (hit.suffix) {
-	ichartostr(suf_class, (hit.suffix)->class, (hit.suffix)->classl+1, 1);
+	ichartostr(suf_class, (hit.suffix)->jclass, (hit.suffix)->classl+1, 1);
 	used_flags[i++] = BITTOCHAR(hit.suffix->flagbit);
     }
     if (hit.suffix2) {
-	ichartostr(suf2_class, (hit.suffix2)->class, (hit.suffix2)->classl+1, 1);
+	ichartostr(suf2_class, (hit.suffix2)->jclass, (hit.suffix2)->classl+1, 1);
 	used_flags[i++] = BITTOCHAR(hit.suffix2->flagbit);
     }
     used_flags[i] = '\0';

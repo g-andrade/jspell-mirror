@@ -192,9 +192,9 @@ static int write_suffixs(int *st)
         }
 
         if (fentry->classl) {
-            fwrite((char *) fentry->class, fentry->classl + 1,
+            fwrite((char *) fentry->jclass, fentry->classl + 1,
                    sizeof(ichar_t), houtfile);
-            fentry->class = (ichar_t *) strptr;
+            fentry->jclass = (ichar_t *) strptr;
             strptr += (fentry->classl + 1) * sizeof(ichar_t);
         }
 
@@ -232,9 +232,9 @@ static int write_prefixs(int *st)
         }
 
         if (fentry->classl) {
-            fwrite((char *) fentry->class, fentry->classl + 1,
+            fwrite((char *) fentry->jclass, fentry->classl + 1,
                    sizeof(ichar_t), houtfile);
-            fentry->class = (ichar_t *) strptr;
+            fentry->jclass = (ichar_t *) strptr;
             strptr += (fentry->classl + 1) * sizeof(ichar_t);
         }
 

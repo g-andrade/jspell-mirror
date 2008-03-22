@@ -273,7 +273,7 @@ struct flagent
 {
    ichar_t * strip;                  /* String to strip off */
    ichar_t * affix;                  /* Affix to append */
-   ichar_t * class;                  /* Class of affix */ /*CHANGE*/
+   ichar_t * jclass;                 /* Class of affix */ /*CHANGE*/
    short     flagbit;                /* Flag bit this ent matches */
    short     stripl;                 /* Length of strip */
    short     affl;                   /* Length of affix */

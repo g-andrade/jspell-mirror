@@ -484,7 +484,7 @@ void flagpr(
       suf2flag = 0;
    }
    else {
-      suf2class = rhits[act_rec]->class;
+      suf2class = rhits[act_rec]->jclass;
       suf2flag = BITTOCHAR(rhits[act_rec]->flagbit);
    }
 

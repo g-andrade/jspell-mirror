@@ -120,7 +120,7 @@ void treat_affix_rule(struct flagent *cond, ichar_t *strip,
    }
    else
       cond->affix = NULL;
-   cond->class = class;
+   cond->jclass = class;
    cond->classl = icharlen(class);
    /*
    * As a special optimization (and a concession to those who the syntax that

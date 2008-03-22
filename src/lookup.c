@@ -269,9 +269,9 @@ static int act_all_entry(void)
       else
          entry->affix = NULL;
       if (entry->classl)
-         entry->class = (ichar_t *) &hashstrings[(int) entry->class];
+         entry->jclass = (ichar_t *) &hashstrings[(int) entry->jclass];
       else
-         entry->class = NULL;
+         entry->jclass = NULL;
    }
 
    /*
