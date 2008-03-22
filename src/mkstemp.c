@@ -1,3 +1,11 @@
+#include <fcntl.h>
+#include <sys/types.h>
+#include <assert.h>
+
+#include <errno.h>
+#ifndef __set_errno
+# define __set_errno(Val) errno = (Val)
+#endif
 
 static const char letters[] =
 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
