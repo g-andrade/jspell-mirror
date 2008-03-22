@@ -67,7 +67,7 @@ jspell: _jdummy_
 	\$(NOECHO) \$(NOOP)
 	
 src/y.tab.c: src/parse.y
-	yacc src/parse.y
+	yacc src/parse.y -o src/y.tab.c
 	
 _jdummy_: @scripts @agrep @jspell scripts/build.pl
 	\$(PERL) scripts/build.pl
