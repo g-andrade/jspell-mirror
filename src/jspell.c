@@ -894,13 +894,17 @@ static void det_readonly_access(char *filename)
     }
 }
 
+#ifdef __WIN__
+#include "mkstemp.c"
+#endif
+
 static void open_outfile(struct stat *statbuf)
 {
     int file_descriptor;
     
     fstat(fileno(infile), statbuf);
     strcpy(tempfile, TEMPNAME);
-    file_descriptor = mkstemps(tempfile,0);
+    file_descriptor = mkstemp(tempfile);
     if ((outfile = fdopen(file_descriptor, "w")) == NULL) {
 		fprintf(stderr, CANT_CREATE, tempfile);
 		sleep((unsigned) 2);
