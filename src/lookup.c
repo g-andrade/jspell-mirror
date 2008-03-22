@@ -78,7 +78,8 @@ static int creat_empty_table()
 
 static int read_hash_header(int hashfd)
 {
-   hashsize = read(hashfd, (char *) &hashheader, sizeof(hashheader));
+   /* 20080322 - WAS: hashsize = read(hashfd, (char *) &hashheader, sizeof(hashheader)); */
+   hashsize = read(hashfd, (void*) &hashheader, sizeof(hashheader));
    if (verify_hash() == -1) return -1;
 
    if (nodictflag) {  /* d'ont remove these {} */
