@@ -22,6 +22,7 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "jsconfig.h"
 #include "jspell.h"
@@ -900,7 +901,11 @@ static void open_outfile(struct stat *statbuf)
     
     fstat(fileno(infile), statbuf);
     strcpy(tempfile, TEMPNAME);
+#ifdef __WIN__
+	file_descriptor = open(mktemp(tempfile),O_CREAT | O_RDWR)
+#else
     file_descriptor = mkstemp(tempfile);
+#endif
     if ((outfile = fdopen(file_descriptor, "w")) == NULL) {
 		fprintf(stderr, CANT_CREATE, tempfile);
 		sleep((unsigned) 2);
