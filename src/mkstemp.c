@@ -1,6 +1,12 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <assert.h>
+#include <sys/time.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+
+
 
 #include <errno.h>
 #ifndef __set_errno
@@ -11,7 +17,7 @@ static const char letters[] =
 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 int
-__gen_tempname (char *tmpl, int flags, int kind)
+__gen_tempname (char *tmpl)
 {
 	int len;
 	char *XXXXXX;
@@ -69,7 +75,7 @@ __gen_tempname (char *tmpl, int flags, int kind)
 		XXXXXX[4] = letters[v % 62];
 		v /= 62;
 		XXXXXX[5] = letters[v % 62];
-		fd = __open (tmpl, (flags & ~ACCESSPERMS) | O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
+		fd = __open (tmpl, (0 & ~ACCESSPERMS) | O_RDWR | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR);
 
 		if (fd >= 0) {
 			__set_errno (save_errno);
@@ -85,6 +91,6 @@ __gen_tempname (char *tmpl, int flags, int kind)
 
 
 int mkstemp (char *template) {
-	return __gen_tempname (template, 0, 0);
+	return __gen_tempname (template);
 }
 
