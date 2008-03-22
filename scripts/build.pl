@@ -91,7 +91,7 @@ my @jspell_source = qw~correct.c    good.c      jmain.c     makedent.c  tgood.c
 my @jspell_objects = map {
 	print " - src/$_\n";
 	$cc->compile(
-		extra_compiler_flags => $CCURSES.' -DVERSION=\\"'.$VERSION.'\\"',
+		extra_compiler_flags => $CCURSES.' -DVERSION=\\"'.$VERSION.'\\" -Wall',
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 

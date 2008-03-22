@@ -791,7 +791,7 @@ int my_main(int argc, char *argv[], char lib)
     }
 
     if (!argc  &&  !lflag  &&  !aflag   &&  !eflag  &&  !dumpflag)
-	usage(Cmd);
+		usage(Cmd);
 
     verify_files(argc, argv);
 
@@ -801,32 +801,32 @@ int my_main(int argc, char *argv[], char lib)
     det_prefstringchar(preftype);
 
     if (prefstringchar < 0)
-	defdupchar = 0;
+		defdupchar = 0;
     else
-	defdupchar = prefstringchar;
+		defdupchar = prefstringchar;
 
     if (missingspaceflag < 0)
-	missingspaceflag = hashheader.defspaceflag;
+		missingspaceflag = hashheader.defspaceflag;
     if (tryhardflag < 0)
-	tryhardflag = hashheader.defhardflag;
+		tryhardflag = hashheader.defhardflag;
 
     initckch(wchars);
 
     process_LibDict(LibDict, cpd);
 
     if (process_a_e_and_d_flags() == 0)
-	return 0;
+		return 0;
 
     if (!islib)
-	setbuf(stdout, outbuf);
+		setbuf(stdout, outbuf);
 
     /* process lflag (also used with the -c option) */
     if (lflag) {
-	infile = stdin;
-	outfile = stdout;
-	if (!islib)
-	    checkfile();
-	return 0;
+		infile = stdin;
+		outfile = stdout;
+		if (!islib)
+	    	checkfile();
+		return 0;
     }
 
     /* n. of parameters advanced */

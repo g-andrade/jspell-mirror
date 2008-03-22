@@ -137,7 +137,7 @@ typedef unsigned short  ichar_t;        /* Internal character */
 
 /* this should be modified if number of words >= 65535 */
 /* era.. unsigned short.. mas como o jslib tem unsigned int :-| */
-/* typedef unsigned int ID_TYPE;      /* NEW */  
+/* typedef unsigned int ID_TYPE;      --  NEW */  
 
 char *advance_beg(char *buf);
 int my_main(int argc, char *argv[], char lib);
