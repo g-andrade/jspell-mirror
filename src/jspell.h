@@ -498,14 +498,14 @@ EXTERN struct flagent *rhits[MAX_HITS]; /* table of hits gotten in lookup */
 EXTERN char *  hashstrings;           /* Strings in hash table */
 EXTERN struct hashheader hashheader;  /* Header of hash table */
 EXTERN struct dent *     hashtbl;     /* Main hash table, for dictionary */
-EXTERN int     hashsize;              /* Size of main hash table */
+EXTERN int    hashsize;               /* Size of main hash table */
 
 EXTERN char    hashname[MAXPATHLEN]; /* Name of hash table file */
 
 EXTERN int     aflag;               /* NZ if -a or -A option specified */
 EXTERN int     cflag;               /* NZ if -c (crunch) option */
-EXTERN int     Jflag;               /* NZ if -J option specified JJoao */
-EXTERN int     showflags;           /* NZ if -z option */
+/* EXTERN int     Jflag;     */          /* NZ if -J option specified JJoao */
+/* EXTERN int     showflags;   */        /* NZ if -z option */
 EXTERN int     lflag;               /* NZ if -l (list) option */
 EXTERN int     incfileflag;         /* whether xgets() acts exactly like gets() */
 EXTERN int     nodictflag;          /* NZ if dictionary not needed */

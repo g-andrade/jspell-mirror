@@ -29,13 +29,13 @@ struct stat dstat;
 struct stat cstat;
 
 /** Number of entries to go in hash table */
-int hashsize;
+/* int hashsize; */
 
 /** Header of hash table being built */
-struct hashheader hashheader;   
+/* struct hashheader hashheader;   */
 
 /** Entries to go in hash table */
-struct dent *hashtbl;        
+/* struct dent *hashtbl;        */
 
 /** Name of dictionary file */
 char *Dfile;         
