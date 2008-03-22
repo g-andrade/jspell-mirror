@@ -92,12 +92,12 @@ my @jspell_objects = map {
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
 print " - building [jbuild] binary\n";
-$cc->link_executable(extra_linker_flags => $LCURSES,
+$cc->link_executable(extra_linker_flags => "$LCURSES $CCURSES",
                      objects => [@jspell_shared,'src/jbuild.c'], 
                      exe_file => "src/jbuild");
 
 print " - building [jspell] binary\n";
-$cc->link_executable(extra_linker_flags => $LCURSES,
+$cc->link_executable(extra_linker_flags => "$LCURSES $CCURSES",
                      objects => [@jspell_shared,'src/jmain.c'],  
                      exe_file => "src/jspell");
 
