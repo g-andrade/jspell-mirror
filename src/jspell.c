@@ -929,9 +929,11 @@ static void update_file(char *filename, struct stat *statbuf)
 
     if (strncmp(filename, bakfile, MAXNAMLEN) != 0)
 		unlink(bakfile);        /* unlink so we can write a new one. */
+#ifdef __WIN__
+#else
     if (link(filename, bakfile) == 0)
 		unlink(filename);
-    
+#endif
     /* if we can't write new, preserve .bak regardless of xflag */
     if ((outfile = fopen(filename, "w")) == NULL) {
 		fprintf(stderr, CANT_CREATE, filename);
