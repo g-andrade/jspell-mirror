@@ -894,10 +894,6 @@ static void det_readonly_access(char *filename)
     }
 }
 
-#ifdef __WIN__
-#include "mkstemp.c"
-#endif
-
 static void open_outfile(struct stat *statbuf)
 {
     int file_descriptor;
