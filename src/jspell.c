@@ -903,7 +903,7 @@ static void open_outfile(struct stat *statbuf)
     fstat(fileno(infile), statbuf);
     strcpy(tempfile, TEMPNAME);
 #ifdef __WIN__
-	file_descriptor = open(mktemp(tempfile),O_CREAT | O_RDWR);
+	file_descriptor = open(mktemp(tempfile),O_CREAT | O_RDWR | O_BINARY);
 #else
     file_descriptor = mkstemp(tempfile);
 #endif

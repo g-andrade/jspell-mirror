@@ -224,7 +224,11 @@ static int read_info_from_disk()
 {
    int hashfd;
 
-   if ((hashfd = open(hashname, 0)) < 0) {
+#ifdef __WIN__ 
+   	if ((hashfd = open(hashname, O_RDONLY | O_BINARY)) < 0) {
+#else
+	if ((hashfd = open(hashname, O_RDONLY)) < 0) {
+#endif
       fprintf(stderr, CANT_OPEN, hashname);
       return -1;
    }
