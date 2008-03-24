@@ -12,7 +12,7 @@ my $VERSION = get_version();
 my $prefix = get_prefix();
 
 # Prepare a hash with variables for substitution on jsconfig.in
-my %c_config = (PREFIX => $prefix);
+my %c_config = (PREFIX => $prefix, VERSION => $VERSION);
 
 # Show some information to the user about what are we doing.
 print "\n - Building International Jspell $VERSION - \n";
@@ -54,6 +54,7 @@ if ($^O eq "MSWin32") {
 interpolate('src/jsconfig.in','src/jsconfig.h',%c_config);
 interpolate('scripts/jspell-dict.in','scripts/jspell-dict',%c_config);
 interpolate('scripts/installdic.in','scripts/installdic.pl',%c_config);
+interpolate('jspell.pc.in','jspell.pc',%c_config);
 
 # prepare a C compiler
 my $cc = ExtUtils::CBuilder->new(quiet => 0);

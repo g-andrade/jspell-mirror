@@ -1,5 +1,8 @@
 Revision history for Lingua-Jspell
 
+	- Added jspell.pc to help other tools to detect the C library
+	  (although the library is not being built yet).
+
 1.50_05 March 23, 2008
 	- Portability to Microsoft Windows under development
 	  (although without ncurses => no interactive spell checking)
