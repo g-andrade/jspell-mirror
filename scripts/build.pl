@@ -96,13 +96,15 @@ my @jspell_objects = map {
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
-my $LIBEXT = ".so";
-$LIBEXT = ".dylib" if $^O =~ /darwin/i;
+unless ($^O =~ /MSWin32/i) {
+	my $LIBEXT = ".so";
+	$LIBEXT = ".dylib" if $^O =~ /darwin/i;
 
-print " - building [jspell] library\n";
-$cc->link(extra_linker_flags => "$LCURSES$CCURSES",
-          objects => [@jspell_shared],  
-          lib_file => "src/libjspell$LIBEXT");
+	print " - building [jspell] library\n";
+	$cc->link(extra_linker_flags => "$LCURSES$CCURSES",
+	          objects => [@jspell_shared],  
+	          lib_file => "src/libjspell$LIBEXT");	
+}
 
 print " - building [jspell] binary\n";
 $cc->link_executable(extra_linker_flags => "$LCURSES$CCURSES",
