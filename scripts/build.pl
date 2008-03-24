@@ -101,8 +101,8 @@ $LIBEXT = ".dylib" if $^O =~ /darwin/i;
 
 print " - building [jspell] library\n";
 $cc->link(extra_linker_flags => "$LCURSES$CCURSES",
-          objects => [@jspell_shared,'src/jmain.o'],  
-          lib_file => "src/jspell$LIBEXT");
+          objects => [@jspell_shared],  
+          lib_file => "src/libjspell$LIBEXT");
 
 print " - building [jspell] binary\n";
 $cc->link_executable(extra_linker_flags => "$LCURSES$CCURSES",
