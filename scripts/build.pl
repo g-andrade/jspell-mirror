@@ -57,7 +57,7 @@ interpolate('scripts/installdic.in','scripts/installdic.pl',%c_config);
 interpolate('jspell.pc.in','jspell.pc',%c_config);
 
 # prepare a C compiler
-my $cc = ExtUtils::CBuilder->new(quiet => 0);
+my $cc = ExtUtils::CBuilder->new(quiet => 1);
 
 
 ### AGREP
