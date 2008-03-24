@@ -96,6 +96,13 @@ my @jspell_objects = map {
 		source => "src/$_")} @jspell_source;
 my @jspell_shared = grep {$_ !~ /jbuild|jmain/ } @jspell_objects;		
 
+my $LIBEXT = ".so";
+
+#print " - building [jspell] library\n";
+#$cc->link(extra_linker_flags => "$LCURSES$CCURSES",
+#          objects => [@jspell_shared,'src/jmain.o'],  
+#          lib_file => "src/jspell$LIBEXT");
+
 print " - building [jspell] binary\n";
 $cc->link_executable(extra_linker_flags => "$LCURSES$CCURSES",
                      objects => [@jspell_shared,'src/jmain.o'],  
