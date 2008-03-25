@@ -71,4 +71,5 @@ src/tgood.c
 src/tree.c
 src/version.h
 src/xgets.c
+src/vars.c
 src/y.tab.c

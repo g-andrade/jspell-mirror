@@ -1,5 +1,10 @@
 Revision history for Lingua-Jspell
 
+1.50_07 March 25, 2008
+	- Added code to create dynamic library under Strawberry Win.
+    - Added a new C file to define the global variables, so that we
+      can build a library under windows.
+
 1.50_06 March 24, 2008
 	- Added code to create dynamic libraries under MacOS and Linux.
 	  (although the library is build it needs some core rewritting
