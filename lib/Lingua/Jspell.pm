@@ -3,6 +3,8 @@ package Lingua::Jspell;
 use warnings;
 use strict;
 
+use 5.008001;
+
 use POSIX qw(locale_h);
 setlocale(LC_CTYPE, "pt_PT");
 use locale;

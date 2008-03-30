@@ -2,6 +2,8 @@ use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
+use 5.008001;
+
 # NOT SURE IF I WANT THIS OR NOT
 # unlink "_jdummy_";
 
