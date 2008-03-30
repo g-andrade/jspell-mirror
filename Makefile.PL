@@ -8,6 +8,8 @@ use ExtUtils::MakeMaker;
 my $EXE = "";
 $EXE=".exe" if $^O eq "MSWin32";
 
+die "OS unsupported" if $EXE eq ".exe";
+
 
 WriteMakefile(
     NAME                => 'Lingua::Jspell',
