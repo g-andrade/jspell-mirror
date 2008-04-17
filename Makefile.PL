@@ -10,7 +10,7 @@ use 5.008001;
 my $EXE = "";
 $EXE=".exe" if $^O eq "MSWin32";
 
-die "OS unsupported" if $EXE eq ".exe";
+# die "OS unsupported" if $EXE eq ".exe";
 
 
 WriteMakefile(
