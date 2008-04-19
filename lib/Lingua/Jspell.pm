@@ -17,6 +17,8 @@ our %EXPORT_TAGS = (basic => [qw.onethat verif ok any2str hash2str.],
 use File::Which qw/which/;
 use IPC::Open3;
 
+=encoding utf8
+
 =head1 NAME
 
 Lingua::Jspell - Perl interface to the Jspell morphological analyser.
@@ -169,9 +171,9 @@ sub fea{
       for(split(/[,;] /,$clas)){
         ($rad,$cla)= m{(.+?)\!:*(.*)$};
 
-	# N„o sei porquÍ, mas acontece por vezes de $cla ser 'undef'
-	# N„o sei bem o que devemos fazer... de momento, estou simplesmente
-	# a passar o cÛdigo ‡ frente.
+	# N√£o sei porqu√™, mas acontece por vezes de $cla ser 'undef'
+	# N√£o sei bem o que devemos fazer... de momento, estou simplesmente
+	# a passar o c√≥digo √† frente.
 	if ($cla) {
 	  if ($cla =~ s/\/(.*)$//) { $flags = $1 }
 	  else                     { $flags = "" }
@@ -207,6 +209,11 @@ sub fea{
 }
 
 =head2 flags
+
+returns the set of morphological flag associated with the word.
+Each flag is related with a set of morphological rules.
+
+ @f = flags("gato")
 
 =cut
 
@@ -377,12 +384,12 @@ Note: This function is specific for the Portuguese jspell dictionary
 
 =cut
 
-# NOTA: Esta funcao È especÌfica da lÌngua TUGA!
+# NOTA: Esta funcao √© espec√≠fica da l√≠ngua TUGA!
 sub _cat2small {
   my %b = @_;
 
   if ($b{'CAT'} eq 'art') {
-    # Artigos: o lÈxico j· prevÍ todos...
+    # Artigos: o l√©xico j√° prev√™ todos...
     # por isso, NUNCA SE DEVE CHEGAR AQUI!!!
     return "ART";
     # 16 tags
@@ -390,7 +397,7 @@ sub _cat2small {
   } elsif ($b{'CAT'} eq 'card') {
     # Numerais cardinais:
     return "DNCNP";
-    # o lÈxico j· prevÍ os que flectem (1 e 2); o resto È tudo neutro plural.
+    # o l√©xico j√° prev√™ os que flectem (1 e 2); o resto √© tudo neutro plural.
 
   } elsif ($b{'CAT'} eq 'nord') {
     # Numerais ordinais:
@@ -433,7 +440,7 @@ sub _cat2small {
     return "\U$b{'CAT'}$b{'G'}$b{'N'}";
 
   } elsif ($b{'CAT'} eq 'np') {
-    # Nomes prÛprios:
+    # Nomes pr√≥prios:
     $b{'G'} = 'N' if $b{'G'} eq '_' || $b{'G'} eq '';
     $b{'N'} = 'N' if $b{'N'} eq '_' || $b{'N'} eq '';
     return "\U$b{'CAT'}$b{'G'}$b{'N'}";
@@ -467,11 +474,11 @@ sub _cat2small {
       $b{'T'} = 'N';
 
     } elsif ($b{'T'} eq 'ppa') {
-      # ParticÌpio Passado
+      # Partic√≠pio Passado
       $b{'T'} = 'PP';
 
     } elsif ($b{'T'} eq 'g') {
-      # Ger˙ndio
+      # Ger√∫ndio
       $b{'T'} = 'G';
 
     } elsif ($b{'T'} eq 'p') {
@@ -479,15 +486,15 @@ sub _cat2small {
       $b{'T'} = 'IH';
 
     } elsif ($b{'T'} eq 'pp') {
-      # modo indicativo: pretÈrito Perfeito
+      # modo indicativo: pret√©rito Perfeito
       $b{'T'} = 'IP';
 
     } elsif ($b{'T'} eq 'pi') {
-      # modo indicativo: pretÈrito Imperfeito
+      # modo indicativo: pret√©rito Imperfeito
       $b{'T'} = 'II';
 
     } elsif ($b{'T'} eq 'pmp') {
-      # modo indicativo: pretÈrito Mais-que-perfeito
+      # modo indicativo: pret√©rito Mais-que-perfeito
       $b{'T'} = 'IM';
 
     } elsif ($b{'T'} eq 'f') {
@@ -499,7 +506,7 @@ sub _cat2small {
       $b{'T'} = 'SH';
 
     } elsif ($b{'T'} eq 'pic') {
-      # modo conjuntivo (Se): pretÈrito Imperfeito
+      # modo conjuntivo (Se): pret√©rito Imperfeito
       $b{'T'} = 'SI';
 
     } elsif ($b{'T'} eq 'fc') {
@@ -518,47 +525,47 @@ sub _cat2small {
       # modo Infinitivo (Pessoal ou Presente): 
       $b{'T'} = 'PI';
 
-      # Futuro conjuntivo? SÛ se tiver um "se" antes! -> regras sint·cticas...
-      # modo&tempo n„o previstos ainda...
+      # Futuro conjuntivo? S√≥ se tiver um "se" antes! -> regras sint√°cticas...
+      # modo&tempo n√£o previstos ainda...
 
     } else {
       $b{'T'} = '_UNKNOWN';
     }
 
-    # converter 'P=1_3' em 'P=_': provisÛrio(?)!
-    $b{'P'} = '_' if $b{'P'} eq '1_3'; # ˙nico sÌtio com '_' como rhs!!!
+    # converter 'P=1_3' em 'P=_': provis√≥rio(?)!
+    $b{'P'} = '_' if $b{'P'} eq '1_3'; # √∫nico s√≠tio com '_' como rhs!!!
 
     return "\U$b{'CAT'}$b{'T'}$b{'G'}$b{'P'}$b{'N'}";
-    #                               GÈnero, sÛ para VPP.
+    #                               G√©nero, s√≥ para VPP.
     # +/- 70 tags
 
   } elsif ($b{'CAT'} eq 'prep') {
-    # PreposiÁıesπ:
+    # Preposi√ß√µes¬π:
     return "\UP";
 
   } elsif ($b{'CAT'} eq 'adv') {
-    # AdvÈrbios≤:
+    # Adv√©rbios¬≤:
     return "\UADV";
 
   } elsif ($b{'CAT'} eq 'con') {
-    # ConjunÁıes≤:
+    # Conjun√ß√µes¬≤:
     return "\UC";
 
   } elsif ($b{'CAT'} eq 'in') {
-    # InterjeiÁıesπ:
+    # Interjei√ß√µes¬π:
     return "\UI";
 
-    # π: n„o sei se a tag devia ser t„o atÛmica, mas para j· n„o h· confus„o!
+    # ¬π: n√£o sei se a tag devia ser t√£o at√≥mica, mas para j√° n√£o h√° confus√£o!
 
   } elsif ($b{'CAT'} =~ m/^cp(.*)/) {
-    # ContracÁıesπ:
+    # Contrac√ß√µes¬π:
     $b{'G'} = 'N' if $b{'G'} eq '_';
     $b{'N'} = 'N' if $b{'N'} eq '_';
     return "\U&$b{'G'}$b{'N'}";
 
-    # ≤: falta estruturar estes no prÛprio dicion·rio...
-    # Palavras do dicion·rio com categoria vazia ou sem categoria,
-    # palavras n„o existentes ou sequÍncias aleatÛrias de caracteres:
+    # ¬≤: falta estruturar estes no pr√≥prio dicion√°rio...
+    # Palavras do dicion√°rio com categoria vazia ou sem categoria,
+    # palavras n√£o existentes ou sequ√™ncias aleat√≥rias de caracteres:
 
   } elsif ($b{'CAT'} eq '') {
     return "\UUNDEFINED";
@@ -570,12 +577,35 @@ sub _cat2small {
 
 =head2 featags
 
+Given a word, returns a set of analysis. Each analysis is a morphosintatic tag
+
+ $pt->featagsrad("lindas") 
+   JFS , ...
+
+
 =cut
 
 sub featags{
   my ($self, $palavra) = @_;
   return (map {_cat2small(%$_)} ($self->fea($palavra)));
 }
+
+=head2 featagsrad
+
+Given a word, returns a set of analysis. Each analysis is a morphosintatic tag
+and the lemma information
+
+ $pt->featagsrad("lindas") 
+   JFS:lindo , ...
+
+=cut
+
+sub featagsrad{
+  my ($self, $palavra) = @_;
+
+  return (map {_cat2small(%$_).":$_->{rad}"} ($self->fea($palavra)));
+}
+
 
 =head2 ok
 
@@ -662,7 +692,7 @@ sub hash2str {
 =head1 AUTHOR
 
 Jose Joao Almeida, C<< <jj@di.uminho.pt> >>
-Alberto Simıes, C<< <ambs@di.uminho.pt> >>
+Alberto Sim√µes, C<< <ambs@di.uminho.pt> >>
 
 =head1 BUGS
 
