@@ -535,7 +535,11 @@ sub _cat2small {
     # converter 'P=1_3' em 'P=_': provisório(?)!
     $b{'P'} = '_' if $b{'P'} eq '1_3'; # único sítio com '_' como rhs!!!
 
-    return "\U$b{'CAT'}$b{'T'}$b{'G'}$b{'P'}$b{'N'}";
+     
+    if($b{T} eq "vpp"){ return "\U$b{'CAT'}$b{'T'}$b{'G'}$b{'P'}$b{'N'}";}
+    else { return "\U$b{'CAT'}$b{'T'}$b{'P'}$b{'N'}";}
+
+
     #                               Género, só para VPP.
     # +/- 70 tags
 

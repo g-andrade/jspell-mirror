@@ -1,0 +1,16 @@
+#!/usr/bin/perl -s 
+use strict;
+use warnings;
+use Lingua::Jspell;
+
+our ($tag, $tagrad);
+
+my $p = Lingua::Jspell->new("port");
+$p->setmode({flags => 1});     # show  feature "flag" in output
+
+while(<>){
+  chop;
+  if($tag){  print join(" ",$p->featags($_)). "\n"}
+  elsif($tagrad){  print join(" ",$p->featagsrad($_)). "\n"}
+  else    {  print $p->any2str([$p->fea($_)],1) . "\n"}
+}
