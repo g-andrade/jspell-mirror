@@ -12,5 +12,5 @@ while(<>){
   chop;
   if($tag){  print join(" ",$p->featags($_)). "\n"}
   elsif($tagrad){  print join(" ",$p->featagsrad($_)). "\n"}
-  else    {  print $p->any2str([$p->fea($_)],1) . "\n"}
+  else    {  print Lingua::Jspell::any2str([$p->fea($_)],"f1") . "\n"}
 }

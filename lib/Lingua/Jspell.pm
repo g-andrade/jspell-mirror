@@ -17,9 +17,10 @@ our %EXPORT_TAGS = (basic => [qw.onethat verif ok any2str hash2str.],
 use File::Which qw/which/;
 use IPC::Open3;
 
-=encoding utf8
 
 =head1 NAME
+
+=encoding utf8
 
 Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
@@ -648,6 +649,10 @@ sub mkradtxt {
 
 =head2 any2str
 
+ Lingua::Jspell::any2str($ref)
+ Lingua::Jspell::any2str($ref,$indentation)
+ Lingua::Jspell::any2str($ref,"compact")
+
 =cut
 
 sub any2str {
@@ -658,6 +663,14 @@ sub any2str {
       return "{". hash2str($r,$i) . "}"
     } elsif (ref($r) eq "ARRAY") {
       return "[" . join(",", map (any2str($_,$i), @$r)) . "]" 
+    } else {
+      return "$r"
+    }
+  } elsif ($i eq "f1") {
+    if (ref($r) eq "HASH") {
+      return "{". hash2str($r,"f1") . "}"
+    } elsif (ref($r) eq "ARRAY") {
+      return "[ " . join("  ,\n  ", map (any2str($_,"compact"), @$r)) . "]" 
     } else {
       return "$r"
     }
@@ -683,6 +696,11 @@ sub hash2str {
   if ($i eq "compact") {
     for (keys %$r) {
       $c .= any2str($_,$i). "=". any2str($r->{$_},$i). ",";
+    }
+    chop($c);
+  } elsif ($i eq "f1") {
+    for (keys %$r) {
+      $c .= "\n  ", any2str($_,"compact"). "=". any2str($r->{$_},"compact"). "\n";
     }
     chop($c);
   } else {
