@@ -45,7 +45,7 @@ if ($@) {
 Archive::Any->import();
 
 my $baseurl = 'http://natura.di.uminho.pt/download/sources/Dictionaries/jspell/';
-my $dics = [qw|jspell.pt-bin-latest.tar.gz|];
+my $dics = [qw|jspell.pt-bin-latest.tar.gz jspell.en-bin-latest.tar.gz|];
 
 for my $dicurl (map { $baseurl.$_ } @$dics) {
     if (is_success(getstore($dicurl, "dic.tar.gz"))) {
