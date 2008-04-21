@@ -3,14 +3,17 @@ use strict;
 use warnings;
 use Lingua::Jspell;
 
-our ($tag, $tagrad);
+our ($tag, $tagrad,$p,$d);
 
-my $p = Lingua::Jspell->new("port");
-$p->setmode({flags => 1});     # show  feature "flag" in output
+$d ||= "port";
+
+my $pt = Lingua::Jspell->new($d);
+$pt->setmode({flags => 1});     # show  feature "flag" in output
 
 while(<>){
   chop;
-  if($tag){  print join(" ",$p->featags($_)). "\n"}
-  elsif($tagrad){  print join(" ",$p->featagsrad($_)). "\n"}
-  else    {  print Lingua::Jspell::any2str([$p->fea($_)],"f1") . "\n"}
+  if($tag){  print join(" ",$pt->featags($_)). "\n"}
+  elsif($tagrad){  print join(" ",$pt->featagsrad($_)). "\n"}
+  elsif($p)    {  print Lingua::Jspell::any2str([$pt->fea($_)],"compact") . "\n"}
+  else    {  print Lingua::Jspell::any2str([$pt->fea($_)],"f1") . "\n"}
 }

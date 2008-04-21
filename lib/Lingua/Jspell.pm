@@ -308,6 +308,8 @@ verifies the Feature Structure Pattern used.
 
    $analysis = onethat( { CAT=>'adj' }, @features);
 
+   $analysis = onethat( { CAT=>'adj' }, $pt->fea("espanhol"));
+
 =cut
 
 sub onethat {
@@ -584,7 +586,7 @@ sub _cat2small {
 
 Given a word, returns a set of analysis. Each analysis is a morphosintatic tag
 
- $pt->featagsrad("lindas") 
+ @l= $pt->featags("lindas") 
    JFS , ...
 
 
@@ -600,7 +602,7 @@ sub featags{
 Given a word, returns a set of analysis. Each analysis is a morphosintatic tag
 and the lemma information
 
- $pt->featagsrad("lindas") 
+ @l= $pt->featagsrad("lindas") 
    JFS:lindo , ...
 
 =cut
@@ -616,6 +618,8 @@ sub featagsrad{
 
  # ok: cond:fs x ele:fs-set -> bool
  # exist x in ele : verif(cond , x)
+
+ if(ok({CAT=>"adj"},$pt->fea("linda"))) { ... }
 
 =cut
 
