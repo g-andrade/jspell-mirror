@@ -34,14 +34,20 @@ our $DELIM = '===';
 our %STOP =();
 
 BEGIN {
+  my $EXE = "";
+  $EXE=".exe" if $^O eq "MSWin32";
+#  my $BAT = "";
+#  $BAT=".bat" if $^O eq "MSWin32";
+
   # Search for jspell binary.
   $JSPELL = which("jspell");
   my $JSPELLDICT = which("jspell-dict");
   if (!$JSPELL) {
 	# check if we are running under make test
-	$JSPELL = "blib/script/jspell";
+	$JSPELL = "blib/script/jspell$EXE";
 	$JSPELLDICT = "blib/script/jspell-dict";
 	$JSPELL = undef unless -e $JSPELL;
+        die "jspell binary cannot be found!\n" unless $JSPELL;
   }
   die "jspell binary cannot be found!\n" unless -e $JSPELL;
 
