@@ -112,10 +112,14 @@ sub new {
   }
 
   $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},
-		       "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o'%s!%s:%s:%s:%s'") ||
+		       "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o\"%s!%s:%s:%s:%s\"") ||
 			 die "Cannot find 'jspell'";
   binmode($self->{DW},":bytes");
-  binmode($self->{DR},":bytes");
+  if ($^O ne "MSWin32") {
+	binmode($self->{DR},":bytes");
+  } else {
+	binmode($self->{DR},":crlf:bytes");
+  }
   $dr = $self->{DR};
   my $first_line = <$dr>;
 
@@ -283,7 +287,7 @@ sub der {
   my %res = ();
   my $command;
 
-  $command = sprintf("echo '%s'|$JSPELL -d $self->{dictionary} -e -o '' ",join("\n",@der));
+  $command = sprintf("echo \"%s\"|$JSPELL -d $self->{dictionary} -e -o \"\" ",join("\n",@der));
 
   local $/ = "\n";
 
