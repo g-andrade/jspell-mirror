@@ -23,9 +23,7 @@ WriteMakefile(
         'Config::AutoConf'   => 0.09,
         'ExtUtils::CBuilder' => 0.23,
         'File::Which'        => 0,
-        # This is not really needed, but Archive::Any needs it and misses the dependency
-        'Test::Pod::Coverage' => 0,
-        'Archive::Any'       => 0,
+        'Archive::Any'       => 0.093,
         'LWP::Simple'        => 0,
         'Test::More'         => 0,
         'IPC::Open2'         => 0,
