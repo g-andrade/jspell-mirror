@@ -28,7 +28,7 @@ copy("jspell.pc",$pkgdestpath);
 ### Later these modules might be in the list of required ones, and thus,
 ### this script made simpler.
 
-eval { require LWP::Simple };
+eval { require (LWP::Simple) };
 if ($@) {
 	print STDERR "LWP::Simple is not available on your system.\n";
 	print STDERR "I'll not try to install any dictionary now.\n";
@@ -36,7 +36,7 @@ if ($@) {
 }
 LWP::Simple->import();
 
-eval { require Archive::Any };
+eval { require (Archive::Any) };
 if ($@) {
 	print STDERR "Archive::Any is not available on your system.\n";
 	print STDERR "I'll not try to install any dictionary now.\n";
