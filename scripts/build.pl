@@ -121,7 +121,7 @@ $cc->link(extra_linker_flags => "$LCURSES$CCURSES",
 
 
 print " - building [jspell] binary\n";
-$cc->link_executable(extra_linker_flags => "-Lsrc -ljspell $LCURSES$CCURSES",
+$cc->link_executable(extra_linker_flags => "$LCURSES$CCURSES",
                      objects => ['src/jmain.o',"src/libjspell$LIBEXT"],  
                      exe_file => "src/jspell");
 					 
