@@ -23,7 +23,7 @@ WriteMakefile(
         'Config::AutoConf'   => 0.09,
         'ExtUtils::CBuilder' => 0.23,
         'File::Which'        => 0,
-        'Archive::Any'       => 0.093,
+        'Archive::Any'       => 0.0932,
         'LWP::Simple'        => 0,
         'Test::More'         => 0,
         'IPC::Open2'         => 0,
