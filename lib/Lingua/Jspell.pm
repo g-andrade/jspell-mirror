@@ -350,6 +350,7 @@ sub verif {
 =head2 nlgrep
 
   @line = $d->nlgrep( word , files);
+  @line = $d->nlgrep( [word1, wordn] , files);
 
 or with options to set a max number of entries, rec. separator, or tu use
 radtxt files format.
@@ -365,9 +366,26 @@ sub nlgrep {
   %opt = (%opt,%{shift(@_)}) if ref($_[0]) eq "HASH";
 
   my $p = shift;
+  my $p2 ;
 
-  my $pattern = $opt{radtxt} ? $p : join("|",($self->der($p)));
-  my $p2 = qr/\b(?:$pattern)\b/i;
+  if(ref($p) eq "ARRAY"){
+    if($opt{radtxt}){ 
+      my @pat =  join("|",@$p) ;
+      $p2 = sub{ my $x=shift; 
+                 for(@pat){ return 0 unless $x =~ /\b(?:$_)\b/i;}
+                 return 1; };
+    }
+    else {
+      my @pat =  map {join("|",($_,$self->der($_)))} @$p ;
+      $p2 = sub{ my $x=shift; 
+                 for(@pat){ return 0 unless $x =~ /\b(?:$_)\b/i;}
+                 return 1; }
+    }
+  }
+  else {
+    my $pattern = $opt{radtxt} ? $p : join("|",($p,$self->der($p)));
+    $p2 = sub{ $_[0] =~ /\b(?:$pattern)\b/i };
+  } 
 
   my @file_list=@_;
   local $/=$opt{sep};
@@ -377,8 +395,7 @@ sub nlgrep {
   for(@file_list) {
     open(F,$_) or die("cant open $_\n");
     while(<F>) {
-      # if(/\b(?:$pattern)\b/io){}
-      if (/$p2/) {
+      if ($p2->($_)) {
         chomp;
         s/$DELIM.*//g if $opt{radtxt};
         push(@res,$_);
