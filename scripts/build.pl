@@ -73,23 +73,6 @@ interpolate('jspell.pc.in','jspell.pc',%c_config);
 my $cc = ExtUtils::CBuilder->new(quiet => 0);
 
 
-### AGREP
-print "\nCompiling agrep.\n";
-my @agrep_source = qw~asearch.c    asearch1.c     bitap.c     checkfile.c
-                      compat.c     follow.c       main.c       maskgen.c
-                      mgrep.c      parse.c        preprocess.c
-                      sgrep.c      utilities.c~;
-my @agrep_objects = map {
-		print " - agrep/$_\n";
-		$cc->compile(   source => "agrep/$_")} @agrep_source;
-		
-print " - building [agrep] binary\n";
-$cc->link_executable(objects  => [@agrep_objects],
-					 exe_file => "agrep/agrep");
-
-
-
-
 ### JSpell
 print "\nCompiling Jspell.\n";
 
