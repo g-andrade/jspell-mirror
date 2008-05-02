@@ -349,16 +349,24 @@ sub verif {
 
 =head2 nlgrep
 
+  @line = $d->nlgrep( word , files);
+
+or with options to set a max number of entries, rec. separator, or tu use
+radtxt files format.
+
+  @line = $d->nlgrep( {max=>100, sep => "\n", radtxt=>0} , pattern , files);
+
 =cut
 
 sub nlgrep {
+  my ($self ) = shift;
   # max=int, sep:str, radtxt:bool
   my %opt = (max=>10000, sep => "\n",radtxt=>0);
   %opt = (%opt,%{shift(@_)}) if ref($_[0]) eq "HASH";
 
   my $p = shift;
 
-  my $pattern = $opt{radtxt} ? $p : join("|",(der($p)));
+  my $pattern = $opt{radtxt} ? $p : join("|",($self->der($p)));
   my $p2 = qr/\b(?:$pattern)\b/i;
 
   my @file_list=@_;
