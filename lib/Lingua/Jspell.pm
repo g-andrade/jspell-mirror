@@ -366,11 +366,15 @@ sub nlgrep {
   %opt = (%opt,%{shift(@_)}) if ref($_[0]) eq "HASH";
 
   my $p = shift;
+
+  if(!ref($p) && $p =~ /[ ()*]/){ 
+     $p = [map {/\w/ ? ($_):()} split(/[ ()*\|]/,$a)];}
+
   my $p2 ;
 
   if(ref($p) eq "ARRAY"){
     if($opt{radtxt}){ 
-      my @pat =  join("|",@$p) ;
+      my @pat =  @$p ;
       $p2 = sub{ my $x=shift; 
                  for(@pat){ return 0 unless $x =~ /\b(?:$_)\b/i;}
                  return 1; };
