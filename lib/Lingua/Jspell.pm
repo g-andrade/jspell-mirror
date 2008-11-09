@@ -114,11 +114,11 @@ sub new {
   $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},
 		       "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o\"%s!%s:%s:%s:%s\"") ||
 			 die "Cannot find 'jspell'";
-  binmode($self->{DW},":bytes");
+  binmode($self->{DW},":encoding(iso-8859-1)");
   if ($^O ne "MSWin32") {
-	binmode($self->{DR},":bytes");
+	binmode($self->{DR},":encoding(iso-8859-1)");
   } else {
-	binmode($self->{DR},":crlf:bytes");
+	binmode($self->{DR},":crlf:encoding(iso-8859-1)");
   }
   $dr = $self->{DR};
   my $first_line = <$dr>;
