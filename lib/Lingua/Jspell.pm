@@ -94,7 +94,8 @@ sub new {
   ## Get meta info
   my $meta_file = _meta_file($self->{dictionary});
   if (-f $meta_file) {
-    open META, "<:encoding(iso-8859-1)", $meta_file or die "$!";
+    open META, $meta_file or die "$!";
+	binmode(META,":encoding(iso-8859-1)");
     while(<META>) {
       next if m!^\s*$!;
       next if m!^\s*#!;
