@@ -134,6 +134,8 @@ sub new {
 
 =head2 setmode
 
+   $dict->setmode({flags => 0, nm => "off" });
+
 =over 4
 
 =item af
