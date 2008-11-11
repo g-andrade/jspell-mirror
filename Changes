@@ -1,5 +1,8 @@
 Revision history for Lingua-Jspell
 
+1.56
+   - Added ujspell script to convert unicode to latin1;
+
 1.55    June 3, 2008
 	- Removed agrep source code and its dependency;
 	- Corrected dependencies on some modules;

@@ -66,6 +66,7 @@ if ($^O eq "MSWin32") {
 
 interpolate('src/jsconfig.in','src/jsconfig.h',%c_config);
 interpolate('scripts/jspell-dict.in','scripts/jspell-dict',%c_config);
+interpolate("scripts/ujspell.in","scripts/ujspell",%c_config);
 interpolate('scripts/installdic.in','scripts/installdic.pl',%c_config);
 interpolate('jspell.pc.in','jspell.pc',%c_config);
 
