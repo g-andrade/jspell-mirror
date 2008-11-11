@@ -151,7 +151,7 @@ to give suggestions by swapping letters on the original word.
 Enable near misses, don't use rules where they are not applied, try 
 to give suggestions by swapping letters on the original word.
 
-=item strict
+=item off
 
 Disable near misses at all.
 
@@ -165,7 +165,7 @@ sub setmode {
     $self->{mode} = $mode;
     print $dw _mode($mode);
   } else {
-    return $self->{mode}
+    return $self->{mode};
   }
 }
 
@@ -818,7 +818,7 @@ sub _mode {
       { $r .= "\$G\n\$Y\n\$m\n" }
     elsif ($m->{nm} eq "cc")
       { $r .= "\$G\n\$P\n\$Y\n" }
-    elsif ($m->{nm} eq "strict")
+    elsif ($m->{nm} eq "off")
       { $r .= "\$g\n\$P\n\$y\n" }
     else {}
   }
