@@ -141,21 +141,23 @@ sub new {
 =item af
 
 Enable near misses, don't use rules where they are not applied, do not
-give suggestions by swapping letters on the original word.
+give suggestions by swapping adjacent letters on the original word.
 
 =item full
 
 Enable near misses, try to use rules where they are not applied, try 
-to give suggestions by swapping letters on the original word.
+to give suggestions by swapping adjacent letters on the original word.
 
 =item cc
 
 Enable near misses, don't use rules where they are not applied, try 
-to give suggestions by swapping letters on the original word.
+to give suggestions by swapping adjacent letters on the original word.
 
 =item off
 
 Disable near misses at all.
+
+=back
 
 =cut
 
