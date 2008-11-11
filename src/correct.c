@@ -430,7 +430,7 @@ void makepossibilities(register ichar_t *word)
          missingspace(word);        /* two words */
    }
    easypossibilities = pcount;
-/*   if (easypossibilities == 0  ||  tryhardflag) */
+
    if (tryhardflag)
       tryveryhard(word);
 
