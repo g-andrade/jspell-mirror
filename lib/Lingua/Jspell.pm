@@ -26,7 +26,7 @@ Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
 =cut
 
-our $VERSION = '1.55';
+our $VERSION = '1.56';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };
@@ -58,8 +58,8 @@ BEGIN {
 
     use Lingua::Jspell;
 
-    my $dic = Lingua::Jspell->new( "dict_name");
-    my $dic = Lingua::Jspell->new( "dict_name" , "personal_dict_name");
+    my $dict = Lingua::Jspell->new( "dict_name");
+    my $dict = Lingua::Jspell->new( "dict_name" , "personal_dict_name");
 
     $dict->rad("gatinho");      # list of radicals (gato)
 
@@ -133,6 +133,27 @@ sub new {
 }
 
 =head2 setmode
+
+=over 4
+
+=item af
+
+Enable near misses, don't use rules where they are not applied, do not
+give suggestions by swapping letters on the original word.
+
+=item full
+
+Enable near misses, try to use rules where they are not applied, try 
+to give suggestions by swapping letters on the original word.
+
+=item cc
+
+Enable near misses, don't use rules where they are not applied, try 
+to give suggestions by swapping letters on the original word.
+
+=item strict
+
+Disable near misses at all.
 
 =cut
 
@@ -797,6 +818,8 @@ sub _mode {
       { $r .= "\$G\n\$Y\n\$m\n" }
     elsif ($m->{nm} eq "cc")
       { $r .= "\$G\n\$P\n\$Y\n" }
+    elsif ($m->{nm} eq "strict")
+      { $r .= "\$g\n\$P\n\$y\n" }
     else {}
   }
   if ($m->{flags})          {$r .= "\$z\n"}
