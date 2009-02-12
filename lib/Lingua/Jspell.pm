@@ -314,7 +314,7 @@ sub der {
 	my $command;
 
 	local $/ = "\n";
-	open3(\*WR, \*RD, \*ERROR, "$JSPELL -d $self->{dictionary} -e -o \"\"") or die "Can't execute jspell.";
+	my $pid = open3(\*WR, \*RD, \*ERROR, "$JSPELL -d $self->{dictionary} -e -o \"\"") or die "Can't execute jspell.";
 	print WR join("\n",@der),"\n";
 	print WR "\032" if ($^O =~ /win32/i);
 	close WR;
@@ -325,13 +325,14 @@ sub der {
 	}
 	close RD;
 	close ERROR;
-
-	  my $irrcomm;
+	waitpid $pid, 0;
+	
+  my $irrcomm;
   my $irr_file = _irr_file($self->{dictionary});
 
 	open IRR, $irr_file or die "Can't find [$irr_file] file\n";
 	while (<IRR>) {
-		next unless /^$w=/;
+		next unless /^\Q$w\E=/;
 		chomp;
 		for (split(/[= ]+/,$_)) { $res{$_}++; }    
 	}
