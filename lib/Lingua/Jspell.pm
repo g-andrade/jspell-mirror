@@ -507,7 +507,8 @@ sub _cat2small {
     # Nomes comuns:
     $b{'G'} = 'N' if $b{'G'} eq '_' || $b{'G'} eq '';
     $b{'N'} = 'N' if $b{'N'} eq '_' || $b{'N'} eq '';
-    return "\U$b{'CAT'}$b{'G'}$b{'N'}";
+		$b{'GR'} = 'd' if $b{'GR'} eq 'dim';
+    return "\U$b{'CAT'}$b{'G'}$b{'N'}$b{'GR'}";
 
   } elsif ($b{'CAT'} eq 'np') {
     # Nomes próprios:
@@ -520,20 +521,22 @@ sub _cat2small {
     $b{'G'} = 'N' if $b{'G'} eq '_';
     $b{'G'} = 'N' if $b{'G'} eq '2';
     $b{'N'} = 'N' if $b{'N'} eq '_';
+		$b{'GR'} = 'd' if $b{'GR'} eq 'dim';
     #    elsif ($b{'N'} eq ''){
     #      $b{'N'} = 'N';
     #    }
-    return "\UJ$b{'G'}$b{'N'}";
+    return "\UJ$b{'G'}$b{'N'}$b{'GR'}";
 
   } elsif ($b{'CAT'} eq 'a_nc') {
     # Adjectivos que podem funcionar como nomes comuns:
     $b{'G'} = 'N' if $b{'G'} eq '_';
     $b{'G'} = 'N' if $b{'G'} eq '2';
     $b{'N'} = 'N' if $b{'N'} eq '_';
+		$b{'GR'} = 'd' if $b{'GR'} eq 'dim';
     #    elsif ($b{'N'} eq ''){
     #      $b{'N'} = 'N';
     #    }
-    return "\UX$b{'G'}$b{'N'}";
+    return "\UX$b{'G'}$b{'N'}$b{'GR'}";
 
   } elsif ($b{'CAT'} eq 'v') {
     # Verbos:
