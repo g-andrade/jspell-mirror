@@ -3,11 +3,11 @@ use strict;
 use warnings;
 use Lingua::Jspell 'any2str';
 
-our ($comp, $tag, $tagrad,$p,$d);
+our ($comp, $p,$d);
 
 $d ||= "port";
 
-my $pt = Lingua::Jspell->new($d);
+my $pt = Lingua::Jspell->new($d, $p);
 
 while(<>){
  chomp; 
@@ -19,13 +19,53 @@ while(<>){
    else     { print join("\n", (map {"$w ".any2str($_,'compact')}  $pt->fea($w))),"\n";}
  } 
 }
-__END__
 
-$pt->setmode({flags => 1});     # show  feature "flag" in output
+=head1 NAME
 
-  chop;
-  if($tag){  print join(" ",$pt->featags($_)). "\n"}
-  elsif($tagrad){  print join(" ",$pt->featagsrad($_)). "\n"}
-  elsif($p)    {  print Lingua::Jspell::any2str([$pt->fea($_)],"compact") . "\n"}
-  else    {  print Lingua::Jspell::any2str([$pt->fea($_)],"f1") . "\n"}
-}
+jspell-dump
+
+=head1 SYNOPSIS
+
+  jspell-dump [-d port] [-p personal] [-comp]
+
+=head1 DESCRIPTION
+
+This tool receives a set of words fron standard input (one work per line), and
+prints all derived words (together with their morphological analysis), one per line.
+
+The tool is prepared to receive as input the source dictionary for a jspell dicitonary.
+In this case, all recognized words are printed, together with their morphological analysis.
+
+Recognized options are:
+
+=over 4
+
+=item C<-d>
+
+Used to specify the dictionary to used. By default the portuguese dictionary will be used.
+
+=item C<-p>
+
+Used to specify a personal dictionary.
+
+=item C<-comp>
+
+When used, instead of the full morphological analysis, a compact tag will be used.
+
+=back
+
+=head1 SEE ALSO
+
+Lingua::Jspell
+
+=head1 AUTHOR
+
+José João Almeira E<lt>jj@di.uminho.ptE<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2009 by Projecto Natura
+
+=cut
+
+

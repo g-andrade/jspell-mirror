@@ -604,8 +604,6 @@ static void process_LibDict(char *LibDict, char *cpd)
 {
 	char *p;
 	static char libdictname[sizeof DEFHASH];
-    
-	fprintf(stderr, "CPD=%s\n",cpd);
 
 	if (LibDict == NULL) {
 		strcpy(libdictname, DEFHASH);
@@ -801,7 +799,7 @@ int my_main(int argc, char *argv[], char lib)
     verify_files(argc, argv);
 
     if (!oflag) strcpy(o_form, DEF_OUT);
-    if (linit() < 0) return 0;
+	if (linit() < 0) exit(1); /* Force an error */
 
     det_prefstringchar(preftype);
 
@@ -973,9 +971,9 @@ void dofile(char *filename)
     det_defdupchar(filename);
 
     if ((infile = fopen(filename, "r")) == NULL) {
-	fprintf(stderr, CANT_OPEN, filename);
-	sleep((unsigned) 2);
-	return;
+		fprintf(stderr, CANT_OPEN, filename);
+		sleep((unsigned) 2);
+		return;
     }
 
     det_readonly_access(filename);

@@ -95,7 +95,7 @@ sub new {
   my $meta_file = _meta_file($self->{dictionary});
   if (-f $meta_file) {
     open META, $meta_file or die $!;
-	binmode(META,":encoding(iso-8859-1)");
+		binmode(META,":encoding(iso-8859-1)");
     while(<META>) {
       next if m!^\s*$!;
       next if m!^\s*#!;
@@ -113,16 +113,17 @@ sub new {
   }
 
   $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},
-		       "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o\"%s!%s:%s:%s:%s\"") ||
-			 die "Cannot find 'jspell'";
+		       "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o\"%s!%s:%s:%s:%s\"") or die $!;
+		
   binmode($self->{DW},":encoding(iso-8859-1)");
   if ($^O ne "MSWin32") {
-	binmode($self->{DR},":encoding(iso-8859-1)");
+		binmode($self->{DR},":encoding(iso-8859-1)");
   } else {
-	binmode($self->{DR},":crlf:encoding(iso-8859-1)");
+		binmode($self->{DR},":crlf:encoding(iso-8859-1)");
   }
   $dr = $self->{DR};
   my $first_line = <$dr>;
+	die "Can't execute jspell with supplied dictionaries\n" unless $first_line =~ /International Jspell/;
 
   $self->{mode} ||= $MODE;
   my $dw = $self->{DW};
