@@ -209,9 +209,8 @@ sub fea{
       for(split(/[,;] /,$clas)){
         ($rad,$cla)= m{(.+?)\!:*(.*)$};
 
-	# Não sei porquê, mas acontece por vezes de $cla ser 'undef'
-	# Não sei bem o que devemos fazer... de momento, estou simplesmente
-	# a passar o código à frente.
+    # $cla undef quando nada preenchido...
+
 	if ($cla) {
 	  if ($cla =~ s/\/(.*)$//) { $flags = $1 }
 	  else                     { $flags = "" }
@@ -219,7 +218,7 @@ sub fea{
 	  $cla =~ s/:+$//g;
 	  $cla =~ s/:+/,/g;
 
-	  my %ana;
+	  my %ana =();
 	  my @attrs = split /,/, $cla;
 	  for (@attrs) {
 	    if (m!=!) {
@@ -240,6 +239,7 @@ sub fea{
 	    push(@r,+{"rad" => $rad, %ana});
 	  }
 	}
+    else {@r=( +{CAT=>"?",rad=>$rad} )}
       }
     }
   }
@@ -398,7 +398,7 @@ sub nlgrep {
   my $p = shift;
 
   if(!ref($p) && $p =~ /[ ()*,]/){ 
-     $p = [map {/\w/ ? ($_):()} split(/[ ()*\|,]/,$a)];}
+     $p = [map {/\w/ ? ($_):()} split(/[\- ()*\|,]/,$a)];}
 
   my $p2 ;
 
@@ -459,6 +459,7 @@ Note: This function is specific for the Portuguese jspell dictionary
 # NOTA: Esta funcao é específica da língua TUGA!
 sub _cat2small {
   my %b = @_;
+  no warnings;
 
   if ($b{'CAT'} eq 'art') {
     # Artigos: o léxico já prevê todos...
