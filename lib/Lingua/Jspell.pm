@@ -123,7 +123,7 @@ sub new {
   }
   $dr = $self->{DR};
   my $first_line = <$dr>;
-	die "Can't execute jspell with supplied dictionaries\n" unless $first_line =~ /International Jspell/;
+	die "Can't execute jspell with supplied dictionaries\n" unless $first_line && $first_line =~ /International Jspell/;
 
   $self->{mode} ||= $MODE;
   my $dw = $self->{DW};
