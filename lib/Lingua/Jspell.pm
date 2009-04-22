@@ -112,8 +112,8 @@ sub new {
     $self->{meta} = {};
   }
 
-  $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},
-		       "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o\"%s!%s:%s:%s:%s\"") or die $!;
+  my $js = "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o'%s!%s:%s:%s:%s'";
+  $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},$js) or die $!;
 		
   binmode($self->{DW},":encoding(iso-8859-1)");
   if ($^O ne "MSWin32") {
@@ -123,7 +123,7 @@ sub new {
   }
   $dr = $self->{DR};
   my $first_line = <$dr>;
-	die "Can't execute jspell with supplied dictionaries\n" unless $first_line && $first_line =~ /International Jspell/;
+  die "Can't execute jspell with supplied dictionaries ($js)" unless $first_line && $first_line =~ /International Jspell/;
 
   $self->{mode} ||= $MODE;
   my $dw = $self->{DW};
