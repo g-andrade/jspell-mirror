@@ -356,11 +356,11 @@ verifies the Feature Structure Pattern used.
 =cut
 
 sub onethat {
-  my ($a, @b) = @_;
-  for (@b) {
-    return %$_ if verif($a,$_);
-  }
-  return () ;
+    my ($a, @b) = @_;
+    for (@b) {
+        return %$_ if verif($a,$_);
+    }
+    return () ;
 }
 
 =head2 verif
@@ -373,11 +373,11 @@ first Feature Structure Pattern.
 =cut
 
 sub verif {
-  my ($a, $b) = @_;
-  for (keys %$a) {
-    return 0 if (!defined($b->{$_}) || $a->{$_} ne $b->{$_}); 
-  }
-  return 1;
+    my ($a, $b) = @_;
+    for (keys %$a) {
+        return 0 if (!defined($b->{$_}) || $a->{$_} ne $b->{$_});
+    }
+    return 1;
 }
 
 =head2 nlgrep
@@ -406,7 +406,7 @@ sub nlgrep {
   my $p2 ;
 
   if(ref($p) eq "ARRAY"){
-    if($opt{radtxt}){ 
+    if($opt{radtxt}){
       my @pat =  @$p ;
       $p2 = sub{ my $x=shift; 
                  for(@pat){ return 0 unless $x =~ /\b(?:$_)\b/i;}
@@ -422,7 +422,7 @@ sub nlgrep {
   else {
     my $pattern = $opt{radtxt} ? $p : join("|",($p,$self->der($p)));
     $p2 = sub{ $_[0] =~ /\b(?:$pattern)\b/i };
-  } 
+  }
 
   my @file_list=@_;
   local $/=$opt{sep};
@@ -450,7 +450,7 @@ sub nlgrep {
 =cut
 
 sub setstopwords {
-  $STOP{$_} = 1 for @_;
+    $STOP{$_} = 1 for @_;
 }
 
 =head2 cat2small
@@ -462,7 +462,7 @@ Note: This function is specific for the Portuguese jspell dictionary
 # NOTA: Esta funcao é específica da língua TUGA!
 sub _cat2small {
   my %b = @_;
-  no warnings;
+  #  no warnings;
 
   if ($b{'CAT'} eq 'art') {
     # Artigos: o léxico já prevê todos...
