@@ -10,8 +10,8 @@ setlocale(LC_CTYPE, "pt_PT");
 use locale;
 
 use base 'Exporter';
-our @EXPORT_OK = (qw.onethat verif nlgrep setstopwords ok any2str hash2str.);
-our %EXPORT_TAGS = (basic => [qw.onethat verif ok any2str hash2str.],
+our @EXPORT_OK = (qw.onethat verif nlgrep setstopwords onethatverif any2str hash2str.);
+our %EXPORT_TAGS = (basic => [qw.onethat verif onethatverif any2str hash2str.],
                     greps => [qw.nlgrep setstopwords.]);
 
 use File::Which qw/which/;
@@ -36,18 +36,16 @@ our %STOP =();
 BEGIN {
   my $EXE = "";
   $EXE=".exe" if $^O eq "MSWin32";
-#  my $BAT = "";
-#  $BAT=".bat" if $^O eq "MSWin32";
 
   # Search for jspell binary.
   $JSPELL = which("jspell");
   my $JSPELLDICT = which("jspell-dict");
   if (!$JSPELL) {
-	# check if we are running under make test
-	$JSPELL = "blib/script/jspell$EXE";
-	$JSPELLDICT = "blib/script/jspell-dict";
-	$JSPELL = undef unless -e $JSPELL;
-        die "jspell binary cannot be found!\n" unless $JSPELL;
+      # check if we are running under make test
+      $JSPELL = "blib/script/jspell$EXE";
+      $JSPELLDICT = "blib/script/jspell-dict";
+      $JSPELL = undef unless -e $JSPELL;
+      die "jspell binary cannot be found!\n" unless $JSPELL;
   }
   die "jspell binary cannot be found!\n" unless -e $JSPELL;
 
@@ -117,9 +115,10 @@ sub new {
 		
   binmode($self->{DW},":encoding(iso-8859-1)");
   if ($^O ne "MSWin32") {
-		binmode($self->{DR},":encoding(iso-8859-1)");
-  } else {
-		binmode($self->{DR},":crlf:encoding(iso-8859-1)");
+      binmode($self->{DR},":encoding(iso-8859-1)");
+  }
+  else {
+      binmode($self->{DR},":crlf:encoding(iso-8859-1)");
   }
   $dr = $self->{DR};
   my $first_line = <$dr>;
@@ -129,8 +128,12 @@ sub new {
   my $dw = $self->{DW};
   print $dw _mode($self->{mode});
 
-  if ($first_line  =~ /Jspell/) { return bless $self, $class }  #amen
-  else                          { return undef}
+  if ($first_line  =~ /Jspell/) {
+      return bless $self, $class # amen
+  }
+  else {
+      return undef
+  }
 }
 
 =head2 setmode
@@ -209,7 +212,7 @@ sub fea{
       for(split(/[,;] /,$clas)){
         ($rad,$cla)= m{(.+?)\!:*(.*)$};
 
-    # $cla undef quando nada preenchido...
+        # $cla undef quando nada preenchido...
 
 	if ($cla) {
 	  if ($cla =~ s/\/(.*)$//) { $flags = $1 }
@@ -239,7 +242,7 @@ sub fea{
 	    push(@r,+{"rad" => $rad, %ana});
 	  }
 	}
-    else {@r=( +{CAT=>"?",rad=>$rad} )}
+        else {@r=( +{CAT=>"?",rad=>$rad} )}
       }
     }
   }
@@ -309,36 +312,36 @@ Returns the list of all possible words using the word as radical.
 =cut
 
 sub der {
-	my ($self, $w) = @_;
-	my @der = $self->flags($w);
-	my %res = ();
-	my $command;
+    my ($self, $w) = @_;
+    my @der = $self->flags($w);
+    my %res = ();
+    my $command;
 
-	local $/ = "\n";
-	my $pid = open3(\*WR, \*RD, \*ERROR, "$JSPELL -d $self->{dictionary} -e -o \"\"") or die "Can't execute jspell.";
-	print WR join("\n",@der),"\n";
-	print WR "\032" if ($^O =~ /win32/i);
-	close WR;
-	while (<RD>) {
-		chomp;
-		s/(=|, | $)//g;
-		for(split) { $res{$_}++; }
-	}
-	close RD;
-	close ERROR;
-	waitpid $pid, 0;
+    local $/ = "\n";
+    my $pid = open3(\*WR, \*RD, \*ERROR, "$JSPELL -d $self->{dictionary} -e -o \"\"") or die "Can't execute jspell.";
+    print WR join("\n",@der),"\n";
+    print WR "\032" if ($^O =~ /win32/i);
+    close WR;
+    while (<RD>) {
+        chomp;
+        s/(=|, | $)//g;
+        for(split) { $res{$_}++; }
+    }
+    close RD;
+    close ERROR;
+    waitpid $pid, 0;
 	
-  my $irrcomm;
-  my $irr_file = _irr_file($self->{dictionary});
+    my $irrcomm;
+    my $irr_file = _irr_file($self->{dictionary});
 
-	open IRR, $irr_file or die "Can't find [$irr_file] file\n";
-	while (<IRR>) {
-		next unless /^\Q$w\E=/;
-		chomp;
-		for (split(/[= ]+/,$_)) { $res{$_}++; }    
-	}
-	close IRR;
-  return keys %res;
+    open IRR, $irr_file or die "Can't find [$irr_file] file\n";
+    while (<IRR>) {
+        next unless /^\Q$w\E=/;
+        chomp;
+        for (split(/[= ]+/,$_)) { $res{$_}++; }
+    }
+    close IRR;
+    return keys %res;
 }
 
 =head2 onethat
@@ -362,7 +365,7 @@ sub onethat {
 
 =head2 verif
 
-Retuurns a true value if the second Feature Structure verifies the
+Returns a true value if the second Feature Structure verifies the
 first Feature Structure Pattern.
 
    if (verif( $pattern, $feature) )  { ... }
@@ -687,16 +690,22 @@ sub featagsrad{
 }
 
 
-=head2 ok
+=head2 onethatverif
 
- # ok: cond:fs x ele:fs-set -> bool
- # exist x in ele : verif(cond , x)
+Given a pattern feature structure and a list of analysis (feature
+structures), returns a true value is there is one analysis that
+verifies the pattern.
 
- if(ok({CAT=>"adj"},$pt->fea("linda"))) { ... }
+ # onethatverif( cond:fs , conj:fs-set) :: bool
+ #     exists x in conj: verif(cond , x)
+
+ if(onethatverif({CAT=>"adj"},$pt->fea("linda"))) {
+    ...
+ }
 
 =cut
 
-sub ok {
+sub onethatverif {
   my ($a, @b) = @_;
   for (@b) {
     return 1 if verif($a,$_);
@@ -803,9 +812,9 @@ progress on your bug as I make changes.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2007-2008 Projecto Natura
+Copyright 2007-2009 Projecto Natura
 
-This program is free software; licensed undef GPL.
+This program is free software; licensed under GPL.
 
 =cut
 
