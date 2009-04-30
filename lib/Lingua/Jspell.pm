@@ -16,6 +16,7 @@ our %EXPORT_TAGS = (basic => [qw.onethat verif onethatverif any2str hash2str.],
 
 use File::Which qw/which/;
 use IPC::Open3;
+use YAML::Any qw/LoadFile !Load !Dump/;
 
 
 =head1 NAME
@@ -89,6 +90,7 @@ sub new {
   $pers = $self->{pdictionary}?"-p $self->{pdictionary}":"";
   $flag = defined($self->{'undef'})?$self->{'undef'}:"-y";
 
+  ## dictionary.meta IS **DEPRECATED!!!**
   ## Get meta info
   my $meta_file = _meta_file($self->{dictionary});
   if (-f $meta_file) {
@@ -109,6 +111,16 @@ sub new {
   } else {
     $self->{meta} = {};
   }
+
+  ## Get yaml info ----------------------------------
+  my $yaml_file = _yaml_file($self->{dictionary});
+  if (-f $yaml_file) {
+      $self->{yaml} = LoadFile($yaml_file);
+  } else {
+      $self->{yaml} = {};
+  }
+
+
 
   my $js = "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o'%s!%s:%s:%s:%s'";
   $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},$js) or die $!;
@@ -187,7 +199,7 @@ attribute value pairs. Attributes available: CAT, T, G, N, P, ....
 =cut
 
 
-sub fea{
+sub fea {
   my ($self,$w) = @_;
 
   local $/="\n";
@@ -659,6 +671,68 @@ sub _cat2small {
   }
 }
 
+=head2 new_featags
+
+=cut
+
+sub new_featags {
+    my ($self, $word) = @_;
+    if (exists($self->{yaml}{META}{TAG})) {
+        my $rules = $self->{yaml}{META}{TAG};
+        return map { $self->_compact($rules, $_) } $self->fea($word);
+    } else {
+        warn "Dictionary without a YAML file, or without rules for fea-compression\n";
+        return undef;
+    }
+}
+
+sub _compact {
+    my ($self,$rules, $fs) = @_;
+    my $tag;
+    if (ref($rules) eq "HASH") {
+        my ($key) = (%$rules);
+
+        if (exists($fs->{$key})) {
+            $tag = $self->_compact_id($key, $fs->{$key});
+            if (exists($rules->{$key}{$fs->{$key}})) {
+                $tag.$self->_compact($rules->{$key}{$fs->{$key}}, $fs);
+            }
+            elsif (exists($rules->{$key}{'-'})) {
+                $tag.$self->_compact($rules->{$key}{'-'}, $fs);
+            }
+            else {
+                $tag
+            }
+        }
+        else {
+            ""
+        }
+    }
+    elsif (ref($rules) eq "ARRAY") {
+        for my $cat (@$rules) {
+            $tag .= $self->_compact($cat, $fs);
+        }
+        $tag
+    }
+    elsif (!ref($rules)) {
+        if (exists($fs->{$rules})) {
+            $self->_compact_id($rules, $fs->{$rules})
+        } else {
+            ""
+        }
+    }
+}
+
+sub _compact_id {
+    my ($self, $cat, $id) = @_;
+    if (exists($self->{yaml}{"$cat-TAG"}{$id})) {
+        return $self->{yaml}{"$cat-TAG"}{$id}
+    } else {
+        return $id
+    }
+}
+
+
 =head2 featags
 
 Given a word, returns a set of analysis. Each analysis is a morphosintatic tag
@@ -826,6 +900,17 @@ sub _meta_file {
     $dic_file =~ s/\.hash/.meta/;
   } else {
     $dic_file = "$JSPELLLIB/$dic_file.meta"
+  }
+  return $dic_file;
+}
+
+sub _yaml_file {
+  my $dic_file = shift;
+  if ($dic_file =~ m!\.hash$!) {
+    # we have a local dictionary
+    $dic_file =~ s/\.hash/.yaml/;
+  } else {
+    $dic_file = "$JSPELLLIB/$dic_file.yaml"
   }
   return $dic_file;
 }
