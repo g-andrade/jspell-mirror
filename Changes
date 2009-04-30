@@ -1,8 +1,12 @@
 Revision history for Lingua-Jspell
 
-1.62
-   - Handle correctly dictionaries that do not ship a .irr file
-   - Bettered ujspell handle of single-letter analysis
+1.62 April 30, 2009
+   - handle correctly dictionaries that do not ship a .irr file
+   - bettered ujspell handle of single-letter analysis
+   - dictionaries .meta file are not longer supported
+   - .meta file replaced by .yaml file
+   - new YAML::Any dependency
+   - new analysis to tag conversion function (under tests)
 
 1.61 February 15, 2009
    - added jspell-dump script to dump all words and flexions for a

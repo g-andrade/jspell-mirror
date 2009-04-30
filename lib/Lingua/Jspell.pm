@@ -27,7 +27,7 @@ Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
 =cut
 
-our $VERSION = '1.61';
+our $VERSION = '1.62';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };
@@ -89,28 +89,6 @@ sub new {
 
   $pers = $self->{pdictionary}?"-p $self->{pdictionary}":"";
   $flag = defined($self->{'undef'})?$self->{'undef'}:"-y";
-
-  ## dictionary.meta IS **DEPRECATED!!!**
-  ## Get meta info
-  my $meta_file = _meta_file($self->{dictionary});
-  if (-f $meta_file) {
-    open META, $meta_file or die $!;
-		binmode(META,":encoding(iso-8859-1)");
-    while(<META>) {
-      next if m!^\s*$!;
-      next if m!^\s*#!;
-      s!#.*$!!;
-      if (m!^(\w+):\s*(.*)!) {
-        $self->{meta}{_}{$1} = $2;
-      }
-      if (m!^(\w+)=(\w+):\s*(.*)!) {
-        $self->{meta}{$1}{$2} = $3;
-      }
-    }
-    close META;
-  } else {
-    $self->{meta} = {};
-  }
 
   ## Get yaml info ----------------------------------
   my $yaml_file = _yaml_file($self->{dictionary});
@@ -892,17 +870,6 @@ Copyright 2007-2009 Projecto Natura
 This program is free software; licensed under GPL.
 
 =cut
-
-sub _meta_file {
-  my $dic_file = shift;
-  if ($dic_file =~ m!\.hash$!) {
-    # we have a local dictionary
-    $dic_file =~ s/\.hash/.meta/;
-  } else {
-    $dic_file = "$JSPELLLIB/$dic_file.meta"
-  }
-  return $dic_file;
-}
 
 sub _yaml_file {
   my $dic_file = shift;
