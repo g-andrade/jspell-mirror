@@ -715,7 +715,7 @@ sub _compact {
         $tag
     }
     elsif (!ref($rules)) {
-        if (exists($fs->{$rules})) {
+        if ($rules && exists($fs->{$rules})) {
             $self->_compact_id($rules, $fs->{$rules})
         } else {
             ""
