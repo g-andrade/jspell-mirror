@@ -1,6 +1,7 @@
 Revision history for Lingua-Jspell
 
 1.62
+   - Handle correctly dictionaries that do not ship a .irr file
    - Bettered ujspell handle of single-letter analysis
 
 1.61 February 15, 2009

@@ -334,13 +334,14 @@ sub der {
     my $irrcomm;
     my $irr_file = _irr_file($self->{dictionary});
 
-    open IRR, $irr_file or die "Can't find [$irr_file] file\n";
-    while (<IRR>) {
-        next unless /^\Q$w\E=/;
-        chomp;
-        for (split(/[= ]+/,$_)) { $res{$_}++; }
+    if (open IRR, $irr_file) {
+        while (<IRR>) {
+            next unless /^\Q$w\E=/;
+            chomp;
+            for (split(/[= ]+/,$_)) { $res{$_}++; }
+        }
+        close IRR;
     }
-    close IRR;
     return keys %res;
 }
 
