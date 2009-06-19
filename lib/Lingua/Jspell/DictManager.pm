@@ -189,10 +189,10 @@ sub _same_cat {
 # Each element should be a reference to an associative array like this:
 #
 # { word => 'word', flags => 'zbr', CAT => 'np', G=>'f' }
-sub add_words {
+sub add_word {
 	my $dict = shift;
 
-	$dict->_same_catadd_full_line(map {
+	$dict->_add_full_line(map {
 				my $word = $_->{word};
 				my $flags = $_->{flags};
 				delete($_->{word});
@@ -330,7 +330,7 @@ definition.
 This method tries to find redundant entries on the dictionary,
 producing an ouput file to be executed and delete the redundancy.
 
-=head2 C<add_words>
+=head2 C<add_word>
 
  $dict->add_word({word=>'word',flags=>'zbr',CAT=>'np',G=>'f'},...)
 
