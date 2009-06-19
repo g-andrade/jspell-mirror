@@ -4,6 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 use Data::Dumper;
+use File::Copy;
 
 use Lingua::Jspell;
 
@@ -15,7 +16,7 @@ our %EXPORT_TAGS = ( 'all' => [ qw() ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our @EXPORT = qw();
+our @EXPORT = qw( &toword );
 
 our $VERSION = '0.01_1';
 
@@ -26,11 +27,40 @@ sub init{
   my $self = { filename => $file };
   open F, $file or die "Cannot open file '$file': $!\n";
   while(<F>) {
-    $self->{shortcut}{$1} = $2 if (m!^#([^/]+)/([^/]+)/!);
+    $self->{   shortcut}{$1} = $2 if (m!^#([^/]+)/([^/]+)/!);
+    $self->{revshortcut}{$2} = $1 if (m!^#([^/]+)/([^/]+)/!);
   }
   close F;
-
+  copy($file,"$file.old") or die("$! cant create $file.old\n");
   return bless($self);
+}
+
+sub toword{ _data2line(@_) }
+
+sub modeach_word{
+  my $dic = shift;
+  my $func = shift;
+  open DIC, $dic->{filename} or die("cannot open file");
+  open DIC, ">$dic->{filename}.new" or die("cannot create file $!");
+  while(<DIC>) {
+    if (m!^#! or m!^/s*$!){ print NDIC $_ ; next }
+
+    my ($word,$class,$flags) = split '/', $_;
+    $class =~ s/#([A-Za-z][A-Za-z0-9]*)/$dic->{shortcut}{$1} || ""/ge if $class;
+    my @flags = ($flags)?split(//, $flags):();
+    my @atts = ($class)?split(/[,=]/, $class):();
+    my %atts;
+    if (@atts % 2) {
+      %atts = ();
+    } else {
+      %atts = @atts;
+    }
+
+    print NDIC $func->($word,\%atts,\@flags) || $_;
+  }
+  close DIC;
+  close NDIC;
+  copy("$dic->{filename}.new",$dic->{filename});
 }
 
 sub foreach_word {
@@ -220,6 +250,7 @@ sub _add_full_line {
 	print NDIC sort grep /./, @p;
 	close DIC;
 	close NDIC;
+    copy("$dict->{filename}.new",$dict->{filename});
 }
 
 sub delete_word {
@@ -236,6 +267,7 @@ sub delete_word {
 	}
 	close DIC;
 	close NDIC;
+    copy("$dict->{filename}.new",$dict->{filename});
 }
 
 sub add_flag {
@@ -270,8 +302,9 @@ sub add_flag {
 #}
 
 sub _data2line {
-  my ($word,$atts,$flags) = @_;
-  return "$word/".join(",",map { "$_=$atts->{$_}" } keys %$atts)."/".join("",grep {/./} @$flags)."/";
+  my ($word,$atts,$flags,@r) = @_;
+  return "$word/".join(",",map { "$_=$atts->{$_}" } keys %$atts)."/".join("",grep {/./} @$flags)."/".
+          join("/",@r);
 }
 
 
@@ -309,6 +342,16 @@ passed as argument. This function is called with three arguments: the
 word, a reference to an associative array with the category
 information and a reference to a list of rules identifiers.
 
+=head2 C<modeach_word>
+
+This method processes all words from the dictionary using the function
+passed as argument. This function is called with three arguments: the
+word, a reference to an associative array with the category
+information and a reference to a list of rules identifiers.
+
+Use the function C<toword($word,$fea,$flag,$coms)> to rebuild a new value;
+if "" is return, the previous value is kept.
+
 =head2 C<for_this_cat_I_want_only_these_flags>
 
 This method receives a gramatical category and a string with flags. It
@@ -331,6 +374,8 @@ This method tries to find redundant entries on the dictionary,
 producing an ouput file to be executed and delete the redundancy.
 
 =head2 C<add_word>
+
+Add (one or more) word to the dictionary
 
  $dict->add_word({word=>'word',flags=>'zbr',CAT=>'np',G=>'f'},...)
 
