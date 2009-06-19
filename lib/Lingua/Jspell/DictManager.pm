@@ -41,11 +41,12 @@ sub modeach_word{
   my $dic = shift;
   my $func = shift;
   open DIC, $dic->{filename} or die("cannot open file");
-  open DIC, ">$dic->{filename}.new" or die("cannot create file $!");
+  open NDIC, ">$dic->{filename}.new" or die("cannot create file $!");
   while(<DIC>) {
-    if (m!^#! or m!^/s*$!){ print NDIC $_ ; next }
+    if (m!^#! or m!^\s*$!){ print NDIC $_ ; next }
 
-    my ($word,$class,$flags) = split '/', $_;
+    chomp;
+    my ($word,$class,$flags,@r) = split '/', $_;
     $class =~ s/#([A-Za-z][A-Za-z0-9]*)/$dic->{shortcut}{$1} || ""/ge if $class;
     my @flags = ($flags)?split(//, $flags):();
     my @atts = ($class)?split(/[,=]/, $class):();
@@ -56,7 +57,8 @@ sub modeach_word{
       %atts = @atts;
     }
 
-    print NDIC $func->($word,\%atts,\@flags) || $_;
+    print NDIC $func->($word,\%atts,\@flags,@r) || $_;
+    print NDIC "\n";
   }
   close DIC;
   close NDIC;
@@ -69,9 +71,9 @@ sub foreach_word {
   open DIC, $dic->{filename} or die("cannot open file");
   while(<DIC>) {
     next if m!^#!;
-    next if m!^/s*$!;
-
-    my ($word,$class,$flags) = split '/', $_;
+    next if m!^\s*$!;
+    chomp;
+    my ($word,$class,$flags,@r) = split '/', $_;
     $class =~ s/#([A-Za-z][A-Za-z0-9]*)/$dic->{shortcut}{$1} || ""/ge if $class;
     my @flags = ($flags)?split(//, $flags):();
     my @atts = ($class)?split(/[,=]/, $class):();
@@ -82,7 +84,7 @@ sub foreach_word {
       %atts = @atts;
     }
 
-    &{$func}($word,\%atts,\@flags);
+    &{$func}($word,\%atts,\@flags,@r);
   }
   close DIC;
 }
@@ -225,29 +227,33 @@ sub add_word {
 	$dict->_add_full_line(map {
 				my $word = $_->{word};
 				my $flags = $_->{flags};
+				my $comment = $_->{comment} || "";
 				delete($_->{word});
 				delete($_->{flags});
+				delete($_->{comment});
 				my %hash = %$_;
 				my $info = join(",",map {"$_=$hash{$_}"} keys %hash);
-				"$word/$info/$flags"
+				"$word/$info/$flags/$comment"
 				 } @_);
 }
 
 sub _add_full_line {
 	my $dict = shift;
-	my @p = map {"$_\n"} @_;
+    my %saw =();
+    @saw{@_} = ();
 	my @v;
 
 	open DIC, $dict->{filename} or die("cannot open dictionary file");
 	open NDIC, ">$dict->{filename}.new" or die("cannot open new dictionary file");
 	while (<DIC>) {
 		push @v,$_ and next if (/^#/);
-		push @p,$_;
+        chomp;
+		$saw{$_} = 1;
 	}
 	
 	print NDIC join "", @v;
 	print NDIC "\n\n";
-	print NDIC sort grep /./, @p;
+	print NDIC map {/./ ? ("$_\n"):()} sort keys %saw;
 	close DIC;
 	close NDIC;
     copy("$dict->{filename}.new",$dict->{filename});
