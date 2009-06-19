@@ -65,8 +65,11 @@ sub modeach_word{
   copy("$dic->{filename}.new",$dic->{filename});
 }
 
+
 sub foreach_word {
+  my %opt =(type => "struct");
   my $dic = shift;
+  if(ref($_[0]) eq "HASH") {%opt = (%opt , %{shift(@_)}) } ;
   my $func = shift;
   open DIC, $dic->{filename} or die("cannot open file");
   while(<DIC>) {
@@ -74,17 +77,19 @@ sub foreach_word {
     next if m!^\s*$!;
     chomp;
     my ($word,$class,$flags,@r) = split '/', $_;
-    $class =~ s/#([A-Za-z][A-Za-z0-9]*)/$dic->{shortcut}{$1} || ""/ge if $class;
-    my @flags = ($flags)?split(//, $flags):();
-    my @atts = ($class)?split(/[,=]/, $class):();
-    my %atts;
-    if (@atts % 2) {
-      %atts = ();
-    } else {
-      %atts = @atts;
-    }
+    if($opt{type} eq "struct"){
+      $class =~ s/#([A-Za-z][A-Za-z0-9]*)/$dic->{shortcut}{$1} || ""/ge if $class;
+      my @flags = ($flags)?split(//, $flags):();
+      my @atts = ($class)?split(/[,=]/, $class):();
+      my %atts;
+      if (@atts % 2) {
+        %atts = ();
+      } else {
+        %atts = @atts;
+      }
 
-    &{$func}($word,\%atts,\@flags,@r);
+      $func->($word,\%atts,\@flags,@r); }
+    elsif( $opt{type} eq "raw"){ $func->($_); }
   }
   close DIC;
 }
