@@ -5,7 +5,8 @@ use strict;
 use warnings;
 use Data::Dumper;
 use File::Copy;
-
+use YAML::Any qw(LoadFile !Load !Dump);
+use File::Spec::Functions;
 use Lingua::Jspell;
 
 require Exporter;
@@ -16,11 +17,38 @@ our %EXPORT_TAGS = ( 'all' => [ qw() ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our @EXPORT = qw( &toword );
+our @EXPORT = qw( &toword &install_dic );
 
 our $VERSION = '0.01_1';
 
 # Preloaded methods go here.
+
+
+sub install_dic{
+  my %opt =(yaml => undef, name=>undef);
+  if(ref($_[0]) eq "HASH") {%opt = (%opt , %{shift(@_)}) } ;
+  my ($aff,@dic)=@_;
+  if($aff =~ /^from:(.*)/){$aff = catfile($Lingua::Jspell::JSPELLLIB,"$1.aff") }
+  my $ya;
+  open(F,">__$$.dic") or die("Error: $!\n");
+  for (@dic){open(G, $_) or die("Error: $!\n");
+      print F <G>;
+      close G;
+  }
+  close F;
+  $ya = LoadFile($opt{yaml}) if $opt{yaml};
+  my $name = $opt{name} || $ya->{META}{IDS}[0] || $dic[0];
+  system ("jbuild __$$.dic $aff __$$.hash");
+  copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$name.hash"));
+  copy($aff,       catfile($Lingua::Jspell::JSPELLLIB,"$name.aff"));
+  if ($opt{yaml}){
+     copy($opt{yaml},       catfile($Lingua::Jspell::JSPELLLIB,"$name.yaml"));
+     for(@{$ya->{META}{IDS}}){
+        copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$_.hash"));
+     }
+  }
+  unlink("__$$.dic","__$$.hash");
+}
 
 sub init{
   my $file = shift;

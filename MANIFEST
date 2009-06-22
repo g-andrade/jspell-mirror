@@ -52,3 +52,7 @@ src/version.h
 src/xgets.c
 src/vars.c
 src/y.tab.c
+
+examples/ex1
+examples/microdic
+
