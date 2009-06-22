@@ -374,6 +374,12 @@ Lingua::Jspell::DictManager - a perl module for processing jspell dictionaries
 This function returns a new dictionary object to be used in future
 methods. It requires a string with the dictionary file name.
 
+=head2 C<install_dic>
+
+ install_dic({name=>"teste"} ,"t.aff", "t.dic")
+ install_dic({name=>"t"} ,"from:port", "t1.dic", "t2.dic")
+ install_dic({yaml=>"t.yaml"} ,"from:port", "t1.dic", "t2.dic")
+
 =head2 C<foreach_word>
 
 This method processes all words from the dictionary using the function
