@@ -43,12 +43,15 @@ elsif($name) {
   my @dic =();
   my @y=(name=>$name);
   my $aff = "";
+  my $hash ="";
   for(@ARGV){
     push(@dic,$_) if /\.dic$/;
+    $hash = $_ if /\.hash$/;
     $aff = $_ if /\.dic$/ || /from:/;
   }
   if (-f "$name.yaml")            { push(@y , yaml => "$name.yaml");  }
   if (-f "$name.irr")             { push(@y , irr  => "$name.irr" );  }
+  if ($hash)                      { push(@y , hash =>  $hash      );  }
   if (not @dic and -f "name.dic") { push(@dic ,"name.dic"); }
   if (not $aff and -f "name.$aff"){ $aff = "$name.aff"; }
 

@@ -40,7 +40,10 @@ sub install_dic{
   close F;
   $ya = LoadFile($opt{yaml}) if $opt{yaml};
   my $name = $opt{name} || $ya->{META}{IDS}[0] || $dic[0];
-  system ("jbuild __$$.dic $aff __$$.hash");
+
+  if($opt{hash}){ copy($opt{hash}, "__$$.hash"); }
+  else { system ("jbuild __$$.dic $aff __$$.hash"); }
+
   if($opt{irr}){
     copy($opt{irr},catfile($Lingua::Jspell::JSPELLLIB,$opt{irr}))
        or warn ("Error 3: $!");
