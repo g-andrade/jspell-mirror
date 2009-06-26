@@ -39,15 +39,19 @@ sub install_dic{
   $ya = LoadFile($opt{yaml}) if $opt{yaml};
   my $name = $opt{name} || $ya->{META}{IDS}[0] || $dic[0];
   system ("jbuild __$$.dic $aff __$$.hash");
-  copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$name.hash"));
-  copy($aff,       catfile($Lingua::Jspell::JSPELLLIB,"$name.aff"));
+  copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$name.hash"))
+    or warn ("Error: $!");
+  copy($aff,       catfile($Lingua::Jspell::JSPELLLIB,"$name.aff"))
+    or warn ("Error: $!");
   if ($opt{yaml}){
-     copy($opt{yaml},       catfile($Lingua::Jspell::JSPELLLIB,"$name.yaml"));
+     copy($opt{yaml},       catfile($Lingua::Jspell::JSPELLLIB,"$name.yaml"))
+       or warn ("Error: $!");
      for(@{$ya->{META}{IDS}}){
-        copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$_.hash"));
+        copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$_.hash"))
+           or warn ("Error: $!");
      }
   }
-  unlink("__$$.dic","__$$.hash");
+  unlink("__$$.dic","__$$.hash","__$$.dic.cnt","__$$.dic.stat");
 }
 
 sub init{
@@ -431,6 +435,11 @@ Deletes the word passed as argument.
 =head2 C<add_flag>
 
 Adds the flags in the first argument to all words passed.
+
+=head2 C<toword>
+
+to format Word, features, flags and commants to jspell-dict format.
+This functions is tically used em C<modeach_word>.
 
 =head1 AUTHOR
 
