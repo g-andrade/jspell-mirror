@@ -6,16 +6,16 @@ use warnings;
 use Getopt::Long;
 use File::Basename;
 use File::Spec::Functions;
-## use Lingua::Jspell::DictManager;
+use Lingua::Jspell::DictManager;
 
 my $libdir = catfile("[% PREFIX %]","lib","jspell");
 
 my ($exists, $listall, $dicdir, $name, $mkname);
 my $result = GetOptions("list-dics" => \$listall,
-			"gen-yaml=s" => \$mkname,
-			"install=s" => \$name,
-			"dic-dir" => \$dicdir,
-			"installed=s" => \$exists);
+	 			"gen-yaml=s" => \$mkname,
+				"install=s" => \$name,
+				"dic-dir" => \$dicdir,
+				"installed=s" => \$exists);
 
 my @dics = map { basename($_) } <$libdir/*hash>;
 
@@ -52,13 +52,14 @@ elsif($mkname) {
     print F qq{
 META:
  IDS: [$mkname]
+ SRC: [$mkname.dic, $mkname.aff]
  TAG:
    CAT:
-     card:
      nc: [G, N, GR]
      adj: [G, N, GR]
      a_nc: [G, N, GR]
      adv: [SUBCAT]
+     card:
      v:
        T:
          vpp: [G, P, N]
@@ -71,8 +72,8 @@ META:
 }
 
 else {
-  print " jspell-dict [--list-dics] | [--dic-dir] | [--installed=<dict>]
-    --gen-yaml=f.yaml
+  print " jspell-dict [-list-dics] | [-dic-dir] 
+                    | [-installed <dict>] | -gen-yaml f.yaml
 \n";
 }
 
@@ -82,11 +83,14 @@ jspell-dict - Command line tool to manage Jspell dictionaries
 
 =head1 SYNOPSIS
 
-  jspell-dict --list-dics
+  jspell-dict -list-dics
 
-  jspell-dict --dir
+  jspell-dict -dir
 
-  jspell-dict --installed
+  jspell-dict -installed
+
+  jspell-dict -gen-yaml name     (make name.yaml)
+
 
 =head1 DESCRIPTION
 

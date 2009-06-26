@@ -44,7 +44,6 @@ BEGIN {
   if (!$JSPELL) {
       # check if we are running under make test
       $JSPELL = "blib/script/jspell$EXE";
-      $JSPELLDICT = "blib/script/jspell-dict";
       $JSPELL = undef unless -e $JSPELL;
       die "jspell binary cannot be found!\n" unless $JSPELL;
   }
