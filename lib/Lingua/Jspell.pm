@@ -13,7 +13,7 @@ use base 'Exporter';
 our @EXPORT_OK = (qw.onethat verif nlgrep setstopwords onethatverif any2str hash2str.);
 our %EXPORT_TAGS = (basic => [qw.onethat verif onethatverif any2str hash2str.],
                     greps => [qw.nlgrep setstopwords.]);
-
+use File::Spec::Functions;
 use File::Which qw/which/;
 use IPC::Open3;
 use YAML::Any qw/LoadFile !Load !Dump/;
@@ -39,8 +39,8 @@ BEGIN {
   $EXE=".exe" if $^O eq "MSWin32";
 
   # Search for jspell binary.
+  my $JSPELL_PREFIX = "[% PREFIX %]";
   $JSPELL = which("jspell");
-  my $JSPELLDICT = which("jspell-dict");
   if (!$JSPELL) {
       # check if we are running under make test
       $JSPELL = "blib/script/jspell$EXE";
@@ -50,7 +50,7 @@ BEGIN {
   }
   die "jspell binary cannot be found!\n" unless -e $JSPELL;
 
-  chomp($JSPELLLIB = `$JSPELLDICT --dic-dir`);
+  $JSPELLLIB = catfile($JSPELL_PREFIX, "lib", "jspell");
 }
 
 =head1 SYNOPSIS
