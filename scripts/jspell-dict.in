@@ -39,39 +39,41 @@ elsif ($exists) {
 }
 elsif($name) {
 ## install_yaml_dic("$name.yaml") if -f "$name.yaml";
-#  if (-f "$name.yaml" && -f "$name.dic" && -f "$name.aff") {
-#  	install_dic({yaml=>"$name.yaml"},"$name.aff","$name.dic") if -f "$name.yaml" && -f "$name.dic" && -f "$name.aff";
-#  }
-#  else {
-#	die "Some required files not found\n";
-#  }
+  if (-f "$name.yaml" && -f "$name.dic" && -f "$name.aff") {
+  	install_dic({yaml=>"$name.yaml"},"$name.aff","$name.dic") 
+  }
+  else {
+	die "Some required files not found\n";
+  }
 }
 elsif($mkname) {
-#  if(-f "$mkname.yaml") { die "$mkname.yaml' already exists\n"}
-#  else { open(F,">$mkname.yaml") or die("Error: $!\n");
-#    print F qq{
-#META:
-# IDS: [$mkname]
-# TAG:
-#   CAT:
-#     card:
-#     nc: [G, N, GR]
-#     adj: [G, N, GR]
-#     a_nc: [G, N, GR]
-#     adv: [SUBCAT]
-#     v:
-#       T:
-#         vpp: [G, P, N]
-#         '-': [P, N]
-#     '-': [C, G, P, N]
-# PROPS:
-#};
-#     close F;
-#    }
+  if(-f "$mkname.yaml") { die "$mkname.yaml' already exists\n"}
+  else { open(F,">$mkname.yaml") or die("Error: $!\n");
+    print F qq{
+META:
+ IDS: [$mkname]
+ TAG:
+   CAT:
+     card:
+     nc: [G, N, GR]
+     adj: [G, N, GR]
+     a_nc: [G, N, GR]
+     adv: [SUBCAT]
+     v:
+       T:
+         vpp: [G, P, N]
+         '-': [P, N]
+     '-': [C, G, P, N]
+ PROPS:
+};
+     close F;
+    }
 }
 
 else {
-  print " jspell-dict [--list-dics] | [--dic-dir] | [--installed=<dict>]\n";
+  print " jspell-dict [--list-dics] | [--dic-dir] | [--installed=<dict>]
+    --gen-yaml=f.yaml
+\n";
 }
 
 =head1 NAME
