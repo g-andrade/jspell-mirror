@@ -39,12 +39,20 @@ elsif ($exists) {
 }
 elsif($name) {
 ## install_yaml_dic("$name.yaml") if -f "$name.yaml";
-  if (-f "$name.yaml" && -f "$name.dic" && -f "$name.aff") {
-  	install_dic({yaml=>"$name.yaml"},"$name.aff","$name.dic") 
+  my @file = @ARGV;
+  my @dic =();
+  my @y=(name=>$name);
+  my $aff = "";
+  for(@ARGV){
+    push(@dic,$_) if /\.dic$/;
+    $aff = $_ if /\.dic$/ || /from:/;
   }
-  else {
-	die "Some required files not found\n";
-  }
+  if (-f "$name.yaml")            { push(@y , yaml => "$name.yaml");  }
+  if (-f "$name.irr")             { push(@y , irr  => "$name.irr" );  }
+  if (not @dic and -f "name.dic") { push(@dic ,"name.dic"); }
+  if (not $aff and -f "name.$aff"){ $aff = "$name.aff"; }
+
+  install_dic({@y},$aff, @dic) 
 }
 elsif($mkname) {
   if(-f "$mkname.yaml") { die "$mkname.yaml' already exists\n"}
@@ -105,6 +113,10 @@ List installed dictionaries
 =item C<--install=name>
 
 install jspell dictionary from name.yaml, name.aff name.dic
+
+ jspell-dict -intall name          (name.yaml, name.aff, name.dic)
+ jspell-dict -intall name from:port d1.dic       (aff from language Port)
+ jspell-dict -intall name a.aff d1.dic d1.dic    (2 dictionaries)
 
 =item C<--gen-yaml=name>
 

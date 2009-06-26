@@ -25,13 +25,15 @@ our $VERSION = '0.01_1';
 
 
 sub install_dic{
-  my %opt =(yaml => undef, name=>undef);
+  my %opt =(yaml => undef, name=>undef); ## irr => "name.irr"
   if(ref($_[0]) eq "HASH") {%opt = (%opt , %{shift(@_)}) } ;
   my ($aff,@dic)=@_;
-  if($aff =~ /^from:(.*)/){$aff = catfile($Lingua::Jspell::JSPELLLIB,"$1.aff") }
+  my $cpaff=1;
+  if($aff =~ /^from:(.*)/){
+     $aff = catfile($Lingua::Jspell::JSPELLLIB,"$1.aff") ; $cpaff=0;}
   my $ya;
-  open(F,">__$$.dic") or die("Error: $!\n");
-  for (@dic){open(G, $_) or die("Error: $!\n");
+  open(F,">__$$.dic") or die("Error 1: $!\n");
+  for (@dic){open(G, $_) or die("Error 2($_): $!\n");
       print F <G>;
       close G;
   }
@@ -39,16 +41,22 @@ sub install_dic{
   $ya = LoadFile($opt{yaml}) if $opt{yaml};
   my $name = $opt{name} || $ya->{META}{IDS}[0] || $dic[0];
   system ("jbuild __$$.dic $aff __$$.hash");
+  if($opt{irr}){
+    copy($opt{irr},catfile($Lingua::Jspell::JSPELLLIB,$opt{irr}))
+       or warn ("Error 3: $!");
+  }
   copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$name.hash"))
-    or warn ("Error: $!");
-  copy($aff,       catfile($Lingua::Jspell::JSPELLLIB,"$name.aff"))
-    or warn ("Error: $!");
+    or warn ("Error 4: $!");
+  if($cpaff){
+    copy($aff,       catfile($Lingua::Jspell::JSPELLLIB,"$name.aff"))
+       or warn ("Error 5: $!");
+  }
   if ($opt{yaml}){
      copy($opt{yaml},       catfile($Lingua::Jspell::JSPELLLIB,"$name.yaml"))
-       or warn ("Error: $!");
+       or warn ("Error 6: $!");
      for(@{$ya->{META}{IDS}}){
         copy("__$$.hash",catfile($Lingua::Jspell::JSPELLLIB,"$_.hash"))
-           or warn ("Error: $!");
+           or warn ("Error 7: $!");
      }
   }
   unlink("__$$.dic","__$$.hash","__$$.dic.cnt","__$$.dic.stat");
@@ -383,6 +391,15 @@ methods. It requires a string with the dictionary file name.
  install_dic({name=>"teste"} ,"t.aff", "t.dic")
  install_dic({name=>"t"} ,"from:port", "t1.dic", "t2.dic")
  install_dic({yaml=>"t.yaml"} ,"from:port", "t1.dic", "t2.dic")
+ install_dic({yaml=>"t.yaml",irr=>"f.irr"} ,"from:port", "t1.dic")
+
+C<from:lang> is used to reuse the affix table from language C<lang> (the
+file lang.aff is imported from the jspell library directory. (see jspell-dic
+-dir)
+
+  name  -- name of the dictionary
+  yaml  -- yaml file with metadata
+  irr   -- file with irregular terms
 
 =head2 C<foreach_word>
 
