@@ -81,7 +81,9 @@ sub init{
 sub toword{ _data2line(@_) }
 
 sub modeach_word{
+  my %opt =(rawfea => 0);
   my $dic = shift;
+  if(ref($_[0]) eq "HASH") {%opt = (%opt , %{shift(@_)}) } ;
   my $func = shift;
   open DIC, $dic->{filename} or die("cannot open file");
   open NDIC, ">$dic->{filename}.new" or die("cannot create file $!");
@@ -90,17 +92,25 @@ sub modeach_word{
 
     chomp;
     my ($word,$class,$flags,@r) = split '/', $_;
-    $class =~ s/#([A-Za-z][A-Za-z0-9]*)/$dic->{shortcut}{$1} || ""/ge if $class;
     my @flags = ($flags)?split(//, $flags):();
-    my @atts = ($class)?split(/[,=]/, $class):();
-    my %atts;
-    if (@atts % 2) {
-      %atts = ();
-    } else {
-      %atts = @atts;
+    if(not $opt{rawfea}){
+      my @atts;
+      if ($class =~ /^\$/){ @atts = (special => $class)}
+      else {
+       $class =~ s/#([A-Za-z][A-Za-z0-9]*)/$dic->{shortcut}{$1} || ""/ge if $class;
+       @atts = ($class)?split(/[,=]/, $class):();
+      }
+      my %atts;
+      if (@atts % 2) {
+        %atts = ();
+      } else {
+        %atts = @atts;
+      }
+      print NDIC $func->($word,\%atts,\@flags,@r) || $_;
     }
-
-    print NDIC $func->($word,\%atts,\@flags,@r) || $_;
+    else {
+      print NDIC $func->($word,$class,\@flags,@r) || $_;
+    }
     print NDIC "\n";
   }
   close DIC;
@@ -355,10 +365,16 @@ sub add_flag {
 	#print "$a/$b/$c/$d\n";
 #}
 
-sub _data2line {
-  my ($word,$atts,$flags,@r) = @_;
-  return "$word/".join(",",map { "$_=$atts->{$_}" } keys %$atts)."/".join("",grep {/./} @$flags)."/".
-          join("/",@r);
+sub _data2line { my ($word,$atts,$flags,@r) = @_;
+  if(ref $atts){
+     return "$word/". join(",",map { "$_=$atts->{$_}" } keys %$atts).
+                 "/". join("",grep {/./} @$flags).
+                 "/". join("/",@r);
+  } else {
+     return "$word/". $atts .
+                 "/". join("",grep {/./} @$flags).
+                 "/". join("/",@r);
+  }
 }
 
 
@@ -417,6 +433,11 @@ This method processes all words from the dictionary using the function
 passed as argument. This function is called with three arguments: the
 word, a reference to an associative array with the category
 information and a reference to a list of rules identifiers.
+
+If the option C<rawfea =>1> is selected, modeach_word receives a string 
+instead of a hash reference.
+
+ modeach_word({rawfea=>1}, sub { my($w,$cat,$flags,@com)=@_; ... })
 
 Use the function C<toword($word,$fea,$flag,$coms)> to rebuild a new value;
 if "" is return, the previous value is kept.
