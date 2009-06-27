@@ -172,12 +172,16 @@ Returns a list of analisys of a word. Each analisys is a list of
 attribute value pairs. Attributes available: CAT, T, G, N, P, ....
 
   @l = $dic->fea($word)
+  @l = $dic->fea($word,{...att. value pair restriction})
+
+If a restriction is provided, just the analisys that verify 
+it are returned.
 
 =cut
 
 
 sub fea {
-  my ($self,$w) = @_;
+  my ($self,$w,$res) = @_;
 
   local $/="\n";
 
@@ -235,7 +239,8 @@ sub fea {
       }
     }
   }
-  return @r;
+  if($res){  return (grep { verif($res,$_) } @r) }
+  else    {  return @r; }
 }
 
 =head2 flags
