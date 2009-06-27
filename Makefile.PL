@@ -27,7 +27,7 @@ my %conf =
                  'IPC::Open2'         => '0',
                  'YAML::Any'          => '0.67',
                 },
-   PM_FILTER => '$(PERL) -pe "s{\\\\[% PREFIX %\\\\]}{$(SITEPREFIX)}"',
+   PM_FILTER => '$(PERL) scripts/changePrefix $(SITEPREFIX)',
    EXE_FILES => ["src/jspell$EXE",
                  "src/jbuild$EXE",
                  "scripts/jspell-dump",

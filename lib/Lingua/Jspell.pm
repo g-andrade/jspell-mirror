@@ -43,7 +43,7 @@ BEGIN {
   $JSPELL = which("jspell");
   if (!$JSPELL) {
       # check if we are running under make test
-      $JSPELL = "blib/script/jspell$EXE";
+      $JSPELL = catfile("blib","script","jspell$EXE");
       $JSPELL = undef unless -e $JSPELL;
       die "jspell binary cannot be found!\n" unless $JSPELL;
   }

@@ -56,3 +56,4 @@ src/y.tab.c
 examples/ex1
 examples/microdic
 
+scripts/changePrefix
