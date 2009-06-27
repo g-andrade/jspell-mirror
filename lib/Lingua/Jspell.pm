@@ -39,7 +39,7 @@ BEGIN {
   $EXE=".exe" if $^O eq "MSWin32";
 
   # Search for jspell binary.
-  my $JSPELL_PREFIX = "[% PREFIX %]";
+  my $JSPELL_PREFIX = '[% PREFIX %]';
   $JSPELL = which("jspell");
   if (!$JSPELL) {
       # check if we are running under make test
