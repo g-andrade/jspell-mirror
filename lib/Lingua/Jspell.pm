@@ -133,18 +133,24 @@ sub new {
 
 =item af
 
-Enable near misses, don't use rules where they are not applied, do not
-give suggestions by swapping adjacent letters on the original word.
+(add flags)
+Enable parcial near misses, 
+by using rules not officially associated with the current word. 
+Does not give suggestions by changing letters on the original word.
+(default option)
 
 =item full
 
+(add flags and change characters)
 Enable near misses, try to use rules where they are not applied, try 
 to give suggestions by swapping adjacent letters on the original word.
 
 =item cc
 
-Enable near misses, don't use rules where they are not applied, try 
-to give suggestions by swapping adjacent letters on the original word.
+(change characters)
+Enable parcial near misses, 
+by swapping adjacent, inserting or modifying letters on the original word.
+Does not use rules not associated with the current word. 
 
 =item off
 
@@ -890,13 +896,13 @@ sub _mode {
   my $m = shift;
   my $r="";
   if ($m->{nm}) {
-    if ($m->{nm} eq "af")
-      { $r .= "\$G\n\$P\n\$y\n" }
-    elsif ($m->{nm} eq "full")
+    if ($m->{nm} eq "af")              ### af = GPy --> Gym
+      { $r .= "\$G\n\$m\n\$y\n" }  
+    elsif ($m->{nm} eq "full")         ### full = GYm
       { $r .= "\$G\n\$Y\n\$m\n" }
-    elsif ($m->{nm} eq "cc")
+    elsif ($m->{nm} eq "cc")           ### cc = GPY
       { $r .= "\$G\n\$P\n\$Y\n" }
-    elsif ($m->{nm} eq "off")
+    elsif ($m->{nm} eq "off")          ### off = gPy
       { $r .= "\$g\n\$P\n\$y\n" }
     else {}
   }
