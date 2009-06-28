@@ -352,9 +352,9 @@ sub der {
 Returns the first Feature Structure from the supplied list that
 verifies the Feature Structure Pattern used.
 
-   $analysis = onethat( { CAT=>'adj' }, @features);
+  %analysis = onethat( { CAT=>'adj' }, @features);
 
-   $analysis = onethat( { CAT=>'adj' }, $pt->fea("espanhol"));
+  %analysis = onethat( { CAT=>'adj' }, $pt->fea("espanhol"));
 
 =cut
 
