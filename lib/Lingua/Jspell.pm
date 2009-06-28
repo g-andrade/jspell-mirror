@@ -798,7 +798,7 @@ sub mkradtxt {
   close F2;
 }
 
-=head2 isaguess
+=head2 isguess
 
  Lingua::Jspell::isguess(@ana)
 
