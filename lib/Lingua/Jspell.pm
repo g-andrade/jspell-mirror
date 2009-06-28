@@ -10,8 +10,10 @@ setlocale(LC_CTYPE, "pt_PT");
 use locale;
 
 use base 'Exporter';
-our @EXPORT_OK = (qw.onethat verif nlgrep setstopwords onethatverif any2str hash2str.);
-our %EXPORT_TAGS = (basic => [qw.onethat verif onethatverif any2str hash2str.],
+our @EXPORT_OK = (qw.onethat verif nlgrep setstopwords onethatverif any2str
+       hash2str isguess.);
+our %EXPORT_TAGS = (basic => [qw.onethat verif onethatverif any2str hash2str
+       isguess.],
                     greps => [qw.nlgrep setstopwords.]);
 use File::Spec::Functions;
 use File::Which qw/which/;
@@ -794,6 +796,20 @@ sub mkradtxt {
   }
   close F1;
   close F2;
+}
+
+=head2 isaguess
+
+ Lingua::Jspell::isguess(@ana)
+
+returns True if list of analisys are near 
+misses (unknown attribut is 1).
+
+=cut
+
+sub isguess{
+ my @a=@_;
+ return @a &&  $a[0]{unknown}; 
 }
 
 =head2 any2str
