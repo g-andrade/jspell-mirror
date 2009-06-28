@@ -807,7 +807,9 @@ sub mkradtxt {
 sub any2str {
   my ($r, $i) = @_;
   $i ||= 0;
-  if ($i eq "compact") {
+  if (not $r) {return ""}
+  if (ref $i) { any2str([@_]);}
+  elsif ($i eq "compact") {
     if (ref($r) eq "HASH") {
       return "{". hash2str($r,$i) . "}"
     } elsif (ref($r) eq "ARRAY") {
