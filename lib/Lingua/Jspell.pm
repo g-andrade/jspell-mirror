@@ -915,7 +915,7 @@ sub _mode {
   my $r="";
   if ($m->{nm}) {
     if ($m->{nm} eq "af")              ### af = GPy --> Gym
-      { $r .= "\$G\n\$m\n\$y\n" }  
+      { $r .= "\$G\n\$m\n\$y\n" }
     elsif ($m->{nm} eq "full")         ### full = GYm
       { $r .= "\$G\n\$Y\n\$m\n" }
     elsif ($m->{nm} eq "cc")           ### cc = GPY

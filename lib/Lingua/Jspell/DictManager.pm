@@ -492,6 +492,12 @@ This functions is tically used em C<modeach_word>.
 
  Lingua::Jspell(3), jspell(1)
 
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2007-2009 Projecto Natura
+
+This program is free software; licensed under GPL.
+
 =cut
 
 1;
