@@ -434,7 +434,7 @@ passed as argument. This function is called with three arguments: the
 word, a reference to an associative array with the category
 information and a reference to a list of rules identifiers.
 
-If the option C<rawfea =>1> is selected, modeach_word receives a string 
+If the option C<< rawfea =>1 >> is selected, modeach_word receives a string 
 instead of a hash reference.
 
  modeach_word({rawfea=>1}, sub { my($w,$cat,$flags,@com)=@_; ... })
