@@ -38,7 +38,7 @@ else {
         print $DW $_;
         print_lines($DR);
     }
-    close $_ for ($DW, $DR, $DE);	
+    for ($DW, $DR, $DE) { $_ and close $_ };	
 }
 
 sub print_lines {
