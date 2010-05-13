@@ -57,3 +57,4 @@ examples/ex1
 examples/microdic
 
 scripts/changePrefix
+examples/C/simple.c
