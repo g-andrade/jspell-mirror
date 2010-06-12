@@ -13,12 +13,33 @@ use File::Path qw.mkpath.;
 
 sub ACTION_install {
     my $self = shift;
+
     if (defined $self->{properties}{install_base}) {
         my $usrlib = catdir($self->{properties}{install_base} => 'lib');
         $self->install_path( 'usrlib' => $usrlib );
         warn "libjspell.so will install on $usrlib. Be sure to add it to your LIBRARY_PATH\n"
     }
-    $self->SUPER::ACTION_install;
+
+    # XXX - mais tarde o jspell.pc deve ir para $prefix/lib/pkgconfig
+    _interpolate('jspell.pc.in' => 'jspell.pc',
+                 VERSION    => $self->notes('version'),
+                 EXECPREFIX => $self->install_destination('bin'),
+                 LIBDIR     => $self->install_destination('usrlib'));
+
+
+
+    _interpolate('scripts/ujspell.in' => 'scripts/ujspell',
+                 BINDIR => $self->install_destination('bin'));
+    _interpolate('scripts/jspell-dict.in' => 'scripts/jspell-dict',
+                 LIBDIR => $self->install_destination('usrlib'));
+
+    for (qw.ujspell jspell-dict.) {
+        $self->copy_if_modified( from   => "scripts/$_",
+                                 to_dir => 'blib/bin',
+                                 flatten => 1 );
+    }
+
+    # $self->SUPER::ACTION_install;
     if ($^O =~ /linux/ && $ENV{USER} eq 'root') {
         my $ldconfig = Config::AutoConf->check_prog("ldconfig");
         system $ldconfig if (-x $ldconfig);

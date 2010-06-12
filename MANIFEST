@@ -13,7 +13,6 @@ t/00.load.t
 t/pod-coverage.t
 t/pod.t
 
-scripts/build.pl
 scripts/installdic.in
 scripts/jspell-dict.in
 scripts/jspell-dump
