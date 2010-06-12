@@ -37,8 +37,10 @@ sub ACTION_pre_install {
                  BINDIR => $self->install_destination('bin'));
     _interpolate('scripts/jspell-dict.in' => 'scripts/jspell-dict',
                  LIBDIR => $self->install_destination('usrlib'));
+    _interpolate('scripts/jspell-installdic.in' => 'scripts/jspell-installdic',
+                 LIBDIR => $self->install_destination('usrlib'));
 
-    for (qw.ujspell jspell-dict.) {
+    for (qw.ujspell jspell-dict jspell-installdic.) {
         $self->copy_if_modified( from   => "scripts/$_",
                                  to_dir => 'blib/bin',
                                  flatten => 1 );
