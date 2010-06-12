@@ -11,7 +11,7 @@ use ExtUtils::Mkbootstrap;
 use File::Spec::Functions qw.catdir catfile.;
 use File::Path qw.mkpath.;
 
-sub ACTION_install {
+sub ACTION_pre_install {
     my $self = shift;
 
     # Fix the path to the library in case the user specified it during install
@@ -43,7 +43,17 @@ sub ACTION_install {
                                  to_dir => 'blib/bin',
                                  flatten => 1 );
     }
+}
 
+sub ACTION_fakeinstall {
+    my $self = shift;
+    $self->dispatch("pre_install");
+    $self->SUPER::ACTION_fakeinstall;
+}
+
+sub ACTION_install {
+    my $self = shift;
+    $self->dispatch("pre_install");
     $self->SUPER::ACTION_install;
 
     # Run ldconfig if root
@@ -157,6 +167,12 @@ sub ACTION_create_manpages {
         $man =~ s!src!catdir("blib","bindoc")!e;
         next if $self->up_to_date($pod, $man);
         ## FIXME
+        `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
+    }
+
+    my $pod = 'scripts/jspell-dict.in';
+    my $man = catfile('blib','bindoc','jspell-dict.1');
+    unless ($self->up_to_date($pod, $man)) {
         `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
     }
 }
