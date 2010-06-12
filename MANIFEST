@@ -1,6 +1,7 @@
 Changes
 MANIFEST
-Makefile.PL
+Build.PL
+inc/MyBuilder.pm
 TODO
 README
 jspell.pc.in
