@@ -63,6 +63,9 @@ sub ACTION_install {
         my $ldconfig = Config::AutoConf->check_prog("ldconfig");
         system $ldconfig if (-x $ldconfig);
     }
+
+    print STDERR "Type 'jspell-installdic pt en' to install portuguese and english dictionaries.\n";
+    print STDERR "Note that dictionary installation should be performed by a superuser account.\n";
 }
 
 sub ACTION_code {
@@ -174,6 +177,12 @@ sub ACTION_create_manpages {
 
     my $pod = 'scripts/jspell-dict.in';
     my $man = catfile('blib','bindoc','jspell-dict.1');
+    unless ($self->up_to_date($pod, $man)) {
+        `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
+    }
+
+    $pod = 'scripts/jspell-installdic.in';
+    $man = catfile('blib','bindoc','jspell-installdic.1');
     unless ($self->up_to_date($pod, $man)) {
         `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
     }

@@ -13,11 +13,11 @@ t/00.load.t
 t/pod-coverage.t
 t/pod.t
 
-scripts/jspell-installdic
+scripts/jspell-installdic.in
 scripts/jspell-dict.in
-scripts/jspell-dump
 scripts/ujspell.in
 scripts/jspellfea
+scripts/jspell-dump
 
 src/correct.c
 src/defmt.c
