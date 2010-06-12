@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use lib 'inc';
+use File::Spec::Functions qw.catdir catfile.;
 use MyBuilder;
 
 my $version = get_version();
@@ -38,17 +39,22 @@ $builder = detect_curses($builder);
 
 ## HACK  HACK  HACK  HACK
 my $libdir = $builder->install_destination("bin");
+my $pkgconfig = $libdir;
 if ($^O =~ /mswin32/i) {
     $libdir = $ENV{WINDIR} || 'c:\\WINDOWS\\'; ## HACK HACK HACK
+    $pkgconfig = undef;
 } else {
     $libdir =~ s/\bbin\b/lib/;
+    $pkgconfig =~ s/\bbin\b/catdir("lib","pkgconfig")/e;
 }
 
 $builder->notes('version'  => $version);
 $builder->notes('libdir'   => $libdir);
 
 $builder->add_build_element('usrlib');
+$builder->add_build_element('pcfile');
 $builder->install_path( 'usrlib' => $libdir );
+$builder->install_path( 'pcfile' => $pkgconfig );
 
 $builder->create_build_script;
 

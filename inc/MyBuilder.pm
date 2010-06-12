@@ -14,20 +14,25 @@ use File::Path qw.mkpath.;
 sub ACTION_install {
     my $self = shift;
 
+    # Fix the path to the library in case the user specified it during install
     if (defined $self->{properties}{install_base}) {
         my $usrlib = catdir($self->{properties}{install_base} => 'lib');
         $self->install_path( 'usrlib' => $usrlib );
         warn "libjspell.so will install on $usrlib. Be sure to add it to your LIBRARY_PATH\n"
     }
 
-    # XXX - mais tarde o jspell.pc deve ir para $prefix/lib/pkgconfig
-    _interpolate('jspell.pc.in' => 'jspell.pc',
-                 VERSION    => $self->notes('version'),
-                 EXECPREFIX => $self->install_destination('bin'),
-                 LIBDIR     => $self->install_destination('usrlib'));
+    # Create and prepare for installation the .pc file if not under windows.
+    if ($^O ne "MSWin32") {
+        _interpolate('jspell.pc.in' => 'jspell.pc',
+                     VERSION    => $self->notes('version'),
+                     EXECPREFIX => $self->install_destination('bin'),
+                     LIBDIR     => $self->install_destination('usrlib'));
+        $self->copy_if_modified( from   => "jspell.pc",
+                                 to_dir => 'blib/pcfile',
+                                 flatten => 1 );
+    }
 
-
-
+    # Interpolate the script files, and prepare them for installation
     _interpolate('scripts/ujspell.in' => 'scripts/ujspell',
                  BINDIR => $self->install_destination('bin'));
     _interpolate('scripts/jspell-dict.in' => 'scripts/jspell-dict',
@@ -39,7 +44,9 @@ sub ACTION_install {
                                  flatten => 1 );
     }
 
-    # $self->SUPER::ACTION_install;
+    $self->SUPER::ACTION_install;
+
+    # Run ldconfig if root
     if ($^O =~ /linux/ && $ENV{USER} eq 'root') {
         my $ldconfig = Config::AutoConf->check_prog("ldconfig");
         system $ldconfig if (-x $ldconfig);
@@ -49,7 +56,9 @@ sub ACTION_install {
 sub ACTION_code {
     my $self = shift;
 
-    for my $path (catdir("blib","bindoc"), catdir("blib","bin")) {
+    for my $path (catdir("blib","bindoc"),
+                  catdir("blib","pcfile"),
+                  catdir("blib","bin")) {
         mkpath $path unless -d $path;
     }
 
