@@ -12,54 +12,47 @@ use File::Spec::Functions qw.catdir catfile.;
 use File::Path qw.mkpath.;
 
 sub ACTION_install {
-    # my $self = shift;
-    # if (defined $self->{properties}{install_base}) {
-    #     my $usrlib = catdir($self->{properties}{install_base} => 'lib');
-    #     $self->install_path( 'usrlib' => $usrlib );
-    #     warn "libbtparse.so will install on $usrlib. Be sure to add it to your LIBRARY_PATH\n"
-    # }
-    # $self->SUPER::ACTION_install;
-    # if ($^O =~ /linux/ && $ENV{USER} eq 'root') {
-    #     my $linux = Config::AutoConf->check_prog("ldconfig");
-    #     system $linux if (-x $linux);
-    # }
+    my $self = shift;
+    if (defined $self->{properties}{install_base}) {
+        my $usrlib = catdir($self->{properties}{install_base} => 'lib');
+        $self->install_path( 'usrlib' => $usrlib );
+        warn "libjspell.so will install on $usrlib. Be sure to add it to your LIBRARY_PATH\n"
+    }
+    $self->SUPER::ACTION_install;
+    if ($^O =~ /linux/ && $ENV{USER} eq 'root') {
+        my $ldconfig = Config::AutoConf->check_prog("ldconfig");
+        system $ldconfig if (-x $ldconfig);
+    }
 }
 
 sub ACTION_code {
-    # my $self = shift;
+    my $self = shift;
 
-    # for my $path (catdir("blib","bindoc"), catdir("blib","bin")) {
-    #     mkpath $path unless -d $path;
-    # }
+    for my $path (catdir("blib","bindoc"), catdir("blib","bin")) {
+        mkpath $path unless -d $path;
+    }
 
-    # my $version = $self->notes('btparse_version');
-    # my $alloca_h = 'undef HAVE_ALLOCA_H';
-    # $alloca_h = 'define HAVE_ALLOCA_H 1' if Config::AutoConf->check_header("alloca.h");
-    # _interpolate("btparse/src/bt_config.h.in",
-    #              "btparse/src/bt_config.h",
-    #              PACKAGE  => "\"libbtparse\"",
-    #              FPACKAGE => "\"libbtparse $version\"",
-    #              VERSION  => "\"$version\"",
-    #              ALLOCA_H => $alloca_h
-    #             );
+    _interpolate("src/jsconfig.in" => "src/jsconfig.h",
+                 VERSION => $self->notes('version'),
+                 LIBDIR  => $self->notes('libdir'),
+                );
 
-
-    # $self->dispatch("create_manpages");
-    # $self->dispatch("create_objects");
-    # $self->dispatch("create_library");
-    # $self->dispatch("create_binaries");
-    # $self->dispatch("create_tests");
+    $self->dispatch("create_manpages");
+    $self->dispatch("create_yacc");
+    $self->dispatch("create_objects");
+    $self->dispatch("create_library");
+    $self->dispatch("create_binaries");
 
     # $self->dispatch("compile_xscode");
 
-    # $self->SUPER::ACTION_code;
+    $self->SUPER::ACTION_code;
 }
 
-sub ACTION_compile_xscode {
+# sub ACTION_compile_xscode {
     # my $self = shift;
     # my $cbuilder = $self->cbuilder;
 
-    # my $archdir = catdir( $self->blib, 'arch', 'auto', 'Text', 'BibTeX');
+    # my $archdir = catdir( $self->blib, 'arch', 'auto', 'Lingua', 'Jspell');
     # mkpath( $archdir, 0, 0777 ) unless -d $archdir;
 
     # print STDERR "\n** Preparing XS code\n";
@@ -106,226 +99,140 @@ sub ACTION_compile_xscode {
     #                     lib_file    => $lib_file,
     #                    );
     # }
+#}
+
+sub ACTION_create_yacc {
+    my $self = shift;
+
+    my $ytabc  = catfile('src','y.tab.c');
+    my $parsey = catfile('src','parse.y');
+
+    return if $self->up_to_date($parsey, $ytabc);
+
+    my $yacc = Config::AutoConf->check_prog("yacc","bison");
+    if ($yacc) {
+        `$yacc -o $ytabc $parsey`;
+    }
 }
 
 sub ACTION_create_manpages {
-    # my $self = shift;
+    my $self = shift;
 
-    # print STDERR "\n** Creating Manpages\n";
+    my $pods = $self->rscan_dir("src", qr/\.pod$/);
 
-    # my $pods = $self->rscan_dir(catdir("btparse","doc"), qr/\.pod$/);
-
-    # my $version = $self->notes('btparse_version');
-    # for my $pod (@$pods) {
-    #     my $man = $pod;
-    #     $man =~ s!.pod!.1!;
-    #     $man =~ s!btparse/doc!blib/bindoc!;   ## FIXME - path
-    #     next if $self->up_to_date($pod, $man);
-    #     ## FIXME
-    #     `pod2man --section=1 --center="btparse" --release="btparse, version $version" $pod $man`;
-    # }
-
-    # my $pod = 'btool_faq.pod';
-    # my $man = catfile('blib','bindoc','btool_faq.1');
-    # unless ($self->up_to_date($pod, $man)) {
-    #     ## FIXME
-    #     `pod2man --section=1 --center="btparse" --release="btparse, version $version" $pod $man`;
-    # }
+    my $version = $self->notes('version');
+    for my $pod (@$pods) {
+        my $man = $pod;
+        $man =~ s!.pod!.1!;
+        $man =~ s!src!catdir("blib","bindoc")!e;
+        next if $self->up_to_date($pod, $man);
+        ## FIXME
+        `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
+    }
 }
 
 sub ACTION_create_objects {
-    # my $self = shift;
-    # my $cbuilder = $self->cbuilder;
+    my $self = shift;
+    my $cbuilder = $self->cbuilder;
 
-    # print STDERR "\n** Compiling C files\n";
-    # my $c_progs = $self->rscan_dir('btparse/progs', qr/\.c$/);
-    # my $c_src   = $self->rscan_dir('btparse/src',   qr/\.c$/);
-    # my $c_tests = $self->rscan_dir('btparse/tests', qr/\.c$/);
-    # my $c_xs    = $self->rscan_dir('xscode/',       qr/\.c$/);
-
-    # my @c_files = (@$c_progs, @$c_src, @$c_tests, @$c_xs);
-    # for my $file (@c_files) {
-    #     my $object = $file;
-    #     $object =~ s/\.c/.o/;
-    #     next if $self->up_to_date($file, $object);
-    #     $cbuilder->compile(object_file  => $object,
-    #                        source       => $file,
-    #                        include_dirs => ["btparse/src"]);
-    # }
+    my $c_files = $self->rscan_dir('src', qr/\.c$/);
+    for my $file (@$c_files) {
+        my $object = $file;
+        $object =~ s/\.c/.o/;
+        next if $self->up_to_date($file, $object);
+        $cbuilder->compile(object_file  => $object,
+                           source       => $file,
+                           include_dirs => ["src"],
+                           extra_compiler_flags => $self->notes('ccurses'));
+    }
 }
 
 
 sub ACTION_create_binaries {
-    # my $self = shift;
-    # my $cbuilder = $self->cbuilder;
+    my $self = shift;
+    my $cbuilder = $self->cbuilder;
 
-    # my $EXEEXT = $Config::AutoConf::EXEEXT;
+    my $EXEEXT = $Config::AutoConf::EXEEXT;
 
-    # my ($LD,$CCL) = Config::AutoConf::Linker::detect_library_link_commands($cbuilder);
-    # die "Can't get a suitable way to compile a C library\n" if (!$LD || !$CCL);
+    my ($LD,$CCL) = Config::AutoConf::Linker::detect_library_link_commands($cbuilder);
+    die "Can't get a suitable way to compile a C library\n" if (!$LD || !$CCL);
 
-    # print STDERR "\n** Creating binaries (dumpnames$EXEEXT, biblex$EXEEXT, bibparse$EXEEXT)\n";
+    my $extralinkerflags = $self->notes('lcurses').$self->notes('ccurses');
 
-    # my @toinstall;
-    # my $exe_file = catfile("btparse","progs","dumpnames$EXEEXT");
-    # push @toinstall, $exe_file;
-    # my $object   = catfile("btparse","progs","dumpnames.o");
-    # my $btparselibdir = $self->install_path('usrlib');
-    # if (!$self->up_to_date($object, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            objects  => [ $object ],
-    #            ($^O !~ /darwin/)?
-    #            (extra_linker_flags => "-Lbtparse/src -Wl,-R${btparselibdir} -lbtparse "):
-    #            (extra_linker_flags => "-Lbtparse/src -lbtparse "));
-    # }
+    my @toinstall;
+    my $exe_file = catfile("src","jspell$EXEEXT");
+    push @toinstall, $exe_file;
+    my $object   = catfile("src","jmain.o");
+    my $libdir   = $self->install_path('usrlib');
+    if (!$self->up_to_date($object, $exe_file)) {
+        $CCL->($cbuilder,
+               exe_file => $exe_file,
+               objects  => [ $object ],
+               ($^O !~ /darwin/)?
+               (extra_linker_flags => "-Lsrc -Wl,-R${libdir} -ljspell $extralinkerflags"):
+               (extra_linker_flags => "-Lsrc -ljspell $extralinkerflags"));
+    }
 
-    # $exe_file = catfile("btparse","progs","biblex$EXEEXT");
-    # push @toinstall, $exe_file;
-    # $object   = catfile("btparse","progs","biblex.o");
-    # if (!$self->up_to_date($object, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            objects  => [ $object ],
-    #            ($^O !~ /darwin/)?
-    #            (extra_linker_flags => "-Lbtparse/src -Wl,-R${btparselibdir} -lbtparse "):
-    #            (extra_linker_flags => "-Lbtparse/src -lbtparse "));
-    # }
+    $exe_file = catfile("src","jbuild$EXEEXT");
+    push @toinstall, $exe_file;
+    $object   = catfile("src","jbuild.o");
+    if (!$self->up_to_date($object, $exe_file)) {
+        $CCL->($cbuilder,
+               exe_file => $exe_file,
+               objects  => [ $object ],
+               ($^O !~ /darwin/)?
+               (extra_linker_flags => "-Lsrc -Wl,-R${libdir} -ljspell $extralinkerflags"):
+               (extra_linker_flags => "-Lsrc -ljspell $extralinkerflags"));
+    }
 
-    # $exe_file = catfile("btparse","progs","bibparse$EXEEXT");
-    # push @toinstall, $exe_file;
-    # $object   = [map {catfile("btparse","progs","$_.o")} (qw.bibparse args getopt getopt1.)];
-    # if (!$self->up_to_date($object, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            ($^O !~ /darwin/)?
-    #            (extra_linker_flags => "-Lbtparse/src -Wl,-R${btparselibdir} -lbtparse "):
-    #            (extra_linker_flags => "-Lbtparse/src -lbtparse "),
-    #            objects => $object);
-    # }
 
-    # for my $file (@toinstall) {
-    #     $self->copy_if_modified( from    => $file,
-    #                              to_dir  => "blib/bin",
-    #                              flatten => 1);
-    # }
-
-}
-
-sub ACTION_create_tests {
-    # my $self = shift;
-    # my $cbuilder = $self->cbuilder;
-
-    # my $EXEEXT = $Config::AutoConf::EXEEXT;
-
-    # my ($LD,$CCL) = Config::AutoConf::Linker::detect_library_link_commands($cbuilder);
-    # die "Can't get a suitable way to compile a C library\n" if (!$LD || !$CCL);
-
-    # print STDERR "\n** Creating test binaries\n";
-
-    # my $exe_file = catfile("btparse","tests","simple_test$EXEEXT");
-    # my $objects  = [ map{catfile("btparse","tests","$_.o")} (qw.simple_test testlib.) ];
-
-    # if (!$self->up_to_date($objects, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            extra_linker_flags => '-Lbtparse/src -lbtparse ',
-    #            objects => $objects);
-    # }
-
-    # $exe_file = catfile("btparse","tests","read_test$EXEEXT");
-    # $objects  = [ map{catfile("btparse","tests","$_.o")}(qw.read_test testlib.) ];
-    # if (!$self->up_to_date($objects, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            extra_linker_flags => '-Lbtparse/src -lbtparse ',
-    #            objects => $objects);
-    # }
-
-    # $exe_file = catfile("btparse","tests","postprocess_test$EXEEXT");
-    # $objects  = [ map{catfile("btparse","tests","$_.o")}(qw.postprocess_test.) ];
-    # if (!$self->up_to_date($objects, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            extra_linker_flags => '-Lbtparse/src -lbtparse ',
-    #            objects => $objects);
-    # }
-
-    # $exe_file = catfile("btparse","tests","tex_test$EXEEXT");
-    # $objects  = [ map{catfile("btparse","tests","$_.o")}(qw.tex_test.) ];
-    # if (!$self->up_to_date($objects, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            extra_linker_flags => '-Lbtparse/src -lbtparse ',
-    #            objects => $objects);
-    # }
-
-    # $exe_file = catfile("btparse","tests","macro_test$EXEEXT");
-    # $objects  = [ map{catfile("btparse","tests","$_.o")}(qw.macro_test.) ];
-    # if (!$self->up_to_date($objects, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            extra_linker_flags => '-Lbtparse/src -lbtparse ',
-    #            objects => $objects);
-    # }
-
-    # $exe_file = catfile("btparse","tests","name_test$EXEEXT");
-    # $objects  = [ map{catfile("btparse","tests","$_.o")}(qw.name_test.) ];
-    # if (!$self->up_to_date($objects, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            extra_linker_flags => '-Lbtparse/src -lbtparse ',
-    #            objects => $objects);
-    # }
-
-    # $exe_file = catfile("btparse","tests","purify_test$EXEEXT");
-    # $objects  = [ map{catfile("btparse","tests","$_.o")}(qw.purify_test.) ];
-    # if (!$self->up_to_date($objects, $exe_file)) {
-    #     $CCL->($cbuilder,
-    #            exe_file => $exe_file,
-    #            extra_linker_flags => '-Lbtparse/src -lbtparse ',
-    #            objects => $objects);
-    # }
+    for my $file (@toinstall) {
+        $self->copy_if_modified( from    => $file,
+                                 to_dir  => "blib/bin",
+                                 flatten => 1);
+    }
 }
 
 sub ACTION_create_library {
-    # my $self = shift;
-    # my $cbuilder = $self->cbuilder;
+    my $self = shift;
+    my $cbuilder = $self->cbuilder;
 
-    # my $LIBEXT = $Config::AutoConf::LIBEXT;
-    # print STDERR "\n** Creating libbtparse$LIBEXT\n";
+    my $LIBEXT = $Config::AutoConf::LIBEXT;
 
-    # my @modules = qw:init input bibtex err scan error
-    #                  lex_auxiliary parse_auxiliary bibtex_ast sym
-    #                  util postprocess macros traversal modify
-    #                  names tex_tree string_util format_name:;
+    my @files = qw!correct defmt dump gclass good hash jjflags
+                   jslib jspell lookup makedent sc-corr term
+                   tgood tree vars xgets y.tab!;
 
-    # my @objects = map { "btparse/src/$_.o" } @modules;
+    my @objects = map { catfile("src","$_.o") } @files;
 
-    # my ($LD,$CCL) = Config::AutoConf::Linker::detect_library_link_commands($cbuilder);
-    # die "Can't get a suitable way to compile a C library\n" if (!$LD || !$CCL);
+    my ($LD,$CCL) = Config::AutoConf::Linker::detect_library_link_commands($cbuilder);
+    die "Can't get a suitable way to compile a C library\n" if (!$LD || !$CCL);
 
-    # my $libpath = $self->notes('lib_path');
-    # $libpath = catfile($libpath, "libbtparse$LIBEXT");
-    # my $libfile = "btparse/src/libbtparse$LIBEXT";
+    my $libpath = $self->notes('libdir');
+    $libpath = catfile($libpath, "libjspell$LIBEXT");
+    my $libfile = catfile("src","libjspell$LIBEXT");
 
-    # if (!$self->up_to_date(\@objects, $libfile)) {
-    #     $LD->($cbuilder,
-    #           module_name => 'btparse',
-    #           ($^O =~ /darwin/)?(extra_linker_flags => "-install_name $libpath"):(),
-    #           objects => \@objects,
-    #           lib_file => $libfile);
-    # }
+    my $extralinkerflags = $self->notes('lcurses').$self->notes('ccurses');
+    $extralinkerflags.=" -install_name $libpath" if $^O =~ /darwin/;
 
-    # my $libdir = catdir($self->blib, 'usrlib');
-    # mkpath( $libdir, 0, 0777 ) unless -d $libdir;
+    if (!$self->up_to_date(\@objects, $libfile)) {
+        $LD->($cbuilder,
+              module_name => 'libjspell',
+              extra_linker_flags => $extralinkerflags,
+              objects => \@objects,
+              lib_file => $libfile,
+             );
+    }
 
-    # $self->copy_if_modified( from   => $libfile,
-    #                          to_dir => $libdir,
-    #                          flatten => 1 );
+    my $libdir = catdir($self->blib, 'usrlib');
+    mkpath( $libdir, 0, 0777 ) unless -d $libdir;
+
+    $self->copy_if_modified( from   => $libfile,
+                             to_dir => $libdir,
+                             flatten => 1 );
 }
 
-sub ACTION_test {
+#sub ACTION_test {
     # my $self = shift;
 
     # if ($^O =~ /darwin/i) {
@@ -340,21 +247,21 @@ sub ACTION_test {
     # }
 
     # $self->SUPER::ACTION_test
-}
+#}
 
 
 sub _interpolate {
-    # my ($from, $to, %config) = @_;
+    my ($from, $to, %config) = @_;
 	
-    # print "Creating new '$to' from '$from'.\n";
-    # open FROM, $from or die "Cannot open file '$from' for reading.\n";
-    # open TO, ">", $to or die "Cannot open file '$to' for writing.\n";
-    # while (<FROM>) {
-    #     s/\[%\s*(\S+)\s*%\]/$config{$1}/ge;		
-    #     print TO;
-    # }
-    # close TO;
-    # close FROM;
+    print "Creating new '$to' from '$from'.\n";
+    open FROM, $from or die "Cannot open file '$from' for reading.\n";
+    open TO, ">", $to or die "Cannot open file '$to' for writing.\n";
+    while (<FROM>) {
+        s/\[%\s*(\S+)\s*%\]/$config{$1}/ge;		
+        print TO;
+    }
+    close TO;
+    close FROM;
 }
 
 
