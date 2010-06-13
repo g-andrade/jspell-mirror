@@ -16,8 +16,8 @@ my %dics;
 @dics{@dics}=@dics;
 ####################################
 
-while (@ARGS) {
-    my $language = lc(shift @ARGS);
+while (@ARGV) {
+    my $language = lc(shift @ARGV);
     warn "Dictionary $language not available\n" unless exists $dics{$language};
 
     my $host = 'http://natura.di.uminho.pt/';

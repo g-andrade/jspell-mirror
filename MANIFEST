@@ -58,3 +58,5 @@ examples/microdic
 
 scripts/changePrefix
 examples/C/simple.c
+META.yml
+jspell-dist.pod

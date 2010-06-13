@@ -41,6 +41,7 @@ sub ACTION_pre_install {
                  LIBDIR => $self->install_destination('usrlib'));
 
     for (qw.ujspell jspell-dict jspell-installdic.) {
+        chmod 0755, "scripts/$_";
         $self->copy_if_modified( from   => "scripts/$_",
                                  to_dir => 'blib/bin',
                                  flatten => 1 );
