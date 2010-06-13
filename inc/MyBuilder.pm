@@ -293,7 +293,9 @@ sub ACTION_create_library {
 sub ACTION_test {
     my $self = shift;
 
-    if ($^O =~ /darwin/i) {
+    if ($^O =~ /mswin32/i) {
+        $ENV{PATH} = catdir($self->blib,"usrlib");
+    } elsif ($^O =~ /darwin/i) {
         $ENV{DYLD_LIBRARY_PATH} = catdir($self->blib,"usrlib");
     }
     elsif ($^O =~ /(?:linux|bsd|sun|sol|dragonfly|hpux|irix)/i) {
