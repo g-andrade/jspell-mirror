@@ -16,6 +16,7 @@ my $builder = MyBuilder->new
    needs_compiler => 1,
    build_requires => {
                       'File::Copy'         => '0',
+                      'ExtUtils::MANIFEST' => '0',
                       'Config::AutoConf'   => '0.14',
                       'ExtUtils::CBuilder' => '0.27',
                       'Module::Build'      => '0.3603',

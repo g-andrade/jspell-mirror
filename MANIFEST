@@ -56,7 +56,6 @@ src/y.tab.c
 examples/ex1
 examples/microdic
 
-scripts/changePrefix
 examples/C/simple.c
 META.yml
 jspell-dist.pod

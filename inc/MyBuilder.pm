@@ -33,18 +33,18 @@ sub ACTION_pre_install {
     }
 
     # Interpolate the script files, and prepare them for installation
-    _interpolate('scripts/ujspell.in' => 'scripts/ujspell',
+    _interpolate(catfile('scripts','ujspell.in') => catfile('scripts','ujspell'),
                  BINDIR => $self->install_destination('bin'));
-    _interpolate('scripts/jspell-dict.in' => 'scripts/jspell-dict',
+    _interpolate(catfile('scripts','jspell-dict.in') => catfile('scripts','jspell-dict'),
                  LIBDIR => $self->install_destination('usrlib'));
-    _interpolate('scripts/jspell-installdic.in' => 'scripts/jspell-installdic',
+    _interpolate(catfile('scripts','jspell-installdic.in')=> catfile('scripts','jspell-installdic'),
                  LIBDIR => $self->install_destination('usrlib'));
 
     for (qw.ujspell jspell-dict jspell-installdic.) {
-        chmod 0755, "scripts/$_";
-        $self->copy_if_modified( from   => "scripts/$_",
-                                 to_dir => 'blib/bin',
+        $self->copy_if_modified( from   => catfile("scripts",$_),
+                                 to_dir => catdir('blib','script'),
                                  flatten => 1 );
+        $self->make_executable( catfile('blib','script',$_ ));
     }
 }
 
@@ -74,6 +74,7 @@ sub ACTION_code {
 
     for my $path (catdir("blib","bindoc"),
                   catdir("blib","pcfile"),
+                  catdir("blib","script"),
                   catdir("blib","bin")) {
         mkpath $path unless -d $path;
     }
@@ -294,7 +295,7 @@ sub ACTION_test {
     my $self = shift;
 
     if ($^O =~ /mswin32/i) {
-        $ENV{PATH} = catdir($self->blib,"usrlib");
+        $ENV{PATH} = catdir($self->blib,"usrlib").";$ENV{PATH}";
     } elsif ($^O =~ /darwin/i) {
         $ENV{DYLD_LIBRARY_PATH} = catdir($self->blib,"usrlib");
     }
