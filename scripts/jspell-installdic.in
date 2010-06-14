@@ -121,7 +121,10 @@ sub install_directory {
     $v and print STDERR "- creating .hash file...";
     my $JBUILD = which "jbuild";
     die "Need jbuild binary...\n" unless $JBUILD;
-    `cd _OUT; jbuild $lang.dic $lang.aff $lang.hash`;
+    my $cwd = getcwd;
+    chdir '_OUT';
+    `jbuild $lang.dic $lang.aff $lang.hash`;
+    chdir $cwd;
     $v and print STDERR " OK\n";
 
     # 7. try to create the output dir

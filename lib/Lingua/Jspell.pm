@@ -44,7 +44,7 @@ BEGIN {
 
     # Search for jspell binary.
     my $JSPELL_PREFIX = '[% PREFIX %]';
-    $JSPELL = which("jspell");
+    $JSPELL = which("jspell$EXE");
     if (!$JSPELL) {
         # check if we are running under make test
         $JSPELL = catfile("blib","bin","jspell$EXE");

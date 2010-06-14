@@ -79,9 +79,11 @@ sub ACTION_code {
         mkpath $path unless -d $path;
     }
 
+    my $x = $self->notes('libdir');
+    $x =~ s/\\/\\\\/g;
     _interpolate("src/jsconfig.in" => "src/jsconfig.h",
                  VERSION => $self->notes('version'),
-                 LIBDIR  => $self->notes('libdir'),
+                 LIBDIR  => $x,
                 );
 
     $self->dispatch("create_manpages");
