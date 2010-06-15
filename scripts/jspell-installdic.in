@@ -27,7 +27,7 @@ for (@ARGV) {
     if (-d $_) {
         install_directory($_);
     } else {
-        my $language = lc(shift @ARGV);
+        my $language = lc;
         unless (exists $dics{$language}) {
             warn "Dictionary $language not available\n";
             next;
