@@ -16,7 +16,7 @@ our @EXPORT_OK = (qw.onethat verif nlgrep setstopwords
 our %EXPORT_TAGS = (basic => [qw.onethat verif onethatverif
                                  any2str hash2str isguess.],
                     greps => [qw.nlgrep setstopwords.]);
-
+# use Data::Dumper;
 use File::Spec::Functions;
 use File::Which qw/which/;
 use IPC::Open3;
@@ -94,7 +94,7 @@ sub new {
   local $/="\n";
   my $class = shift;
 
-  $self->{dictionary} = shift;
+  $self->{dictionary}  = shift;
   $self->{pdictionary} = shift ||
     (defined($ENV{HOME})?"$ENV{HOME}/.jspell.$self->{dictionary}":"");
 
@@ -155,9 +155,14 @@ sub nearmatches {
 
     my @words = ($word);
     for my $c (keys %classes) {
-        my $o = $word;
-        $o =~ s/$c/$classes{$c}/;
-        push @words, $o if $o ne $word;
+        my @where;
+        my $l = length($c);
+        push @where, pos($word)-$l while $word =~ /$c/g;
+        for my $i (@where) {
+            my $o = $word;
+            substr($o,$i,length($c), $classes{$c});
+            push @words, $o if $o ne $word;
+        }
     }
 
     my $current_mode = $dict->setmode;
