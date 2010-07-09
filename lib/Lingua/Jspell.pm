@@ -160,7 +160,17 @@ sub nearmatches {
         push @words, $o if $o ne $word;
     }
 
-    return @words;
+    my $current_mode = $dict->setmode;
+    $dict->setmode({flags => 0, nm => "cc" });
+
+    my @nms;
+    for my $w (@words) {
+        my @analysis = $dict->fea($w);
+        push @nms, @analysis;
+    }
+
+    $dict->setmode($current_mode);
+    return @nms;
 }
 
 sub _expand_classes { map { _expand_class($_) } @_ }
@@ -185,24 +195,21 @@ sub _expand_class {
 
 =item af
 
-(add flags)
-Enable parcial near misses, 
-by using rules not officially associated with the current word. 
-Does not give suggestions by changing letters on the original word.
-(default option)
+(add flags) Enable parcial near misses, by using rules not officially
+associated with the current word.  Does not give suggestions by
+changing letters on the original word.  (default option)
 
 =item full
 
-(add flags and change characters)
-Enable near misses, try to use rules where they are not applied, try 
-to give suggestions by swapping adjacent letters on the original word.
+(add flags and change characters) Enable near misses, try to use rules
+where they are not applied, try to give suggestions by swapping
+adjacent letters on the original word.
 
 =item cc
 
-(change characters)
-Enable parcial near misses, 
-by swapping adjacent, inserting or modifying letters on the original word.
-Does not use rules not associated with the current word. 
+(change characters) Enable parcial near misses, by swapping adjacent,
+inserting or modifying letters on the original word.  Does not use
+rules not associated with the current word.
 
 =item off
 
