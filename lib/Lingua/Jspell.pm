@@ -22,7 +22,6 @@ use File::Which qw/which/;
 use IPC::Open3;
 use YAML::Any qw/LoadFile !Load !Dump/;
 
-
 =head1 NAME
 
 =encoding utf8
@@ -43,7 +42,8 @@ BEGIN {
     $EXE=".exe" if $^O eq "MSWin32";
 
     # Search for jspell binary.
-    my $JSPELL_PREFIX = '[% PREFIX %]';
+    # LIBDIR = "/opt/local/lib/jspell"
+
     $JSPELL = which("jspell$EXE");
     if (!$JSPELL) {
         # check if we are running under make test
@@ -53,7 +53,14 @@ BEGIN {
     }
     die "jspell binary cannot be found!\n" unless -e $JSPELL;
 
-    $JSPELLLIB = catfile($JSPELL_PREFIX, "lib", "jspell");
+    open X, "$JSPELL -vv|" or die "Can't execute $JSPELL";
+    while (<X>) {
+        if (/LIBDIR = "([^"]+)"/) {
+            $JSPELLLIB = $1;
+        }
+    }
+    close X;
+    die "Can't find out jspell lib dir" unless $JSPELLLIB;
 }
 
 =head1 SYNOPSIS
@@ -72,6 +79,7 @@ BEGIN {
     $dict->flags("gato");       # list of roots and flags
 
 =head1 FUNCTIONS
+
 
 =head2 new
 
@@ -102,7 +110,6 @@ sub new {
   }
 
 
-
   my $js = "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o'%s!%s:%s:%s:%s'";
   $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},$js) or die $!;
 		
@@ -127,6 +134,47 @@ sub new {
   else {
       return undef
   }
+}
+
+=head2 nearmatches
+
+=cut
+
+sub nearmatches {
+    my ($dict, $word, %ops) = @_;
+    my %classes;
+    if ($ops{rules}) {
+        %classes = (); # XXX - FIX ME
+    } else {
+        if (exists($dict->{yaml}{META}{SNDCLASSES})) {
+            %classes = _expand_classes(@{ $dict->{yaml}{META}{SNDCLASSES} });
+        } else {
+            warn "No snd classes defined\n";
+        }
+    }
+
+    my @words = ($word);
+    for my $c (keys %classes) {
+        my $o = $word;
+        $o =~ s/$c/$classes{$c}/;
+        push @words, $o if $o ne $word;
+    }
+
+    return @words;
+}
+
+sub _expand_classes { map { _expand_class($_) } @_ }
+
+sub _expand_class {
+    my @class = @{ $_[0] };
+    my %subs;
+    for my $c (@class) {
+        my @other = grep { $_ ne $c } @class;
+        for (@other) {
+            $subs{$c} = $_;
+        }
+    }
+    %subs
 }
 
 =head2 setmode
