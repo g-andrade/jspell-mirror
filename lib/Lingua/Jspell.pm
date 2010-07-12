@@ -31,7 +31,7 @@ Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
 =cut
 
-our $VERSION = '1.65';
+our $VERSION = '1.66';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };
@@ -139,13 +139,46 @@ sub new {
 
 =head2 nearmatches
 
+This method returns a list of analysis for words that are near-matches
+to the supplied word. Note that although a word might exist, this
+method will compute the near-matches as well.
+
+  @nearmatches = $dictionary->nearmatches('cavale');
+
+To compute the list of words to analyze, the method uses a list of
+equivalence classes that are present on the C<< SNDCLASSES >> section
+of dictionaries yaml files.
+
+It is also possible to specify a list of user-defined classes. These
+are supplied as a filename that contains, per line, the characters
+that are equivalent (with spaces separating them):
+
+   ch   x
+   ss   ç
+
+This example says that if a word uses C<ch>, then it can be replaced
+by C<x> for near-matches calculation. The inverse is also true.
+
+If these rules are stored in a file named C<classes.txt>, you can
+supply this list with:
+
+  @nearmatches = $dictionary->nearmatches('chaile', rules => 'classes.txt');
+
 =cut
 
 sub nearmatches {
     my ($dict, $word, %ops) = @_;
     my %classes;
     if ($ops{rules}) {
-        %classes = (); # XXX - FIX ME
+        -f $ops{rules} or die "Can't find file $ops{rules}";
+        open RULES, $ops{rules} or die "Can't open file $ops{rules}";
+        my @rules;
+        while(<RULES>) {
+            chomp;
+            push @rules, [split /\s+/];
+        }
+        close RULES;
+        %classes = _expand_classes(@rules);
     } else {
         if (exists($dict->{yaml}{META}{SNDCLASSES})) {
             %classes = _expand_classes(@{ $dict->{yaml}{META}{SNDCLASSES} });
