@@ -21,6 +21,7 @@ use File::Spec::Functions;
 use File::Which qw/which/;
 use IPC::Open3;
 use YAML::Any qw/LoadFile !Load !Dump/;
+use Data::Compare;
 
 =head1 NAME
 
@@ -174,8 +175,18 @@ sub nearmatches {
         push @nms, @analysis;
     }
 
+    @nms = _remove_dups(@nms);
+
     $dict->setmode($current_mode);
     return @nms;
+}
+
+sub _remove_dups {
+    my @new;
+    while (my $struct = shift @_) {
+        push @new, $struct unless grep { Compare($_,$struct) } @new;
+    }
+    @new;
 }
 
 sub _expand_classes { map { _expand_class($_) } @_ }
