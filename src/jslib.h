@@ -63,6 +63,8 @@ char * replace_word();
 
 /*----------------------------------------*/
 
+#if 0  /* commented on jslib.c as well (strange)
+
 typedef unsigned int ID_TYPE; 
 
 ID_TYPE word_id(char *word, char *feats, int *status);
@@ -76,6 +78,8 @@ char *class_f_id(ID_TYPE id);
 
 char *flags_f_id(ID_TYPE id);
 /* class from id: returns a string with the flags of this word */
+
+#endif
 
 /*---------------------------------------------------------------------*/
 /* Feature processing                                                  */

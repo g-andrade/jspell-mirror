@@ -1,5 +1,8 @@
 Revision history for Lingua-Jspell
 
+1.67
+   - Fixed small detail on 'nearmatches' method
+
 1.66 July 13, 2010
    - Added 'nearmatches' method.
    - Fixed some issues with relative paths.
