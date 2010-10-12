@@ -8,6 +8,7 @@ use File::Which qw/which/;
 use File::Copy;
 use File::Spec::Functions qw'catfile catdir';
 use File::Path;
+use Lingua::Jspell::ConfigData;
 use Cwd;
 use LWP::Simple;
 use Archive::Any;
@@ -15,7 +16,7 @@ use ExtUtils::Manifest qw/manicheck/;
 
 our ($v);
 
-our $LIBDIR = '[% LIBDIR %]';
+our $LIBDIR = Lingua::Jspell::ConfigData->config('libdir');
 
 for (@ARGV) {
     if (-d $_) {
