@@ -175,13 +175,13 @@ sub ACTION_create_manpages {
         `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
     }
 
-    my $pod = 'scripts/jspell-dict.in';
+    my $pod = 'scripts/jspell-dict';
     my $man = catfile('blib','bindoc','jspell-dict.1');
     unless ($self->up_to_date($pod, $man)) {
         `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
     }
 
-    $pod = 'scripts/jspell-installdic.in';
+    $pod = 'scripts/jspell-installdic';
     $man = catfile('blib','bindoc','jspell-installdic.1');
     unless ($self->up_to_date($pod, $man)) {
         `pod2man --section=1 --center="Lingua::Jspell" --release="Lingua-Jspell-$version" $pod $man`;
