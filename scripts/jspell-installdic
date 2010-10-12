@@ -4,7 +4,6 @@ use warnings;
 use strict;
 
 use YAML::Any qw/LoadFile/;
-use File::Which qw/which/;
 use File::Copy;
 use File::Spec::Functions qw'catfile catdir';
 use File::Path;
@@ -110,11 +109,11 @@ sub install_directory {
 
     # 6. create .hash file
     $v and print STDERR "- creating .hash file...";
-    my $JBUILD = which "jbuild";
-    die "Need jbuild binary...\n" unless $JBUILD;
+    my $JBUILD = Lingua::Jspell::ConfigData->config("jbuild");
+    die "Need jbuild binary...\n" unless -x $JBUILD;
     my $cwd = getcwd;
     chdir '_OUT';
-    `jbuild $lang.dic $lang.aff $lang.hash`;
+    `$JBUILD $lang.dic $lang.aff $lang.hash`;
     chdir $cwd;
     $v and print STDERR " OK\n";
 
