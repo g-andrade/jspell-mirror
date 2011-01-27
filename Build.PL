@@ -23,6 +23,12 @@ my $builder = MyBuilder->new
                 'IPC::Open2'         => '0',
                 'YAML'               => '0.72',
                },
+   configure_requires => {
+                          'Config::AutoConf'   => '0.14',
+                          'ExtUtils::CBuilder' => '0.27',
+                          'ExtUtils::LibBuilder' => '0.01',
+                          'Module::Build'      => '0.3603',
+                         },
    build_requires => {
                       'Config::AutoConf'   => '0.14',
                       'ExtUtils::CBuilder' => '0.27',
