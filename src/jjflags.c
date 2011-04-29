@@ -18,25 +18,25 @@ extern char o_form[80];
 
 void jjflags(char *w )
 {
-   char solutions[MAXPOSSIBLE][MAXSOLLEN];
-   char near_misses[MAXPOSSIBLE][MAXSOLLEN];
-   char radical[30];
-   char classi[30];
-   char imp_cla[30];
-   char w2[30];
-   int i,r, imposed,k;
-   ID_TYPE id;
-   int  old_islib;
-   char  old_o_form[80];
+    char solutions[MAXPOSSIBLE][MAXSOLLEN];
+    char near_misses[MAXPOSSIBLE][MAXSOLLEN];
+    char radical[30];
+    char classi[30];
+    char imp_cla[30];
+    char w2[30];
+    int i, r, imposed, k;
+    ID_TYPE id;
+    int  old_islib;
+    char  old_o_form[80];
 
-   old_islib = islib;
+    old_islib = islib;
 
-   strcpy(old_o_form,o_form);
-   strcpy(o_form,"%s|%s");
+    strcpy(old_o_form, o_form);
+    strcpy(o_form, "%s|%s");
 
-   islib = 1;
+    islib = 1;
 
-   imposed = sscanf(w,"%[^/]/%s", w2, imp_cla) ;
+    imposed = sscanf(w, "%[^/]/%s", w2, imp_cla) ;
    
    printf("%s%s", w2, COL_SEP);
 
