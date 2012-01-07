@@ -10,6 +10,7 @@ use ExtUtils::ParseXS;
 use ExtUtils::Mkbootstrap;
 use File::Spec::Functions qw.catdir catfile.;
 use File::Path qw.mkpath.;
+use File::Copy;
 
 my $pedantic = $ENV{AMBS_PEDANTIC} || 0;
 
@@ -57,6 +58,22 @@ sub ACTION_install {
     my $self = shift;
     $self->dispatch("pre_install");
     $self->SUPER::ACTION_install;
+
+    if ($^O =~ /MSWin32/) {
+        # we succeeded installing the dll?
+        unless (-e catfile($self->notes(libdir), "libjspell.dll")) {
+            my @folders = split /;/, $ENV{PATH};
+            my $installed = 0;
+            while(@folder && !$installed) {
+                my $f = shift @folder;
+                copy(catfile('blib','usrlib','libjspell.dll'), $f);
+                $installed = 1 if -f catfile($f, 'libjspell.dll');
+            }
+            if (!$installed) {
+                warn("Wasn't able to install libjspell.dll anywhere!");
+            }
+        }
+    }
 
     # Run ldconfig if root
     if ($^O =~ /linux/ && $ENV{USER} eq 'root') {
