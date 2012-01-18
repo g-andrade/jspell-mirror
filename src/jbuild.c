@@ -129,7 +129,10 @@ static void read_hassize(void)
         exit(1);
     }
     hashsize = 0;
-    fscanf(countf, "%d", &hashsize);
+    if (fscanf(countf, "%d", &hashsize) != 1) {
+        fprintf(stderr, "Error reading hash.\n");
+        exit(1);
+    }
     fclose(countf);
     if (hashsize == 0) {
         fprintf(stderr, BHASH_C_BAD_COUNT);
