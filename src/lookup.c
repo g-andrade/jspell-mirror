@@ -82,7 +82,7 @@ static int read_hash_header(int hashfd)
    hashsize = read(hashfd, (void*) &hashheader, sizeof(hashheader));
    if (verify_hash() == -1) return -1;
 
-   if (nodictflag) {  /* d'ont remove these {} */
+   if (nodictflag) {  /* don't remove these {} */
       if (creat_empty_table() == -1) return -1;
    }
    else {
