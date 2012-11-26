@@ -1,0 +1,70 @@
+#!/usr/bin/perl
+
+my $term = new Term::ReadLine("Jspell") ;
+
+#my $attrs = $term->Attribs;
+#$attrs->{completion_entry_function} = $attrs->{list_completion_function};
+#$attrs->{completion_word} = [ @words ];
+
+$term->ornaments(0);
+
+
+use strict;
+use warnings;
+
+use File::Basename;
+use File::Spec::Functions;
+use IPC::Open3;
+use Term::ReadLine;
+
+use Lingua::Jspell::ConfigData;
+
+my $encontrei_l = 0;
+$encontrei_l = 1 if grep {$_ eq "-l"} @ARGV;
+
+unshift @ARGV, "-a" if !$encontrei_l;
+
+binmode(STDIN,":utf8");
+binmode(STDOUT,":utf8");
+
+my ($DW,$DR,$DE);
+my $exe = Lingua::Jspell::ConfigData->config('jspell');
+open3($DW,$DR,$DE,$exe,@ARGV);
+
+binmode($DW,":encoding(iso-8859-1)");
+binmode($DR,":encoding(iso-8859-1)");
+
+if ($encontrei_l) {
+    while (<STDIN>) {
+        print $DW $_;
+    }
+    close $DW;
+    while (<$DR>) {
+        print;
+    }
+}
+else {
+    my $x = <$DR>;
+    print $x;
+    while($_=$term->readline("?- ")){
+       $term->addhistory($_) if /\S/;
+       print $DW "$_\n";
+       print_lines($DR);
+    }
+    for ($DW, $DR, $DE) { $_ and close $_ };	
+}
+
+sub print_lines {
+    my $handler = shift;
+    my $l;
+    do {
+        $l = <$handler>;
+        chomp($l);
+        $l =~ s/:\s*(\S)/\n\t1/;
+        $l =~ s/\)\s*,\s*lex\(/)\n\tlex(/g;
+        $l =~ s/\)\s*,\s*(\w+)=\s*lex\(/)\n\t$1=lex(/g;
+        $l =~ s/\)\s*;\s*/)\n\t/g;
+        print "$l\n";
+    } while ($l ne "" && $l ne "*");
+}
+
