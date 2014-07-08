@@ -569,90 +569,98 @@ sub _cat2small {
   my %b = @_;
   #  no warnings;
 
-  if ($b{'CAT'} eq 'art') {
+  $b{CAT} ||= "HEY!";
+  $b{G}   ||= "";
+  $b{N}   ||= "";
+  $b{P}   ||= "";
+  $b{T}   ||= "";
+
+  if ($b{CAT} eq 'art') {
     # Artigos: o léxico já prevê todos...
     # por isso, NUNCA SE DEVE CHEGAR AQUI!!!
     return "ART";
     # 16 tags
 
-  } elsif ($b{'CAT'} eq 'card') {
+  } elsif ($b{CAT} eq 'card') {
     # Numerais cardinais:
     return "DNCNP";
     # o léxico já prevê os que flectem (1 e 2); o resto é tudo neutro plural.
 
-  } elsif ($b{'CAT'} eq 'nord') {
+  } elsif ($b{CAT} eq 'nord') {
     # Numerais ordinais:
-    return "\UDNO$b{'G'}$b{'N'}";
+    return "\UDNO$b{G}$b{'N'}";
 
-  } elsif ($b{'CAT'} eq 'ppes' || $b{'CAT'} eq 'prel' ||
-           $b{'CAT'} eq 'ppos' || $b{'CAT'} eq 'pdem' ||
-           $b{'CAT'} eq 'pind' || $b{'CAT'} eq 'pint') {
+  } elsif ($b{CAT} eq 'ppes' || $b{CAT} eq 'prel' ||
+           $b{CAT} eq 'ppos' || $b{CAT} eq 'pdem' ||
+           $b{CAT} eq 'pind' || $b{CAT} eq 'pint') {
     # Pronomes:
-    if ($b{'CAT'} eq 'ppes') {
+    if ($b{CAT} eq 'ppes') {
       # Pronomes pessoais
-      $b{'CAT'} = 'PS';
-    } elsif ($b{'CAT'} eq 'prel') {
+      $b{CAT} = 'PS';
+    } elsif ($b{CAT} eq 'prel') {
       # Pronomes relativos
-      $b{'CAT'} = 'PR';
-    } elsif ($b{'CAT'} eq 'ppos') {
+      $b{CAT} = 'PR';
+    } elsif ($b{CAT} eq 'ppos') {
       # Pronomes possessivos
-      $b{'CAT'} = 'PP';
-    } elsif ($b{'CAT'} eq 'pdem') {
+      $b{CAT} = 'PP';
+    } elsif ($b{CAT} eq 'pdem') {
       # Pronomes demonstrativos
-      $b{'CAT'} = 'PD';
-    } elsif ($b{'CAT'} eq 'pint') {
+      $b{CAT} = 'PD';
+    } elsif ($b{CAT} eq 'pint') {
       # Pronomes interrogativos
-      $b{'CAT'} = 'PI';
-    } elsif ($b{'CAT'} eq 'pind') {
+      $b{CAT} = 'PI';
+    } elsif ($b{CAT} eq 'pind') {
       # Pronomes indefinidos
-      $b{'CAT'} = 'PF';
+      $b{CAT} = 'PF';
     }
 
-    $b{'G'} = 'N' if $b{'G'} eq '_';
+    $b{G} = 'N' if $b{G} eq '_';
     $b{'N'} = 'N' if $b{'N'} eq '_';
 
-    return "\U$b{'CAT'}$b{'C'}$b{'G'}$b{'P'}$b{'N'}";
+    # $b{C} esta por inicializar... oops!? vou por como C para já
+    $b{C} = "C";
+    return "\U$b{CAT}$b{'C'}$b{G}$b{'P'}$b{'N'}";
     #                        $b{'C'}: caso latino.
 
-  } elsif ($b{'CAT'} eq 'nc') {
+  } elsif ($b{CAT} eq 'nc') {
     # Nomes comuns:
-    $b{'G'} = 'N' if $b{'G'} eq '_' || $b{'G'} eq '';
+    $b{G} = 'N' if $b{G} eq '_' || $b{G} eq '';
     $b{'N'} = 'N' if $b{'N'} eq '_' || $b{'N'} eq '';
     $b{'GR'} ||= '' ;
     $b{'GR'}= 'd' if $b{'GR'} eq 'dim';
-    return "\U$b{'CAT'}$b{'G'}$b{'N'}$b{'GR'}";
+    return "\U$b{CAT}$b{G}$b{'N'}$b{'GR'}";
 
-  } elsif ($b{'CAT'} eq 'np') {
+  } elsif ($b{CAT} eq 'np') {
     # Nomes próprios:
-    $b{'G'} = 'N' if $b{'G'} eq '_' || $b{'G'} eq '';
+    $b{G} = 'N' if $b{G} eq '_' || $b{G} eq '';
     $b{'N'} = 'N' if $b{'N'} eq '_' || $b{'N'} eq '';
-    return "\U$b{'CAT'}$b{'G'}$b{'N'}";
+    return "\U$b{CAT}$b{G}$b{'N'}";
 
-  } elsif ($b{'CAT'} eq 'adj') {
+  } elsif ($b{CAT} eq 'adj') {
     # Adjectivos:
-    $b{'G'} = 'N' if $b{'G'} eq '_';
-    $b{'G'} = 'N' if $b{'G'} eq '2';
+    $b{G} = 'N' if $b{G} eq '_';
+    $b{G} = 'N' if $b{G} eq '2';
     $b{'N'} = 'N' if $b{'N'} eq '_';
     $b{'GR'} ||= '' ;
-	$b{'GR'} = 'd' if $b{'GR'} eq 'dim';
+  	$b{'GR'} = 'd' if $b{'GR'} eq 'dim';
     #    elsif ($b{'N'} eq ''){
     #      $b{'N'} = 'N';
     #    }
-    return "\UJ$b{'G'}$b{'N'}$b{'GR'}";
+    return "\UJ$b{G}$b{'N'}$b{'GR'}";
 
-  } elsif ($b{'CAT'} eq 'a_nc') {
+  } elsif ($b{CAT} eq 'a_nc') {
     # Adjectivos que podem funcionar como nomes comuns:
-    $b{'G'} = 'N' if $b{'G'} eq '_';
-    $b{'G'} = 'N' if $b{'G'} eq '2';
+    $b{G} = 'N' if $b{G} eq '_';
+    $b{G} = 'N' if $b{G} eq '2';
     $b{'N'} = 'N' if $b{'N'} eq '_';
     $b{'GR'} ||= '' ;
-	$b{'GR'} = 'd' if $b{'GR'} eq 'dim';
+	  $b{'GR'} = 'd' if $b{'GR'} eq 'dim';
     #    elsif ($b{'N'} eq ''){
     #      $b{'N'} = 'N';
     #    }
-    return "\UX$b{'G'}$b{'N'}$b{'GR'}";
+    return "\UX$b{G}$b{'N'}$b{'GR'}";
 
-  } elsif ($b{'CAT'} eq 'v') {
+  } elsif ($b{CAT} eq 'v') {
     # Verbos:
 
     # formas nominais:
@@ -720,45 +728,46 @@ sub _cat2small {
     }
 
     # converter 'P=1_3' em 'P=_': provisório(?)!
-    $b{'P'} = '_' if $b{'P'} eq '1_3'; # único sítio com '_' como rhs!!!
+    $b{P} = "";
+    $b{P} = '_' if $b{P} eq '1_3'; # único sítio com '_' como rhs!!!
 
      
-    if($b{T} eq "vpp"){ return "\U$b{'CAT'}$b{'T'}$b{'G'}$b{'P'}$b{'N'}";}
-    else { return "\U$b{'CAT'}$b{'T'}$b{'P'}$b{'N'}";}
+    if ($b{T} eq "vpp") { return "\U$b{CAT}$b{T}$b{G}$b{P}$b{N}"; }
+    else                { return "\U$b{CAT}$b{T}$b{P}$b{N}";      }
 
 
     #                               Género, só para VPP.
     # +/- 70 tags
 
-  } elsif ($b{'CAT'} eq 'prep') {
+  } elsif ($b{CAT} eq 'prep') {
     # Preposições¹:
     return "\UP";
 
-  } elsif ($b{'CAT'} eq 'adv') {
+  } elsif ($b{CAT} eq 'adv') {
     # Advérbios²:
     return "\UADV";
 
-  } elsif ($b{'CAT'} eq 'con') {
+  } elsif ($b{CAT} eq 'con') {
     # Conjunções²:
     return "\UC";
 
-  } elsif ($b{'CAT'} eq 'in') {
+  } elsif ($b{CAT} eq 'in') {
     # Interjeições¹:
     return "\UI";
 
     # ¹: não sei se a tag devia ser tão atómica, mas para já não há confusão!
 
-  } elsif ($b{'CAT'} =~ m/^cp(.*)/) {
+  } elsif ($b{CAT} =~ m/^cp(.*)/) {
     # Contracções¹:
-    $b{'G'} = 'N' if $b{'G'} eq '_';
+    $b{G} = 'N' if $b{G} eq '_';
     $b{'N'} = 'N' if $b{'N'} eq '_';
-    return "\U&$b{'G'}$b{'N'}";
+    return "\U&$b{G}$b{'N'}";
 
     # ²: falta estruturar estes no próprio dicionário...
     # Palavras do dicionário com categoria vazia ou sem categoria,
     # palavras não existentes ou sequências aleatórias de caracteres:
 
-  } elsif ($b{'CAT'} eq '') {
+  } elsif (defined($b{CAT}) && $b{CAT} eq '') {
     return "\UUNDEFINED";
 
   } else {   # restantes categorias (...?)
