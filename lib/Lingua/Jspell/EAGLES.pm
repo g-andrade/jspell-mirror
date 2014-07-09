@@ -7,15 +7,38 @@ package Lingua::Jspell::EAGLES;
 # para já, não abrir demasiadas frentes.
 
 my %rules = (
+	## --[ Pronomes - Artigos ]--						
 	art  => sub {},
+	## --[ Números Cardinais ]--					
 	card => sub {},
+	## --[ Números Ordinais ]--				
 	nord => sub {},
+	## --[ Pronomes Pessoais ]--				
 	ppes => sub {},
+	## --[ Pronomes Possessivos ]--			
 	ppos => sub {},
+	## --[ Pronomes Indicativos ]--		
 	pind => sub {},
+	## --[ Pronomes Relativos ]--	
 	prel => sub {},
+	## --[ Pronomes Demonstrativos ]--
 	pdem => sub {},
+	## --[ Pronomes interrogativos ]--		
 	pint => sub {},
+	## --[ Verbos ]--	
+	v    => sub {},
+	## --[ Preposições ]--	
+	prep => sub {},
+	## --[ Advérbios ]--	
+	adv  => sub {},	
+	## --[ Interjeições ]--	
+	in   => sub {},	
+	## --[ Conjunções ]--	
+	con  => sub {},	
+	## --[ Contrações ]--
+	cp   => sub {
+		# temos de verificar se há CAT com cp...
+	},
 	## --[ Nomes Comuns ]--
 	nc   => sub {
 		my %fea = @_;
@@ -92,7 +115,6 @@ my %rules = (
 	a_nc => sub {
 		return ($rules{nc}->(@_), $rules{adj}->(@_))
 		},
-	v    => sub {},
 	);
 
 sub _cat2eagles {
