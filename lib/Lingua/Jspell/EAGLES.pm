@@ -34,7 +34,7 @@ my %rules = (
 	## --[ Interjeições ]--	
 	in   => sub { return "I" },	
 	## --[ Conjunções ]--	
-	con  => sub {},	
+	con  => sub { return "C0" },	
 	## --[ Contrações ]--
 	cp   => sub {
 		# temos de verificar se há CAT com cp...
