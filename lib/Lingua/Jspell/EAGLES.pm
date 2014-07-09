@@ -32,7 +32,7 @@ my %rules = (
 	## --[ Advérbios ]--	
 	adv  => sub {},	
 	## --[ Interjeições ]--	
-	in   => sub {},	
+	in   => sub { return "I" },	
 	## --[ Conjunções ]--	
 	con  => sub {},	
 	## --[ Contrações ]--
@@ -114,8 +114,8 @@ my %rules = (
 	## --[ Nomes e Adjetivos ]--
 	a_nc => sub {
 		return ($rules{nc}->(@_), $rules{adj}->(@_))
-		},
-	);
+	},
+);
 
 sub _cat2eagles {
 	my %fea = @_;
