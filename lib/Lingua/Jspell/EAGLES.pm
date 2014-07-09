@@ -30,7 +30,12 @@ my %rules = (
 	## --[ Preposições ]--	
 	prep => sub {},
 	## --[ Advérbios ]--	
-	adv  => sub {},	
+	adv  => sub {
+		my %fea = @_;
+		my $tag = "R";
+		$tag .= exists($fea{SUBCAT}) && $fea{SUBCAT} eq "neg" ? "N" : "G";
+		return $tag;
+	},	
 	## --[ Interjeições ]--	
 	in   => sub { return "I" },	
 	## --[ Conjunções ]--	
