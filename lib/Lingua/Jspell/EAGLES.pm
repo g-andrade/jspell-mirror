@@ -26,11 +26,25 @@ my %rules = (
 		my $tag = "PP";
 		
 		# pessoa (1,2,3)
+		$tag .= exists $fea{P} ? $fea{P} : 0;
+
 		# género (M,F,Comum,Neutro)
+		my $G = exists $fea{G} ? uc $fea{G} : "0";
+		$G = "C" if $G eq "2";
+		$G = "0" if $G eq "_"; # XXX ????????
+		$tag .= $G;
+
 		# Numero (S, P, N --impessoal/invariavel)
+		$tag .= exists $fea{P}
+		         ? ($fea{P} =~ /[SP]/i ? : uc($fea{P}) : "N")
+		         : "0";
 		# Caso (nominativo, acusativo, dativo, obliquo)
+		$tag .= exists $fea{C} ? uc(fea{C}) : "0";
+
 		# possuidor (Singluar, Plural)
-		# Politeness 
+		# XXX --- temos disto?
+		$tag .= "0"
+		
 	},
 	## --[ Pronomes Possessivos ]--			
 	ppos => sub {
@@ -42,7 +56,6 @@ my %rules = (
 		# Numero (S, P, N --impessoal/invariavel)
 		# Caso (nominativo, acusativo, dativo, obliquo)
 		# possuidor (Singluar, Plural)
-		# Politeness 
 	},
 	## --[ Pronomes Indefinido ]--		
 	pind => sub {
@@ -54,7 +67,6 @@ my %rules = (
 		# Numero (S, P, N --impessoal/invariavel)
 		# Caso (nominativo, acusativo, dativo, obliquo)
 		# possuidor (Singluar, Plural)
-		# Politeness 
 	},
 	## --[ Pronomes Relativos ]--	
 	prel => sub {
@@ -66,7 +78,6 @@ my %rules = (
 		# Numero (S, P, N --impessoal/invariavel)
 		# Caso (nominativo, acusativo, dativo, obliquo)
 		# possuidor (Singluar, Plural)
-		# Politeness 
 	},
 	## --[ Pronomes Demonstrativos ]--
 	pdem => sub {
@@ -78,7 +89,6 @@ my %rules = (
 		# Numero (S, P, N --impessoal/invariavel)
 		# Caso (nominativo, acusativo, dativo, obliquo)
 		# possuidor (Singluar, Plural)
-		# Politeness 
 	},
 	## --[ Pronomes interrogativos ]--		
 	pint => sub {
@@ -90,7 +100,6 @@ my %rules = (
 		# Numero (S, P, N --impessoal/invariavel)
 		# Caso (nominativo, acusativo, dativo, obliquo)
 		# possuidor (Singluar, Plural)
-		# Politeness 
 	},
 	## --[ Verbos ]--	
 	v    => sub {
