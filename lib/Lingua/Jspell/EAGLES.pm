@@ -62,13 +62,36 @@ my %rules = (
 		$grad =~ s/dim/D/;
 		$grad =~ s/aum/A/;
 		$grad = "0" unless $grad =~ /^[DA]$/;
-
 		$tag .= $grad;
 
 		return $tag;
 	},
-	adj  => sub {},
-	a_nc => sub {},
+	## --[ Adjetivos ]--
+	adj  => sub {
+		my %fea = @_;
+		my $tag = "A0";
+
+		my $grad = $fea{GR};
+		$grad =~ s/dim/D/;
+		$grad =~ s/aum/A/;
+		$grad =~ s/sup/S/;
+		$grad = "0" unless $grad =~ /^[DSA]$/;
+		$tag .= $grad
+
+		my $gen = $fea{G};
+		$gen =~ s/[^MF]/C/;
+		$tag .= $gen;
+
+		my $num = $fea{N};
+		$num =~ s/[^SP]/N/;
+		$tag .= $num;
+
+		return $grad . "0";
+	},
+	## --[ Nomes e Adjetivos ]--
+	a_nc => sub {
+		return ($rules{nc}->(@_), $rules{adj}->(@_))
+		},
 	v    => sub {},
 	);
 
