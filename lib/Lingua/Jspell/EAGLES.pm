@@ -8,7 +8,14 @@ package Lingua::Jspell::EAGLES;
 
 my %rules = (
 	## --[ Pronomes - Artigos ]--						
-	art  => sub {},
+	art  => sub { my %fea = @_;
+	  return "D"
+             .($fea{CLA} eq "indef" ? "I":"A")
+             ."0"
+             .uc($fea{G})
+             .uc($fea{N})
+             . "0" ;
+    },
 	## --[ Números Cardinais ]--					
 	card => sub {},
 	## --[ Números Ordinais ]--				
@@ -104,7 +111,7 @@ my %rules = (
 		$grad =~ s/aum/A/;
 		$grad =~ s/sup/S/;
 		$grad = "0" unless $grad =~ /^[DSA]$/;
-		$tag .= $grad
+		$tag .= $grad;
 
 		my $gen = $fea{G};
 		$gen =~ s/[^MF]/C/;

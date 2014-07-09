@@ -1,0 +1,29 @@
+#!/usr/bin/perl -s
+
+our($l,$a);
+
+use common::sense;
+use utf8::all;
+
+#use File::Basename;
+#use File::Spec::Functions;
+#use IPC::Open3;
+
+use Lingua::Jspell;
+#use Lingua::Jspell::ConfigData;
+
+$l //= 'port' ;
+
+my $dict = Lingua::Jspell->new( $l);
+
+while(<>){
+  chomp;
+  while(m{(\w+)}g){
+     my $w=$1;
+     print join(",",$dict->eagles($w)),"\n";
+     print join(",",$dict->new_featags($w)),"\n";
+     print join(",",$dict->featags($w)),"\n";
+  } 
+  print("→ ");
+}
+
