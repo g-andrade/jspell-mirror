@@ -19,6 +19,7 @@ our %EXPORT_TAGS = (basic => [qw.onethat verif onethatverif
 # use Data::Dumper;
 use File::Spec::Functions;
 use Lingua::Jspell::ConfigData;
+use Lingua::Jspell::EAGLES;
 use IPC::Open3;
 use YAML qw/LoadFile/;
 use Data::Compare;
@@ -558,11 +559,16 @@ sub setstopwords {
     $STOP{$_} = 1 for @_;
 }
 
-=head2 cat2small
-
-Note: This function is specific for the Portuguese jspell dictionary
+=head2 eagles 
 
 =cut
+sub eagles {
+  my ($dict, $palavra, @ar) = @_;
+
+  map {
+    Lingua::Jspell::EAGLES::_cat2eagles(%$_) . ":$_->{rad}"
+  } $dict->fea($palavra, @ar);
+}
 
 # NOTA: Esta funcao é específica da língua TUGA!
 sub _cat2small {
@@ -664,67 +670,67 @@ sub _cat2small {
     # Verbos:
 
     # formas nominais:
-    if ($b{'T'} eq 'inf') {
+    if ($b{T} eq 'inf') {
       # infinitivo impessoal
-      $b{'T'} = 'N';
+      $b{T} = 'N';
 
-    } elsif ($b{'T'} eq 'ppa') {
+    } elsif ($b{T} eq 'ppa') {
       # Particípio Passado
-      $b{'T'} = 'PP';
+      $b{T} = 'PP';
 
-    } elsif ($b{'T'} eq 'g') {
+    } elsif ($b{T} eq 'g') {
       # Gerúndio
-      $b{'T'} = 'G';
+      $b{T} = 'G';
 
-    } elsif ($b{'T'} eq 'p') {
+    } elsif ($b{T} eq 'p') {
       # modo indicativo: presente (Hoje)
-      $b{'T'} = 'IH';
+      $b{T} = 'IH';
 
-    } elsif ($b{'T'} eq 'pp') {
+    } elsif ($b{T} eq 'pp') {
       # modo indicativo: pretérito Perfeito
-      $b{'T'} = 'IP';
+      $b{T} = 'IP';
 
-    } elsif ($b{'T'} eq 'pi') {
+    } elsif ($b{T} eq 'pi') {
       # modo indicativo: pretérito Imperfeito
-      $b{'T'} = 'II';
+      $b{T} = 'II';
 
-    } elsif ($b{'T'} eq 'pmp') {
+    } elsif ($b{T} eq 'pmp') {
       # modo indicativo: pretérito Mais-que-perfeito
-      $b{'T'} = 'IM';
+      $b{T} = 'IM';
 
-    } elsif ($b{'T'} eq 'f') {
+    } elsif ($b{T} eq 'f') {
       # modo indicativo: Futuro
-      $b{'T'} = 'IF';
+      $b{T} = 'IF';
 
-    } elsif ($b{'T'} eq 'pc') {
+    } elsif ($b{T} eq 'pc') {
       # modo conjuntivo (Se): presente (Hoje)
-      $b{'T'} = 'SH';
+      $b{T} = 'SH';
 
-    } elsif ($b{'T'} eq 'pic') {
+    } elsif ($b{T} eq 'pic') {
       # modo conjuntivo (Se): pretérito Imperfeito
-      $b{'T'} = 'SI';
+      $b{T} = 'SI';
 
-    } elsif ($b{'T'} eq 'fc') {
+    } elsif ($b{T} eq 'fc') {
       # modo conjuntivo (Se): Futuro
-      $b{'T'} = 'PI';
+      $b{T} = 'PI';
 
-    } elsif ($b{'T'} eq 'i') {
+    } elsif ($b{T} eq 'i') {
       # modo Imperativo: presente (Hoje)
-      $b{'T'} = 'MH';
+      $b{T} = 'MH';
 
-    } elsif ($b{'T'} eq 'c') {
+    } elsif ($b{T} eq 'c') {
       # modo Condicional: presente (Hoje)
-      $b{'T'} = 'CH';
+      $b{T} = 'CH';
 
-    } elsif ($b{'T'} eq 'ip') {
+    } elsif ($b{T} eq 'ip') {
       # modo Infinitivo (Pessoal ou Presente): 
-      $b{'T'} = 'PI';
+      $b{T} = 'PI';
 
       # Futuro conjuntivo? Só se tiver um "se" antes! -> regras sintácticas...
       # modo&tempo não previstos ainda...
 
     } else {
-      $b{'T'} = '_UNKNOWN';
+      $b{T} = '_UNKNOWN';
     }
 
     # converter 'P=1_3' em 'P=_': provisório(?)!
