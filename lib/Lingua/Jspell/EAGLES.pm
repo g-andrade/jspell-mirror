@@ -16,6 +16,7 @@ my %rules = (
 	prel => sub {},
 	pdem => sub {},
 	pint => sub {},
+	## --[ Nomes Comuns ]--
 	nc   => sub {
 		my %fea = @_;
 		my $tag = "NC";
@@ -37,8 +38,35 @@ my %rules = (
 		$grad = "0" unless $grad =~ /^[DA]$/;
 
 		$tag .= $grad;
+
+		return $tag;
 	},
-	np   => sub {},
+	## --[ Nomes Próprios ]--
+	np   => sub {
+		my %fea = @_;
+		my $tag = "NP";
+
+		my $gen = $fea{G};
+		$gen =~ s/[^MF]/C/;
+		$tag .= $gen;
+
+		my $num = $fea{N};
+		$num =~ s/[^SP]/N/;
+		$tag .= $num;
+
+		my $sem = $fea{SEM} || "V0";
+		$sem = "SP" if $sem eq "p";
+		$tag .= $sem;
+
+		my $grad = $fea{GR};
+		$grad =~ s/dim/D/;
+		$grad =~ s/aum/A/;
+		$grad = "0" unless $grad =~ /^[DA]$/;
+
+		$tag .= $grad;
+
+		return $tag;
+	},
 	adj  => sub {},
 	a_nc => sub {},
 	v    => sub {},
