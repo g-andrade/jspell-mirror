@@ -594,7 +594,7 @@ sub _cat2small {
 
   } elsif ($b{CAT} eq 'nord') {
     # Numerais ordinais:
-    return "\UDNO$b{G}$b{'N'}";
+    return "\UDNO$b{G}$b{N}";
 
   } elsif ($b{CAT} eq 'ppes' || $b{CAT} eq 'prel' ||
            $b{CAT} eq 'ppos' || $b{CAT} eq 'pdem' ||
@@ -621,50 +621,50 @@ sub _cat2small {
     }
 
     $b{G} = 'N' if $b{G} eq '_';
-    $b{'N'} = 'N' if $b{'N'} eq '_';
+    $b{N} = 'N' if $b{N} eq '_';
 
     # $b{C} esta por inicializar... oops!? vou por como C para já
     $b{C} = "C";
-    return "\U$b{CAT}$b{'C'}$b{G}$b{'P'}$b{'N'}";
+    return "\U$b{CAT}$b{'C'}$b{G}$b{'P'}$b{N}";
     #                        $b{'C'}: caso latino.
 
   } elsif ($b{CAT} eq 'nc') {
     # Nomes comuns:
     $b{G} = 'N' if $b{G} eq '_' || $b{G} eq '';
-    $b{'N'} = 'N' if $b{'N'} eq '_' || $b{'N'} eq '';
+    $b{N} = 'N' if $b{N} eq '_' || $b{N} eq '';
     $b{'GR'} ||= '' ;
     $b{'GR'}= 'd' if $b{'GR'} eq 'dim';
-    return "\U$b{CAT}$b{G}$b{'N'}$b{'GR'}";
+    return "\U$b{CAT}$b{G}$b{N}$b{'GR'}";
 
   } elsif ($b{CAT} eq 'np') {
     # Nomes próprios:
     $b{G} = 'N' if $b{G} eq '_' || $b{G} eq '';
-    $b{'N'} = 'N' if $b{'N'} eq '_' || $b{'N'} eq '';
-    return "\U$b{CAT}$b{G}$b{'N'}";
+    $b{N} = 'N' if $b{N} eq '_' || $b{N} eq '';
+    return "\U$b{CAT}$b{G}$b{N}";
 
   } elsif ($b{CAT} eq 'adj') {
     # Adjectivos:
     $b{G} = 'N' if $b{G} eq '_';
     $b{G} = 'N' if $b{G} eq '2';
-    $b{'N'} = 'N' if $b{'N'} eq '_';
+    $b{N} = 'N' if $b{N} eq '_';
     $b{'GR'} ||= '' ;
   	$b{'GR'} = 'd' if $b{'GR'} eq 'dim';
-    #    elsif ($b{'N'} eq ''){
-    #      $b{'N'} = 'N';
+    #    elsif ($b{N} eq ''){
+    #      $b{N} = 'N';
     #    }
-    return "\UJ$b{G}$b{'N'}$b{'GR'}";
+    return "\UJ$b{G}$b{N}$b{'GR'}";
 
   } elsif ($b{CAT} eq 'a_nc') {
     # Adjectivos que podem funcionar como nomes comuns:
     $b{G} = 'N' if $b{G} eq '_';
     $b{G} = 'N' if $b{G} eq '2';
-    $b{'N'} = 'N' if $b{'N'} eq '_';
+    $b{N} = 'N' if $b{N} eq '_';
     $b{'GR'} ||= '' ;
 	  $b{'GR'} = 'd' if $b{'GR'} eq 'dim';
-    #    elsif ($b{'N'} eq ''){
-    #      $b{'N'} = 'N';
+    #    elsif ($b{N} eq ''){
+    #      $b{N} = 'N';
     #    }
-    return "\UX$b{G}$b{'N'}$b{'GR'}";
+    return "\UX$b{G}$b{N}$b{'GR'}";
 
   } elsif ($b{CAT} eq 'v') {
     # Verbos:
@@ -766,8 +766,8 @@ sub _cat2small {
   } elsif ($b{CAT} =~ m/^cp(.*)/) {
     # Contracções¹:
     $b{G} = 'N' if $b{G} eq '_';
-    $b{'N'} = 'N' if $b{'N'} eq '_';
-    return "\U&$b{G}$b{'N'}";
+    $b{N} = 'N' if $b{N} eq '_';
+    return "\U&$b{G}$b{N}";
 
     # ²: falta estruturar estes no próprio dicionário...
     # Palavras do dicionário com categoria vazia ou sem categoria,
