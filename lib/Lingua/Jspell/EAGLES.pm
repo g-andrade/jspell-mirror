@@ -17,25 +17,25 @@ my %rules = (
              . "0" ;
     },
 	## --[ Números Cardinais ]--					
-	card => sub {},
+	card => sub {"Fixme"},
 	## --[ Números Ordinais ]--				
-	nord => sub {},
+	nord => sub {"Fixme"},
 	## --[ Pronomes Pessoais ]--				
-	ppes => sub {},
+	ppes => sub {"Fixme"},
 	## --[ Pronomes Possessivos ]--			
-	ppos => sub {},
+	ppos => sub {"Fixme"},
 	## --[ Pronomes Indicativos ]--		
-	pind => sub {},
+	pind => sub {"Fixme"},
 	## --[ Pronomes Relativos ]--	
-	prel => sub {},
+	prel => sub {"Fixme"},
 	## --[ Pronomes Demonstrativos ]--
-	pdem => sub {},
+	pdem => sub {"Fixme"},
 	## --[ Pronomes interrogativos ]--		
-	pint => sub {},
+	pint => sub {"Fixme"},
 	## --[ Verbos ]--	
-	v    => sub {},
+	v    => sub {"Fixme"},
 	## --[ Preposições ]--	
-	prep => sub {},
+	prep => sub {"Fixme"},
 	## --[ Advérbios ]--	
 	adv  => sub {
 		my %fea = @_;
@@ -48,7 +48,7 @@ my %rules = (
 	## --[ Conjunções ]--	
 	con  => sub { return "C0" },	
 	## --[ Contrações ]--
-	cp   => sub {
+	cp   => sub {"???:Fixme"
 		# temos de verificar se há CAT com cp...
 	},
 	## --[ Nomes Comuns ]--
@@ -56,11 +56,11 @@ my %rules = (
 		my %fea = @_;
 		my $tag = "NC";
 
-		my $gen = $fea{G};
-		$gen =~ s/[^MF]/C/;
+		my $gen = uc($fea{G});
+		$gen =~ s/[^MF]/C/i;
 		$tag .= $gen;
 
-		my $num = $fea{N};
+		my $num = uc($fea{N});
 		$num =~ s/[^SP]/N/;
 		$tag .= $num;
 
@@ -81,11 +81,11 @@ my %rules = (
 		my %fea = @_;
 		my $tag = "NP";
 
-		my $gen = $fea{G};
+		my $gen = uc($fea{G});
 		$gen =~ s/[^MF]/C/;
 		$tag .= $gen;
 
-		my $num = $fea{N};
+		my $num = uc($fea{N});
 		$num =~ s/[^SP]/N/;
 		$tag .= $num;
 
@@ -113,11 +113,11 @@ my %rules = (
 		$grad = "0" unless $grad =~ /^[DSA]$/;
 		$tag .= $grad;
 
-		my $gen = $fea{G};
+		my $gen = uc($fea{G});
 		$gen =~ s/[^MF]/C/;
 		$tag .= $gen;
 
-		my $num = $fea{N};
+		my $num = uc($fea{N});
 		$num =~ s/[^SP]/N/;
 		$tag .= $num;
 
