@@ -10,32 +10,143 @@ my %rules = (
 	## --[ Pronomes - Artigos ]--						
 	art  => sub { my %fea = @_;
 	  return "D"
-           . ($fea{CLA} eq "indef" ? "I":"A")
+           . (exists($fea{CLA}) && $fea{CLA} eq "indef" ? "I":"A")
            . "0"
            . uc($fea{G})
            . uc($fea{N})
            . "0";
     },
 	## --[ Números Cardinais ]--					
-	card => sub {"Fixme"},
+	card => sub {"Fixme(card)"},
 	## --[ Números Ordinais ]--				
-	nord => sub {"Fixme"},
+	nord => sub {"Fixme(nord)"},
 	## --[ Pronomes Pessoais ]--				
-	ppes => sub {"Fixme"},
+	ppes => sub {
+		my %fea = @_;
+		my $tag = "PP";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+		# Politeness 
+	},
 	## --[ Pronomes Possessivos ]--			
-	ppos => sub {"Fixme"},
-	## --[ Pronomes Indicativos ]--		
-	pind => sub {"Fixme"},
+	ppos => sub {
+		my %fea = @_;
+		my $tag = "PX";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+		# Politeness 
+	},
+	## --[ Pronomes Indefinido ]--		
+	pind => sub {
+		my %fea = @_;
+		my $tag = "PI";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+		# Politeness 
+	},
 	## --[ Pronomes Relativos ]--	
-	prel => sub {"Fixme"},
+	prel => sub {
+		my %fea = @_;
+		my $tag = "PR";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+		# Politeness 
+	},
 	## --[ Pronomes Demonstrativos ]--
-	pdem => sub {"Fixme"},
+	pdem => sub {
+		my %fea = @_;
+		my $tag = "PD";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+		# Politeness 
+	},
 	## --[ Pronomes interrogativos ]--		
-	pint => sub {"Fixme"},
+	pint => sub {
+		my %fea = @_;
+		my $tag = "PT";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+		# Politeness 
+	},
 	## --[ Verbos ]--	
-	v    => sub {"Fixme"},
+	v    => sub {
+		my %fea = @_;
+		my $tag = "V";
+
+		# (XXX) tipo (principal, auxiliar, semiauxiliar...)
+		$tag .= "0";
+
+		# será que temos de adaptar estes 2 campos ao português?
+		# Temos:
+        ###        ip:  infinitivo pessoal
+        ###        inf: infinitivo
+        ###        pp:  pretérito perfeito
+        ###        ppa: particípio passado
+        ###        pc:  presente do conjuntivo
+        ###        pic: pretérito imperfeito do conjuntivo
+        ###        c:   condicional
+        ###        p:   presente
+        ###        fc:  futuro do conjuntivo
+        ###        g:   gerúndio
+        ###        pmp: pretérito mais que perfeito
+        ###        pi:  pretérito imperfeito
+        ###        f:   futuro
+        ###        i:   imperativo		
+
+        # (XXX)
+		# modo: {I}ndicativo, {S}ubjuntivo, i{M}perativo, 
+		#       i{N}finitivo, {G}erundio, {P}articipio
+		$tag .= "0";
+
+        # (XXX)
+		# tempo: {P}resente, {I}mperfeito, {F}uturo, pas{S}ado, {C}ondicional
+		$tag .= "0";
+
+		# pessoa (1,2,3) -- 1_3 é desdobrado abaixo
+		$tag .= exists($fea{P}) ? $fea{P} : "0";
+
+		# numero (S, P)
+		$tag .= exists($fea{N}) ? uc($fea{N}) : "0";
+
+		# genero (M,F)
+		$tag .= exists($fea{G}) ? uc($fea{G}) : "0";
+
+		# Desdobrar pessoa.
+		if ($tag =~ /1_3/) {
+			my ($one, $three) = ($tag) x 2;
+			$one   =~ s/1_3/1/;
+			$three =~ s/1_3/3/;
+			return ($one, $three)
+		} else {
+			return $tag;
+		}
+	},
 	## --[ Preposições ]--	
-	prep => sub {"Fixme"},
+	prep => sub { "SPS00" },
 	## --[ Advérbios ]--	
 	adv  => sub {
 		my %fea = @_;
@@ -48,7 +159,7 @@ my %rules = (
 	## --[ Conjunções ]--	
 	con  => sub { return "C0" },	
 	## --[ Contrações ]--
-	cp   => sub {"???:Fixme"
+	cp   => sub {"Fixme(cp)"
 		# temos de verificar se há CAT com cp...
 	},
 	## --[ Nomes Comuns ]--
@@ -68,8 +179,8 @@ my %rules = (
 		$tag .= "00";
 
 		my $grad = $fea{GR};
-		$grad =~ s/dim/D/;
-		$grad =~ s/aum/A/;
+		$grad =~ s/dim/D/i;
+		$grad =~ s/aum/A/i;
 		$grad = "0" unless $grad =~ /^[DA]$/;
 
 		$tag .= $grad;
@@ -94,8 +205,8 @@ my %rules = (
 		$tag .= $sem;
 
 		my $grad = $fea{GR};
-		$grad =~ s/dim/D/;
-		$grad =~ s/aum/A/;
+		$grad =~ s/dim/D/i;
+		$grad =~ s/aum/A/i;
 		$grad = "0" unless $grad =~ /^[DA]$/;
 		$tag .= $grad;
 
@@ -107,9 +218,9 @@ my %rules = (
 		my $tag = "A0";
 
 		my $grad = $fea{GR};
-		$grad =~ s/dim/D/;
-		$grad =~ s/aum/A/;
-		$grad =~ s/sup/S/;
+		$grad =~ s/dim/D/i;
+		$grad =~ s/aum/A/i;
+		$grad =~ s/sup/S/i;
 		$grad = "0" unless $grad =~ /^[DSA]$/;
 		$tag .= $grad;
 
