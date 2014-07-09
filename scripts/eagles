@@ -21,9 +21,9 @@ while(<>){
   chomp;
   while(m{(\w+)}g){
      my $w=$1;
-     print join(",",$dict->eagles($w)),"\n";
-     print join(",",$dict->featagsrad($w)),"\n";
-     print join(",",$dict->new_featags($w)),"\n";
+     print join("\t",$dict->eagles($w)),"\n";
+     print join("\t",$dict->featagsrad($w)),"\n";
+     print join("\t",$dict->new_featags($w)),"\n";
   } 
   print("→ ");
 }

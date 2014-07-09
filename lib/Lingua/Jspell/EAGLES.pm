@@ -10,11 +10,11 @@ my %rules = (
 	## --[ Pronomes - Artigos ]--						
 	art  => sub { my %fea = @_;
 	  return "D"
-             .($fea{CLA} eq "indef" ? "I":"A")
-             ."0"
-             .uc($fea{G})
-             .uc($fea{N})
-             . "0" ;
+           . ($fea{CLA} eq "indef" ? "I":"A")
+           . "0"
+           . uc($fea{G})
+           . uc($fea{N})
+           . "0";
     },
 	## --[ Números Cardinais ]--					
 	card => sub {"Fixme"},
