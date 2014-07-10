@@ -148,6 +148,10 @@ my %rules = (
 
 		# (XXX) tipo (principal, auxiliar, semiauxiliar...)
 		$tag .= "0";
+		$tag .= ( $fea{rad} eq "ter" ? "A" 
+                : $fea{rad} eq "ser" ? "S"
+                :                      "M"
+                );
 
         
         $tag .=  $temposverbais{$fea{T}} || "00";
