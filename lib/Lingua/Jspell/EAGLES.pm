@@ -64,7 +64,7 @@ my %rules = (
 		$tag .= exists $fea{C} ? uc($fea{C}) : "0";
 
 		# possuidor (Singluar, Plural)
-		# XXX --- temos disto?
+		# XXX --- temos disto? Não --> so nos ppos
 		$tag .= "0"
 		
 	},
@@ -88,7 +88,15 @@ my %rules = (
 	## --[ Pronomes Indefinido ]--		
 	pind => sub {
 		my %fea = @_;
-		my $tag = "PI";
+		my $tag = "PI"
+           . "0"
+           . (uc($fea{G}) || "0")
+           . (uc($fea{N}) || "0")
+           . "0"
+           . "0"
+           ;
+        $tag =~ s/_/0/g;
+        $tag;
 		
 		# pessoa (1,2,3)
 		# género (M,F,Comum,Neutro)
@@ -110,65 +118,11 @@ my %rules = (
 	## --[ Pronomes Demonstrativos ]--
 	pdem => sub {
 		my %fea = @_;
-	    return "PD0"
+	    return "PD"
+           . "0"
            . (uc($fea{G}) || "0")
            . (uc($fea{N}) || "0")
            . "00";
-		
-		# pessoa (1,2,3)
-		# género (M,F,Comum,Neutro)
-		# Numero (S, P, N --impessoal/invariavel)
-		# Caso (nominativo, acusativo, dativo, obliquo)
-		# possuidor (Singluar, Plural)
-	},
-	## --[ Pronomes Indefinido ]--		
-	pind => sub {
-		my %fea = @_;
-		my $tag = "PI";
-		
-		# pessoa (1,2,3)
-		# género (M,F,Comum,Neutro)
-		# Numero (S, P, N --impessoal/invariavel)
-		# Caso (nominativo, acusativo, dativo, obliquo)
-		# possuidor (Singluar, Plural)
-	},
-	## --[ Pronomes Relativos ]--	
-	prel => sub {
-		my %fea = @_;
-		my $tag = "PR";
-		
-		# pessoa (1,2,3)
-		# género (M,F,Comum,Neutro)
-		# Numero (S, P, N --impessoal/invariavel)
-		# Caso (nominativo, acusativo, dativo, obliquo)
-		# possuidor (Singluar, Plural)
-	},
-	## --[ Pronomes Demonstrativos ]--
-	pdem => sub {
-		my %fea = @_;
-		my $tag = "PD";
-		
-		# pessoa (1,2,3)
-		# género (M,F,Comum,Neutro)
-		# Numero (S, P, N --impessoal/invariavel)
-		# Caso (nominativo, acusativo, dativo, obliquo)
-		# possuidor (Singluar, Plural)
-	},
-	## --[ Pronomes interrogativos ]--		
-	pint => sub {
-		my %fea = @_;
-		my $tag = "PT";
-		
-		# pessoa (1,2,3)
-		# género (M,F,Comum,Neutro)
-		# Numero (S, P, N --impessoal/invariavel)
-		# Caso (nominativo, acusativo, dativo, obliquo)
-		# possuidor (Singluar, Plural)
-	},
-	## --[ Verbos ]--	
-	v    => sub {
-		my %fea = @_;
-		my $tag = "V";
 		
 		# pessoa (1,2,3)
 		# género (M,F,Comum,Neutro)
@@ -322,5 +276,30 @@ sub _cat2eagles {
 	}
 }
 
-
 1;
+
+__END__
+
+=encoding utf8
+
+=head1 NAME
+
+Lingua::Jpell::EAGLES - Perl extension for building tags in EAGLES format
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=head2 EXPORT
+
+=head1 AUTHOR
+
+=head1 SEE ALSO
+
+EAGLES -- http://www.ilc.cnr.it/EAGLES96/annotate/node1.html
+
+EAGLES-ES -- http://nlp.lsi.upc.edu/freeling/doc/tagsets/tagset-es.html
+
+perl(1).
+
+=cut      
