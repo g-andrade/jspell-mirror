@@ -6,6 +6,28 @@ package Lingua::Jspell::EAGLES;
 #
 # para já, não abrir demasiadas frentes.
 
+
+		# modo: {I}ndicativo, {S}ubjuntivo, i{M}perativo, 
+		#       i{N}finitivo, {G}erundio, {P}articipio
+
+		# tempo: {P}resente, {I}mperfeito, {F}uturo, pas{S}ado, {C}ondicional
+my %temposverbais = (
+ ip => "NE", #  infinitivo pessoal           ???FIXME(tempo E = pEssoal)
+ inf => "N0", # infinitivo
+ pp => "IS", #  pretérito perfeito (simples)
+ ppa => "P0", # particípio passado
+ pc => "SP", #  presente do conjuntivo
+ pic => "SI", # pretérito imperfeito do conjuntivo
+ c => "IC", #   condicional
+ p => "IP", #   presente
+ fc => "SF", #  futuro do conjuntivo
+ g => "G0", #   gerúndio
+ pmp => "IM", # pretérito mais que perfeito  ???FIXME (tempo M = mais que perf.)
+ pi => "II", #  pretérito Imperfeito
+ f => "IF", #   Futuro
+ i => "M0", #   iMperativo
+);
+
 my %rules = (
 	## --[ Pronomes - Artigos ]--						
 	art  => sub { my %fea = @_;
@@ -36,10 +58,10 @@ my %rules = (
 
 		# Numero (S, P, N --impessoal/invariavel)
 		$tag .= exists $fea{P}
-		         ? ($fea{P} =~ /[SP]/i ? : uc($fea{P}) : "N")
+		         ? ($fea{P} =~ /[SP]/i ? uc($fea{P}) : "N")
 		         : "0";
 		# Caso (nominativo, acusativo, dativo, obliquo)
-		$tag .= exists $fea{C} ? uc(fea{C}) : "0";
+		$tag .= exists $fea{C} ? uc($fea{C}) : "0";
 
 		# possuidor (Singluar, Plural)
 		# XXX --- temos disto?
@@ -49,7 +71,49 @@ my %rules = (
 	## --[ Pronomes Possessivos ]--			
 	ppos => sub {
 		my %fea = @_;
-		my $tag = "PX";
+	    return "PX"
+           . (uc($fea{P}) || "0")
+           . (uc($fea{G}) || "0")
+           . (uc($fea{N}) || "0")
+           . "0"
+           . (uc($fea{NP})|| "0")
+           ;
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+	},
+	## --[ Pronomes Indefinido ]--		
+	pind => sub {
+		my %fea = @_;
+		my $tag = "PI";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+	},
+	## --[ Pronomes Relativos ]--	
+	prel => sub {
+		my %fea = @_;
+		my $tag = "PR";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+	},
+	## --[ Pronomes Demonstrativos ]--
+	pdem => sub {
+		my %fea = @_;
+	    return "PD0"
+           . (uc($fea{G}) || "0")
+           . (uc($fea{N}) || "0")
+           . "00";
 		
 		# pessoa (1,2,3)
 		# género (M,F,Comum,Neutro)
@@ -105,35 +169,34 @@ my %rules = (
 	v    => sub {
 		my %fea = @_;
 		my $tag = "V";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+	},
+	## --[ Pronomes interrogativos ]--		
+	pint => sub {
+		my %fea = @_;
+		my $tag = "PT";
+		
+		# pessoa (1,2,3)
+		# género (M,F,Comum,Neutro)
+		# Numero (S, P, N --impessoal/invariavel)
+		# Caso (nominativo, acusativo, dativo, obliquo)
+		# possuidor (Singluar, Plural)
+	},
+	## --[ Verbos ]--	
+	v    => sub {
+		my %fea = @_;
+		my $tag = "V";
 
 		# (XXX) tipo (principal, auxiliar, semiauxiliar...)
 		$tag .= "0";
 
-		# será que temos de adaptar estes 2 campos ao português?
-		# Temos:
-        ###        ip:  infinitivo pessoal
-        ###        inf: infinitivo
-        ###        pp:  pretérito perfeito
-        ###        ppa: particípio passado
-        ###        pc:  presente do conjuntivo
-        ###        pic: pretérito imperfeito do conjuntivo
-        ###        c:   condicional
-        ###        p:   presente
-        ###        fc:  futuro do conjuntivo
-        ###        g:   gerúndio
-        ###        pmp: pretérito mais que perfeito
-        ###        pi:  pretérito imperfeito
-        ###        f:   futuro
-        ###        i:   imperativo		
-
-        # (XXX)
-		# modo: {I}ndicativo, {S}ubjuntivo, i{M}perativo, 
-		#       i{N}finitivo, {G}erundio, {P}articipio
-		$tag .= "0";
-
-        # (XXX)
-		# tempo: {P}resente, {I}mperfeito, {F}uturo, pas{S}ado, {C}ondicional
-		$tag .= "0";
+        
+        $tag .=  $temposverbais{$fea{T}} || "00";
 
 		# pessoa (1,2,3) -- 1_3 é desdobrado abaixo
 		$tag .= exists($fea{P}) ? $fea{P} : "0";
