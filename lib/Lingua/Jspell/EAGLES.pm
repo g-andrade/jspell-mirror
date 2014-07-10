@@ -7,25 +7,25 @@ package Lingua::Jspell::EAGLES;
 # para já, não abrir demasiadas frentes.
 
 
-		# modo: {I}ndicativo, {S}ubjuntivo, i{M}perativo, 
-		#       i{N}finitivo, {G}erundio, {P}articipio
-
-		# tempo: {P}resente, {I}mperfeito, {F}uturo, pas{S}ado, {C}ondicional
+# modo: {I}ndicativo, {S}ubjuntivo, i{M}perativo, 
+#       i{N}finitivo, {G}erundio, {P}articipio
+# tempo: {P}resente, {I}mperfeito, {F}uturo,
+#        pas{S}ado, {C}ondicional
 my %temposverbais = (
- ip => "NE", #  infinitivo pessoal           ???FIXME(tempo E = pEssoal)
- inf => "N0", # infinitivo
- pp => "IS", #  pretérito perfeito (simples)
- ppa => "P0", # particípio passado
- pc => "SP", #  presente do conjuntivo
- pic => "SI", # pretérito imperfeito do conjuntivo
- c => "IC", #   condicional
- p => "IP", #   presente
- fc => "SF", #  futuro do conjuntivo
- g => "G0", #   gerúndio
- pmp => "IM", # pretérito mais que perfeito  ???FIXME (tempo M = mais que perf.)
- pi => "II", #  pretérito Imperfeito
- f => "IF", #   Futuro
- i => "M0", #   iMperativo
+     ip     => "NE", # infinitivo pessoal           ???FIXME(tempo E = pEssoal)
+     inf    => "N0", # infinitivo
+     pp     => "IS", # pretérito perfeito (simples)
+     ppa    => "P0", # particípio passado
+     pc     => "SP", # presente do conjuntivo
+     pic    => "SI", # pretérito imperfeito do conjuntivo
+     c      => "IC", # condicional
+     p      => "IP", # presente
+     fc     => "SF", # futuro do conjuntivo
+     g      => "G0", # gerúndio
+     pmp    => "IM", # pretérito mais que perfeito  ???FIXME (tempo M = mais que perf.)
+     pi     => "II", # pretérito Imperfeito
+     f      => "IF", # Futuro
+     i      => "M0", # iMperativo
 );
 
 my %rules = (
