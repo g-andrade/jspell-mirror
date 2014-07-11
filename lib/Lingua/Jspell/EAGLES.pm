@@ -199,14 +199,15 @@ my %rules;
 		return $tag;
 	},	
 	## --[ Interjeições ]--	
-	in   => sub { return "I" },	
+	in    => sub { return "I" },	
 	## --[ Conjunções ]--	
-	con  => sub { return "C0" },	
+	con   => sub { return "C0" },	
 	## --[ Contrações ]--
-	punct => sub {"Fixme(punct)"},
+	punct => sub { return "F" },
 	## --[ Contrações ]--
-	cp   => sub {"Fixme(cp)"
-		# temos de verificar se há CAT com cp...
+	cp    => sub {
+		my %fea = @_;
+		return "SPC" . uc($fea{G} || "0") . uc($fea{N} || "0")
 	},
 	## --[ Nomes Comuns ]--
 	nc   => sub {
