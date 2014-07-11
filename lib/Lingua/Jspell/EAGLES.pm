@@ -46,7 +46,10 @@ my %rules;
            . "0";
     },
 	## --[ Números Cardinais ]--					
-	card => sub {"Fixme(card)"},
+	card => sub {
+		my %fea = @_;
+		return "Z0" . uc($fea{G} || "0") . uc($fea{N} || "0")
+	},
 	## --[ Números Ordinais ]--				
 	nord => sub {"Fixme(nord)"},
 	## --[ Pronomes Pessoais ]--				
@@ -55,7 +58,7 @@ my %rules;
 		my $tag = "PP";
 		
 		# pessoa (1,2,3)
-		$tag .= exists $fea{P} ? $fea{P} : 0;
+		$tag .= uc($fea{P} || 0);
 
 		# género (M,F,Comum,Neutro)
 		my $G = exists $fea{G} ? uc $fea{G} : "0";
