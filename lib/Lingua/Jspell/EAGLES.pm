@@ -28,7 +28,12 @@ my %temposverbais = (
      i      => "M0", # iMperativo
 );
 
-my %rules = (
+# NUNCA NA VIDA JUNTAR ESTAS DUAS LINHAS
+# NUMA ÚNICA OU A REGRA DO a_nc DEIXA DE
+# FUNCIONAR.
+
+my %rules;
+%rules = (
 	## --[ Pronomes - Artigos ]--						
 	art  => sub { my %fea = @_;
 	  return "D"
@@ -271,7 +276,7 @@ my %rules = (
 	},
 	## --[ Nomes e Adjetivos ]--
 	a_nc => sub {
-		return eval {($rules{nc}->(@_), $rules{adj}->(@_))}
+		return ( $rules{nc}->(@in) , $rules{adj}->(@in) );
 	},
 );
 

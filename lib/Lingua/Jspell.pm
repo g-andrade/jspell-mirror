@@ -566,7 +566,8 @@ sub eagles {
   my ($dict, $palavra, @ar) = @_;
 
   map {
-    Lingua::Jspell::EAGLES::_cat2eagles(%$_) . ":$_->{rad}"
+    my $fea = $_;
+    map { $_ . ":$fea->{rad}" } Lingua::Jspell::EAGLES::_cat2eagles(%$fea)
   } $dict->fea($palavra, @ar);
 }
 
