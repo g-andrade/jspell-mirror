@@ -79,11 +79,11 @@ my %rules;
 	ppos => sub {
 		my %fea = @_;
 	    return "PX"
-           . (uc($fea{P}) || "0")
-           . (uc($fea{G}) || "0")
-           . (uc($fea{N}) || "0")
+           . uc($fea{P} || "0")
+           . uc($fea{G} || "0")
+           . uc($fea{N} || "0")
            . "0"
-           . (uc($fea{NP})|| "0")
+           . uc($fea{NP} || "0")
            ;
 		
 		# pessoa (1,2,3)
@@ -97,8 +97,8 @@ my %rules;
 		my %fea = @_;
 		my $tag = "PI"
                 . "0"
-                . (uc($fea{G}) || "0")
-                . (uc($fea{N}) || "0")
+                . uc($fea{G} || "0")
+                . uc($fea{N} || "0")
                 . "0"
                 . "0"
                 ;
@@ -116,9 +116,9 @@ my %rules;
 		my %fea = @_;
 		my $tag = "PR"
                 . "0"
-                . (uc($fea{G}) || "0")
-                . (uc($fea{N}) || "0")
-                . (uc($fea{C}) || "0")
+                . uc($fea{G} || "0")
+                . uc($fea{N} || "0")
+                . uc($fea{C} || "0")
                 . "0"
                 ;
         $tag =~ s/_/0/g;
@@ -133,10 +133,10 @@ my %rules;
 	pdem => sub {
 		my %fea = @_;
 	    return "PD"
-           . "0"
-           . (uc($fea{G}) || "0")
-           . (uc($fea{N}) || "0")
-           . "00";
+             . "0"
+             . uc($fea{G} || "0")
+             . uc($fea{N} || "0")
+             . "00";
 		
 		# pessoa (1,2,3)
 		# género (M,F,Comum,Neutro)
@@ -203,6 +203,8 @@ my %rules;
 	## --[ Conjunções ]--	
 	con  => sub { return "C0" },	
 	## --[ Contrações ]--
+	punct => sub {"Fixme(punct)"},
+	## --[ Contrações ]--
 	cp   => sub {"Fixme(cp)"
 		# temos de verificar se há CAT com cp...
 	},
@@ -211,18 +213,18 @@ my %rules;
 		my %fea = @_;
 		my $tag = "NC";
 
-		my $gen = uc($fea{G}) || '0';
+		my $gen = uc($fea{G} || '0');
 		$gen =~ s/[^MF0]/C/i;
 		$tag .= $gen;
 
-		my $num = uc($fea{N}) || '0';
+		my $num = uc($fea{N} || '0');
 		$num =~ s/[^SP0]/N/;
 		$tag .= $num;
 
 		# tipo de nome
 		$tag .= "00";
 
-		my $grad = $fea{GR};
+		my $grad = $fea{GR} || "";
 		$grad =~ s/dim/D/i;
 		$grad =~ s/aum/A/i;
 		$grad = "0" unless $grad =~ /^[DA]$/;
@@ -236,17 +238,17 @@ my %rules;
 		my %fea = @_;
 		my $tag = "NP";
 
-		my $gen = uc($fea{G}) || '0';
+		my $gen = uc($fea{G} || '0');
 		$gen =~ s/[^MF0]/C/;
 		$tag .= $gen;
 
-		my $num = uc($fea{N}) || '0';
+		my $num = uc($fea{N} || '0');
 		$num =~ s/[^SP0]/N/;
 		$tag .= $num;
 
-		$tag .= $fea{SEM} =~ /^p/i ? "SP" : "V0";
+		$tag .= ($fea{SEM} || "") =~ /^p/i ? "SP" : "V0";
 	
-		my $grad = $fea{GR};
+		my $grad = $fea{GR} || "";
 		$grad =~ s/dim/D/i;
 		$grad =~ s/aum/A/i;
 		$grad = "0" unless $grad =~ /^[DA]$/;
@@ -259,18 +261,18 @@ my %rules;
 		my %fea = @_;
 		my $tag = "A0";
 
-		my $grad = $fea{GR};
+		my $grad = $fea{GR} || "";
 		$grad =~ s/dim/D/i;
 		$grad =~ s/aum/A/i;
 		$grad =~ s/sup/S/i;
 		$grad = "0" unless $grad =~ /^[DSA]$/;
 		$tag .= $grad;
 
-		my $gen = uc($fea{G}) || '0';
+		my $gen = uc($fea{G} || '0');
 		$gen =~ s/[^MF0]/C/;
 		$tag .= $gen;
 
-		my $num = uc($fea{N}) || '0';
+		my $num = uc($fea{N} || '0');
 		$num =~ s/[^SP0]/N/;
 		$tag .= $num;
 
@@ -278,7 +280,7 @@ my %rules;
 	},
 	## --[ Nomes e Adjetivos ]--
 	a_nc => sub {
-		return ( $rules{nc}->(@in) , $rules{adj}->(@in) );
+		return ( $rules{nc}->(@_) , $rules{adj}->(@_) );
 	},
 );
 
