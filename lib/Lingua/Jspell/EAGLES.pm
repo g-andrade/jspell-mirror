@@ -271,7 +271,7 @@ my %rules = (
 	},
 	## --[ Nomes e Adjetivos ]--
 	a_nc => sub {
-		return ($rules{nc}->(@_), $rules{adj}->(@_))
+		return eval {($rules{nc}->(@_), $rules{adj}->(@_))}
 	},
 );
 
