@@ -89,12 +89,12 @@ my %rules = (
 	pind => sub {
 		my %fea = @_;
 		my $tag = "PI"
-           . "0"
-           . (uc($fea{G}) || "0")
-           . (uc($fea{N}) || "0")
-           . "0"
-           . "0"
-           ;
+                . "0"
+                . (uc($fea{G}) || "0")
+                . (uc($fea{N}) || "0")
+                . "0"
+                . "0"
+                ;
         $tag =~ s/_/0/g;
         $tag;
 		
@@ -107,8 +107,15 @@ my %rules = (
 	## --[ Pronomes Relativos ]--	
 	prel => sub {
 		my %fea = @_;
-		my $tag = "PR";
-		
+		my $tag = "PR"
+                . "0"
+                . (uc($fea{G}) || "0")
+                . (uc($fea{N}) || "0")
+                . (uc($fea{C}) || "0")
+                . "0"
+                ;
+        $tag =~ s/_/0/g;
+        $tag;		
 		# pessoa (1,2,3)
 		# género (M,F,Comum,Neutro)
 		# Numero (S, P, N --impessoal/invariavel)
@@ -197,12 +204,12 @@ my %rules = (
 		my %fea = @_;
 		my $tag = "NC";
 
-		my $gen = uc($fea{G});
-		$gen =~ s/[^MF]/C/i;
+		my $gen = uc($fea{G}) || '0';
+		$gen =~ s/[^MF0]/C/i;
 		$tag .= $gen;
 
-		my $num = uc($fea{N});
-		$num =~ s/[^SP]/N/;
+		my $num = uc($fea{N}) || '0';
+		$num =~ s/[^SP0]/N/;
 		$tag .= $num;
 
 		# tipo de nome
@@ -222,18 +229,16 @@ my %rules = (
 		my %fea = @_;
 		my $tag = "NP";
 
-		my $gen = uc($fea{G});
-		$gen =~ s/[^MF]/C/;
+		my $gen = uc($fea{G}) || '0';
+		$gen =~ s/[^MF0]/C/;
 		$tag .= $gen;
 
-		my $num = uc($fea{N});
-		$num =~ s/[^SP]/N/;
+		my $num = uc($fea{N}) || '0';
+		$num =~ s/[^SP0]/N/;
 		$tag .= $num;
 
-		my $sem = $fea{SEM} || "V0";
-		$sem = "SP" if $sem eq "p";
-		$tag .= $sem;
-
+		$tag .= $fea{SEM} =~ /^p/i ? "SP" : "V0";
+	
 		my $grad = $fea{GR};
 		$grad =~ s/dim/D/i;
 		$grad =~ s/aum/A/i;
@@ -254,15 +259,15 @@ my %rules = (
 		$grad = "0" unless $grad =~ /^[DSA]$/;
 		$tag .= $grad;
 
-		my $gen = uc($fea{G});
-		$gen =~ s/[^MF]/C/;
+		my $gen = uc($fea{G}) || '0';
+		$gen =~ s/[^MF0]/C/;
 		$tag .= $gen;
 
-		my $num = uc($fea{N});
-		$num =~ s/[^SP]/N/;
+		my $num = uc($fea{N}) || '0';
+		$num =~ s/[^SP0]/N/;
 		$tag .= $num;
 
-		return $grad . "0";
+		return $tag . "0";
 	},
 	## --[ Nomes e Adjetivos ]--
 	a_nc => sub {
