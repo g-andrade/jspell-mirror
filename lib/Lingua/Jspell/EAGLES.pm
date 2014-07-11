@@ -51,7 +51,10 @@ my %rules;
 		return "Z0" . uc($fea{G} || "0") . uc($fea{N} || "0")
 	},
 	## --[ Números Ordinais ]--				
-	nord => sub {"Fixme(nord)"},
+	nord => sub {
+		my %fea = @_;
+		return "AO0" . uc($fea{G} || "0") . uc($fea{N} || "0") . "0"
+	},
 	## --[ Pronomes Pessoais ]--				
 	ppes => sub {
 		my %fea = @_;
