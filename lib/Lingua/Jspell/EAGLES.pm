@@ -6,6 +6,8 @@ package Lingua::Jspell::EAGLES;
 #
 # para já, não abrir demasiadas frentes.
 
+use warnings;
+use strict;
 
 # modo: {I}ndicativo, {S}ubjuntivo, i{M}perativo, 
 #       i{N}finitivo, {G}erundio, {P}articipio
