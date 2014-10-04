@@ -32,7 +32,7 @@ Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
 =cut
 
-our $VERSION = '1.85';
+our $VERSION = '1.86';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };
@@ -42,6 +42,9 @@ our %STOP =();
 BEGIN {
     my $EXE = "";
     $EXE=".exe" if $^O eq "MSWin32";
+
+    local $_;
+    undef $ENV{PATH}; # Taint mode stuff
 
     $JSPELL = catfile("blib","bin","jspell$EXE");
     $JSPELL = Lingua::Jspell::ConfigData->config("jspell") unless -x $JSPELL;
