@@ -1,5 +1,8 @@
 Revision history for Lingua-Jspell
 
+1.87 February 20, 2015
+   - fix Windows that was broken since taint fix;
+
 1.86 October 4, 2014
    - fixes for taint mode usage;
 

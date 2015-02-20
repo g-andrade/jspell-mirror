@@ -242,16 +242,17 @@ sub ACTION_test {
     my $self = shift;
 
     if ($^O =~ /mswin32/i) {
-        $ENV{PATH} = catdir($self->blib,"usrlib").";$ENV{PATH}";
+        my $oldpath = $ENV{PATH};
+        $ENV{PATH} = catdir($self->blib, "usrlib").";$oldpath";
     } elsif ($^O =~ /darwin/i) {
-        $ENV{DYLD_LIBRARY_PATH} = catdir($self->blib,"usrlib");
+        $ENV{DYLD_LIBRARY_PATH} = catdir($self->blib, "usrlib");
     }
     elsif ($^O =~ /(?:linux|bsd|sun|sol|dragonfly|hpux|irix)/i) {
-        $ENV{LD_LIBRARY_PATH} = catdir($self->blib,"usrlib");
+        $ENV{LD_LIBRARY_PATH} = catdir($self->blib, "usrlib");
     }
     elsif ($^O =~ /aix/i) {
         my $oldlibpath = $ENV{LIBPATH} || '/lib:/usr/lib';
-        $ENV{LIBPATH} = catdir($self->blib,"usrlib").":$oldlibpath";
+        $ENV{LIBPATH} = catdir($self->blib, "usrlib").":$oldlibpath";
     }
 
     $self->SUPER::ACTION_test
