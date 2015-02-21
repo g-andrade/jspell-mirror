@@ -32,7 +32,7 @@ Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
 =cut
 
-our $VERSION = '1.88';
+our $VERSION = '1.89';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };
@@ -40,7 +40,7 @@ our $DELIM = '===';
 our %STOP =();
 
 BEGIN {
-    delete @ENV{qw(IFS CDPATH ENV BASH_ENV)};  # Make %ENV safer
+    delete @ENV{qw(IFS CD PATH ENV BASH_ENV)};  # Make %ENV safer
 
     my $EXE = "";
     if ($^O eq "MSWin32") {

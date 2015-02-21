@@ -1,5 +1,8 @@
 Revision history for Lingua-Jspell
 
+1.89 February 21, 2015
+   - fix missing space;
+
 1.88 February 21, 2015
    - more taint fixes;
 
