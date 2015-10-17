@@ -9,6 +9,8 @@ package Lingua::Jspell::EAGLES;
 use warnings;
 use strict;
 
+our $VERSION = '1.90';
+
 # modo: {I}ndicativo, {S}ubjuntivo, i{M}perativo, 
 #       i{N}finitivo, {G}erundio, {P}articipio
 # tempo: {P}resente, {I}mperfeito, {F}uturo,
