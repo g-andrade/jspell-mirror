@@ -79,7 +79,7 @@ binmode(STDOUT,":utf8");
 
 my ($DW,$DR,$DE);
 my $exe = Lingua::Jspell::ConfigData->config('jspell');
-open3($DW,$DR,$DE,$exe,@ARGV);
+open3($DW,$DR,$DE,$exe,"-W 0", @ARGV);
 
 binmode($DW,":encoding(iso-8859-1)");
 binmode($DR,":encoding(iso-8859-1)");
