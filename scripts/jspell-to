@@ -16,32 +16,34 @@ $targets{$target}->(@ARGV);
 
 sub _get_targets {
 	return (
-			visl => sub {
-				my $DIC = Lingua::Jspell->new("pt"); ## FIXME - make this an option
+			visl => \&_visl,
+		);
+}
 
-				while (<>) {
-					while (m!\W+|\w+(-\w+)*!g) {
-						my $word = $&;
+sub _visl {
+	my $DIC = Lingua::Jspell->new("pt"); ## FIXME - make this an option
 
-						next if $word =~ /^\s+$/;
-						print "<\"$word\">\n";
-						
-						my @a = $DIC->fea($word);
-						if (@a) {
-							for my $a (@a) {
-								print "\t$a->{rad}  $a->{CAT}";
-								for my $k (keys %$a) {
-									next if $k eq "rad" || $k eq "CAT";
-									print "  $k=$a->{$k}";
-								}
-								print "\n";
-							}
-						}
-						else {
-							print "\t$word  UNK\n"
-						}
+	while (<>) {
+		while (m!\W+|\w+(-\w+)*!g) {
+			my $word = $&;
+
+			next if $word =~ /^\s+$/;
+			print "<\"$word\">\n";
+			
+			my @a = $DIC->fea($word);
+			if (@a) {
+				for my $a (@a) {
+					print "\t$a->{rad}  $a->{CAT}";
+					for my $k (keys %$a) {
+						next if $k eq "rad" || $k eq "CAT";
+						print "  $k=$a->{$k}";
 					}
+					print "\n";
 				}
 			}
-		);
+			else {
+				print "\t$word  UNK\n"
+			}
+		}
+	}
 }
