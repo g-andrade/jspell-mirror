@@ -61,3 +61,4 @@ examples/C/simple.c
 META.yml
 jspell-dist.pod
 META.json
+scripts/jspell-to

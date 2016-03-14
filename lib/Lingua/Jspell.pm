@@ -32,7 +32,7 @@ Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
 =cut
 
-our $VERSION = '1.90';
+our $VERSION = '1.91';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };
@@ -58,6 +58,7 @@ BEGIN {
 
     die "jspell binary cannot be found!\n" unless -x $JSPELL;
 
+    local $.;
     open X, "$JSPELL -vv|" or die "Can't execute $JSPELL";
     while (<X>) {
         if (/LIBDIR = "([^"]+)"/) {
@@ -116,6 +117,7 @@ sub new {
 
 
   my $js = "$JSPELL -d $self->{dictionary} -a $pers -W 0 $flag -o'%s!%s:%s:%s:%s'";
+  local $.;
   $self->{pid} = open3($self->{DW},$self->{DR},$self->{DE},$js) or die $!;
 		
   binmode($self->{DW},":encoding(iso-8859-1)");
@@ -175,6 +177,7 @@ sub nearmatches {
     my %classes;
     if ($ops{rules}) {
         -f $ops{rules} or die "Can't find file $ops{rules}";
+        local $.;
         open RULES, $ops{rules} or die "Can't open file $ops{rules}";
         my @rules;
         while(<RULES>) {
@@ -314,8 +317,11 @@ sub fea {
 
   my ($dw,$dr) = ($self->{DW},$self->{DR});
 
+  local $.;
+
   print $dw " $w\n";
   $a = <$dr>;
+
 
   for (;($a ne "\n"); $a=<$dr>) {       # l^e as respostas
     for($a){
@@ -380,6 +386,8 @@ sub flags {
   my ($a,$dr);
   local $/="\n";
 
+  local $.;
+
   print {$self->{DW}} "\$\"$w\n";
   $dr = $self->{DR};
   $a = <$dr>;
@@ -405,11 +413,13 @@ sub rad {
   my %rad = ();
   my $a_ = "";
   local $/ = "\n";
-
+  local $.;
+  
   my ($dw,$dr) = ($self->{DW},$self->{DR});
 
   print $dw " $word\n";
 
+  
   for ($a_ = <$dr>; $a_ ne "\n"; $a_ = <$dr>) {
     chop $a_;
     %rad = ($a_ =~ m/(?: |:)([^ =:,!]+)(\!)/g ) ;
@@ -434,6 +444,7 @@ sub der {
     my $command;
 
     local $/ = "\n";
+    local $.;
     my $pid = open3(\*WR, \*RD, \*ERROR, "$JSPELL -d $self->{dictionary} -e -o \"\"") or die "Can't execute jspell.";
     print WR join("\n",@der),"\n";
     print WR "\032" if ($^O =~ /win32/i);
@@ -450,6 +461,7 @@ sub der {
     my $irrcomm;
     my $irr_file = _irr_file($self->{dictionary});
 
+    local $.;
     if (open IRR, $irr_file) {
         while (<IRR>) {
             next unless /^\Q$w\E=/;
@@ -547,6 +559,7 @@ sub nlgrep {
   my @res=();
   my $n = 0;
   for(@file_list) {
+    local $.;
     open(F,$_) or die("cant open $_\n");
     while(<F>) {
       if ($p2->($_)) {
@@ -918,6 +931,7 @@ sub onethatverif {
 
 sub mkradtxt {
   my ($self, $f1, $f2) = @_;
+  local $.;
   open F1, $f1 or die "Can't open '$f1'\n";
   open F2, "> $f2" or die "Can't create '$f2'\n";
   while(<F1>) {

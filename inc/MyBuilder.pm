@@ -39,7 +39,7 @@ sub ACTION_pre_install {
     }
 
     ## FIXME - usar o Module::Build para isto?
-    for (qw.ujspell jspell-dict jspell-installdic.) {
+    for (qw.ujspell jspell-dict jspell-to jspell-installdic.) {
 
         $self->copy_if_modified( from   => catfile("scripts",$_),
                                  to_dir => catdir('blib','script'),

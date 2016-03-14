@@ -1,5 +1,8 @@
 Revision history for Lingua-Jspell
 
+1.91 March 14, 2016
+   - localize $. everywhere (hopefully);
+
 1.90 October 17, 2015
    - consistent versioning;
 
