@@ -308,7 +308,7 @@ it are returned.
 sub fea {
   my ($self,$w,$res) = @_;
 
-  local $/="\n";
+  local $/ = "\n";
 
   my @r = ();
   my ($a, $rad, $cla, $flags);
@@ -325,21 +325,23 @@ sub fea {
     $a = <$dr>;
 
 
-    for (;($a ne "\n"); $a=<$dr>) {       # l^e as respostas
-      for($a){
+    for ( ; ($a ne "\n") ; $a = <$dr> ) {       # l^e as respostas
+      for ($a) {
         chop;
-        my ($lixo,$clas);
-        if(/(.*?) :(.*)/){$clas = $2 ; $lixo =$1}
-        else             {$clas = $_ ; $lixo =""}
+        my ($lixo, $clas);
+        if (/(.*?) :(.*)/)
+        { $clas = $2 ; $lixo = $1 }
+        else
+        { $clas = $_ ; $lixo ="" }
 
         for(split(/[,;] /,$clas)){
           ($rad,$cla)= m{(.+?)\!:*(.*)$};
 
           # $cla undef quando nada preenchido...
 
-      	if ($cla) {
-      	  if ($cla =~ s/\/(.*)$//) { $flags = $1 }
-      	  else                     { $flags = "" }
+          if ($cla)  {
+      	    if ($cla =~ s/\/(.*)$//) { $flags = $1 }
+      	    else                     { $flags = "" }
 
       	  $cla =~ s/:+$//g;
       	  $cla =~ s/:+/,/g;
@@ -352,7 +354,7 @@ sub fea {
       	    } else {
       	      print STDERR "** WARNING: Feature-structure parse error: $cla (for word '$w')\n";
       	    }
-	        }
+          }
 
       	  $ana{"flags"} = $flags if $flags;
 
@@ -364,11 +366,14 @@ sub fea {
       	  if ($rad ne "" ) {
       	    push(@r,+{"rad" => $rad, %ana});
       	  }
-      	}
-        else {@r=( +{CAT=>"?",rad=>$rad} )}
+        }
+           else
+           {
+                @r=( +{CAT=>"?",rad=>$rad} )
+           }
+        }
       }
     }
-  }
   } 
   if($res){  return (grep { verif($res,$_) } @r) }
   else    {  return @r; }
