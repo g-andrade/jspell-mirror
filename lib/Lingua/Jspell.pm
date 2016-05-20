@@ -313,60 +313,63 @@ sub fea {
   my @r = ();
   my ($a, $rad, $cla, $flags);
 
-  return () if $w =~ /\!/;
+  if ($w =~ /\!/) {
+    @r = ( +{CAT=>'punct', rad=>'!'});
+  }
+  else {
+    my ($dw,$dr) = ($self->{DW},$self->{DR});
 
-  my ($dw,$dr) = ($self->{DW},$self->{DR});
+    local $.;
 
-  local $.;
-
-  print $dw " $w\n";
-  $a = <$dr>;
+    print $dw " $w\n";
+    $a = <$dr>;
 
 
-  for (;($a ne "\n"); $a=<$dr>) {       # l^e as respostas
-    for($a){
-      chop;
-      my ($lixo,$clas);
-      if(/(.*?) :(.*)/){$clas = $2 ; $lixo =$1}
-      else             {$clas = $_ ; $lixo =""}
+    for (;($a ne "\n"); $a=<$dr>) {       # l^e as respostas
+      for($a){
+        chop;
+        my ($lixo,$clas);
+        if(/(.*?) :(.*)/){$clas = $2 ; $lixo =$1}
+        else             {$clas = $_ ; $lixo =""}
 
-      for(split(/[,;] /,$clas)){
-        ($rad,$cla)= m{(.+?)\!:*(.*)$};
+        for(split(/[,;] /,$clas)){
+          ($rad,$cla)= m{(.+?)\!:*(.*)$};
 
-        # $cla undef quando nada preenchido...
+          # $cla undef quando nada preenchido...
 
-	if ($cla) {
-	  if ($cla =~ s/\/(.*)$//) { $flags = $1 }
-	  else                     { $flags = "" }
+      	if ($cla) {
+      	  if ($cla =~ s/\/(.*)$//) { $flags = $1 }
+      	  else                     { $flags = "" }
 
-	  $cla =~ s/:+$//g;
-	  $cla =~ s/:+/,/g;
+      	  $cla =~ s/:+$//g;
+      	  $cla =~ s/:+/,/g;
 
-	  my %ana =();
-	  my @attrs = split /,/, $cla;
-	  for (@attrs) {
-	    if (m!=!) {
-	      $ana{$`}=$';
-	    } else {
-	      print STDERR "** WARNING: Feature-structure parse error: $cla (for word '$w')\n";
-	    }
-	  }
+      	  my %ana =();
+      	  my @attrs = split /,/, $cla;
+      	  for (@attrs) {
+      	    if (m!=!) {
+      	      $ana{$`}=$';
+      	    } else {
+      	      print STDERR "** WARNING: Feature-structure parse error: $cla (for word '$w')\n";
+      	    }
+	        }
 
-	  $ana{"flags"} = $flags if $flags;
+      	  $ana{"flags"} = $flags if $flags;
 
-	  if ($lixo =~ /^&/) {
-	    $rad =~ s/(.*?)= //;
-	    $ana{"guess"} = lc($1);
-	    $ana{"unknown"} = 1;
-	  }
-	  if ($rad ne "" ) {
-	    push(@r,+{"rad" => $rad, %ana});
-	  }
-	}
+      	  if ($lixo =~ /^&/) {
+      	    $rad =~ s/(.*?)= //;
+      	    $ana{"guess"} = lc($1);
+      	    $ana{"unknown"} = 1;
+      	  }
+      	  if ($rad ne "" ) {
+      	    push(@r,+{"rad" => $rad, %ana});
+      	  }
+      	}
         else {@r=( +{CAT=>"?",rad=>$rad} )}
       }
     }
   }
+  } 
   if($res){  return (grep { verif($res,$_) } @r) }
   else    {  return @r; }
 }
