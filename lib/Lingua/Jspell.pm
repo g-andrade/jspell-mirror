@@ -32,7 +32,7 @@ Lingua::Jspell - Perl interface to the Jspell morphological analyser.
 
 =cut
 
-our $VERSION = '1.91';
+our $VERSION = '1.92';
 our $JSPELL;
 our $JSPELLLIB;
 our $MODE = { nm => "af", flags => 0 };
@@ -306,77 +306,77 @@ it are returned.
 
 
 sub fea {
-  my ($self,$w,$res) = @_;
+    my ( $self, $w, $res ) = @_;
 
-  local $/ = "\n";
+    local $/ = "\n";
 
-  my @r = ();
-  my ($a, $rad, $cla, $flags);
+    my @r = ();
+    my ( $a, $rad, $cla, $flags );
 
-  if ($w =~ /\!/) {
-    @r = ( +{CAT=>'punct', rad=>'!'});
-  }
-  else {
-    my ($dw,$dr) = ($self->{DW},$self->{DR});
-
-    local $.;
-
-    print $dw " $w\n";
-    $a = <$dr>;
-
-
-    for ( ; ($a ne "\n") ; $a = <$dr> ) {       # l^e as respostas
-      for ($a) {
-        chop;
-        my ($lixo, $clas);
-        if (/(.*?) :(.*)/)
-        { $clas = $2 ; $lixo = $1 }
-        else
-        { $clas = $_ ; $lixo ="" }
-
-        for(split(/[,;] /,$clas)){
-          ($rad,$cla)= m{(.+?)\!:*(.*)$};
-
-          # $cla undef quando nada preenchido...
-
-          if ($cla)  {
-      	    if ($cla =~ s/\/(.*)$//) { $flags = $1 }
-      	    else                     { $flags = "" }
-
-      	  $cla =~ s/:+$//g;
-      	  $cla =~ s/:+/,/g;
-
-      	  my %ana =();
-      	  my @attrs = split /,/, $cla;
-      	  for (@attrs) {
-      	    if (m!=!) {
-      	      $ana{$`}=$';
-      	    } else {
-      	      print STDERR "** WARNING: Feature-structure parse error: $cla (for word '$w')\n";
-      	    }
-          }
-
-      	  $ana{"flags"} = $flags if $flags;
-
-      	  if ($lixo =~ /^&/) {
-      	    $rad =~ s/(.*?)= //;
-      	    $ana{"guess"} = lc($1);
-      	    $ana{"unknown"} = 1;
-      	  }
-      	  if ($rad ne "" ) {
-      	    push(@r,+{"rad" => $rad, %ana});
-      	  }
-        }
-           else
-           {
-                @r=( +{CAT=>"?",rad=>$rad} )
-           }
-        }
-      }
+    if ( $w =~ /\!/ ) {
+        @r = ( +{ CAT => 'punct', rad => '!' } );
     }
-  } 
-  if($res){  return (grep { verif($res,$_) } @r) }
-  else    {  return @r; }
+    else {
+        my ( $dw, $dr ) = ( $self->{DW}, $self->{DR} );
+
+        local $.;
+
+        print $dw " $w\n";
+        $a = <$dr>;
+
+        for ( ; ( $a ne "\n" ); $a = <$dr> ) {    # l^e as respostas
+            for ($a) {
+                chop;
+                my ( $lixo, $clas );
+                if   (/(.*?) :(.*)/) { $clas = $2; $lixo = $1 }
+                else                 { $clas = $_; $lixo = "" }
+
+                for ( split( /[,;] /, $clas ) ) {
+                    ( $rad, $cla ) = m{(.+?)\!:*(.*)$};
+
+                    # $cla undef quando nada preenchido...
+
+                    if ($cla) {
+                        if   ( $cla =~ s/\/(.*)$// ) { $flags = $1 }
+                        else                         { $flags = "" }
+
+                        $cla =~ s/:+$//g;
+                        $cla =~ s/:+/,/g;
+
+                        my %ana = ();
+                        my @attrs = split /,/, $cla;
+                        for (@attrs) {
+                            if (m!=!) {
+                                $ana{$`} = $';
+                            }
+                            else {
+                                print STDERR
+                                    "** WARNING: Feature-structure parse error: $cla (for word '$w')\n";
+                            }
+                        }
+
+                        $ana{"flags"} = $flags if $flags;
+
+                        if ( $lixo =~ /^&/ ) {
+                            $rad =~ s/(.*?)= //;
+                            $ana{"guess"}   = lc($1);
+                            $ana{"unknown"} = 1;
+                        }
+                        if ( $rad ne "" ) {
+                            push( @r, +{ "rad" => $rad, %ana } );
+                        }
+                    }
+                    else {
+                        @r = ( +{ CAT => "?", rad => $rad } );
+                    }
+                }
+            }
+        }
+    }
+    if ($res) {
+        return ( grep { verif( $res, $_ ) } @r );
+    }
+    else { return @r; }
 }
 
 =head2 flags
@@ -1103,4 +1103,3 @@ sub _irr_file {
 '\o/ yay!'; # End of Lingua::Jspell
 
 __END__
-
