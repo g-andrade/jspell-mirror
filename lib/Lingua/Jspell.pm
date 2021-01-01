@@ -1023,7 +1023,7 @@ sub hash2str {
     chop($c);
   } elsif ($i eq "f1") {
     for (keys %$r) {
-      $c .= "\n  ", any2str($_,"compact"). "=". any2str($r->{$_},"compact"). "\n";
+      $c .= "\n  ". any2str($_,"compact"). "=". any2str($r->{$_},"compact"). "\n";
     }
     chop($c);
   } else {
